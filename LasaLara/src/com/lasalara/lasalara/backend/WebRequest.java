@@ -18,8 +18,8 @@ public class WebRequest {
 	private String result;
 	
 	public WebRequest(String url, String urlParameters) throws IOException {
-		this.url = url;
-		this.urlParameters = urlParameters;
+		this.url = url.toLowerCase();
+		this.urlParameters = urlParameters.toLowerCase();
 		createConnection();
 		sendRequest();
 		getResponse();
