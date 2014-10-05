@@ -1,5 +1,7 @@
 package com.lasalara.lasalara;
 
+import com.lasalara.lasalara.constants.StringConstants;
+
 import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -19,7 +21,7 @@ public class LasaLaraApplication extends Application {
 	}
 	
 	public static boolean isNetworkConnected(Context context) {
-		Log.d("LasaLara", "Checking network connection.");
+		Log.d(StringConstants.APP_NAME.getValue(), "Checking network connection.");
 		ConnectivityManager connectivityManager = 
 				(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();

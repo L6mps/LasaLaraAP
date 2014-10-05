@@ -6,6 +6,8 @@ import java.net.URLEncoder;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.lasalara.lasalara.constants.WebRequestURLs;
+
 import android.content.Context;
 
 /**
@@ -29,7 +31,7 @@ public class Book {
 	 * @throws JSONException
 	 */
 	Book(Context context, String ownerEmail, String title) throws IOException, JSONException {
-		String url = "http://www.lasalara.com/getbook";
+		String url = WebRequestURLs.GET_BOOK.getAddress();
 		String urlParameters =
 				"em=" + URLEncoder.encode(ownerEmail, "UTF-8") +
 				"&bt=" + URLEncoder.encode(title, "UTF-8");

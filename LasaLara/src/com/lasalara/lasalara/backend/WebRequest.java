@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.lasalara.lasalara.Backend;
 import com.lasalara.lasalara.LasaLaraApplication;
+import com.lasalara.lasalara.constants.StringConstants;
 
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
@@ -43,7 +44,7 @@ public class WebRequest {
 			getResponse();
 		} else {
 			// TODO
-			Log.d("LasaLara", "No networks are connected.");
+			Log.d(StringConstants.APP_NAME.getValue(), "No networks are connected.");
 		}
 	}
 	
