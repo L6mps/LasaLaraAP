@@ -3,6 +3,9 @@ package com.lasalara.lasalara;
 import java.io.IOException;
 import java.net.URLEncoder;
 
+import android.content.Context;
+import android.util.Log;
+
 import com.lasalara.lasalara.backend.WebRequest;
 
 /**
@@ -30,17 +33,14 @@ public class Backend {
 		}
 	}
 	
-	public void testRequest() {
-		try {
+	public void testRequest(Context context) throws IOException {
 		String url = "http://www.lasalara.com/getbook";
 		String urlParameters =
 				"em=" + URLEncoder.encode("lasalara.help@gmail.com", "UTF-8") +
 				"&bt=" + URLEncoder.encode("Welcome to LasaLara", "UTF-8");
-			WebRequest request = new WebRequest(url, urlParameters);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		Log.d("LasaLara", "Initializing web request.");
+		WebRequest request = new WebRequest(context, url, urlParameters);
+		Log.d("LasaLara", "Result: " + request.getResult());
 	}
 	
 	/**

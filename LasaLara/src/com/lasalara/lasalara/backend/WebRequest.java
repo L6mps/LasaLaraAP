@@ -1,5 +1,11 @@
 package com.lasalara.lasalara.backend;
 
+import android.content.Context;
+import android.util.Log;
+
+import com.lasalara.lasalara.Backend;
+import com.lasalara.lasalara.LasaLaraApplication;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -17,12 +23,17 @@ public class WebRequest {
 	private HttpURLConnection connection;
 	private String result;
 	
-	public WebRequest(String url, String urlParameters) throws IOException {
-		this.url = url.toLowerCase();
-		this.urlParameters = urlParameters.toLowerCase();
-		createConnection();
-		sendRequest();
-		getResponse();
+	public WebRequest(Context context, String url, String urlParameters) throws IOException {
+		if (LasaLaraApplication.isNetworkConnected(context)) {
+			this.url = url;
+			this.urlParameters = urlParameters;
+			createConnection();
+			sendRequest();
+			getResponse();
+		} else {
+			// TODO
+			Log.d("LasaLara", "No networks are connected.");
+		}
 	}
 	
 	private void createConnection() throws IOException {
