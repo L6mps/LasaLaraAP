@@ -13,6 +13,6 @@ public class LasaLaraApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		Backend.initializeInstance();
-		Backend.getInstance().testRequest();
+		//Backend.getInstance().testRequest();
 	}
 }
