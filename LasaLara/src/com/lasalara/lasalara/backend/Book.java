@@ -31,7 +31,7 @@ public class Book {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	Book(Context context, String ownerEmail, String title) throws IOException, JSONException {
+	public Book(Context context, String ownerEmail, String title) throws IOException, JSONException {
 		String url = "http://www.lasalara.com/getbook";
 		String urlParameters =
 				"em=" + URLEncoder.encode(ownerEmail, "UTF-8") +
@@ -72,9 +72,7 @@ public class Book {
 	private void loadChapters(Context context) throws IOException, JSONException {
 		chapters = new ArrayList<Chapter>();
 		String url = "http://www.lasalara.com/getmchapters";
-		System.out.println(url + ": " + key);
 		String urlParameters = "bk=" + URLEncoder.encode(key, "UTF-8");
-		System.out.println(urlParameters);
 		WebRequest request = new WebRequest(context, url, urlParameters);
 		try {
 			JSONObject result = request.getJSONObject();
@@ -94,11 +92,10 @@ public class Book {
 				if (!result.isNull("institution")) {
 					chapterAuthorInstitution = result.get("institution").toString();
 				}
-				boolean chapterAllowProposals = result.getBoolean("allowProp");
-				Chapter newChapter = new Chapter(chapterKey, chapterTitle, chapterVersion, 
+				boolean chapterProposalsAllowed = result.getBoolean("allowProp");
+				chapters.add(new Chapter(chapterKey, chapterTitle, chapterVersion, 
 						chapterAuthorEmail, chapterAuthorName, chapterAuthorInstitution, 
-						chapterAllowProposals);
-				chapters.add(newChapter);
+						chapterProposalsAllowed));
 			}
 		} catch (JSONException e) {
 			throw new JSONException(e.toString());
@@ -159,6 +156,7 @@ public class Book {
 	}
 	
 	/**
+	 * @param context		The current activity's context (needed for network connection check).
 	 * @return the list of chapters in this book.
 	 * @throws JSONException 
 	 * @throws IOException 
