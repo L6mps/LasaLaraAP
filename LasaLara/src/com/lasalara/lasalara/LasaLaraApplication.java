@@ -1,7 +1,5 @@
 package com.lasalara.lasalara;
 
-import java.io.IOException;
-
 import android.app.Application;
 import android.content.Context;
 import android.net.ConnectivityManager;
@@ -18,12 +16,6 @@ public class LasaLaraApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		Backend.initializeInstance();
-		try {
-			Backend.getInstance().testRequest(getApplicationContext());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public static boolean isNetworkConnected(Context context) {
