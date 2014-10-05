@@ -2,16 +2,16 @@ package com.lasalara.lasalara.backend;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.lasalara.lasalara.constants.WebRequestURLs;
-
 import android.content.Context;
 
 /**
- * Class responsible for holding and querying a book's information.
+ * Class responsible for holding and querying a book's information and querying it's chapters' information.
  * @author Ants-Oskar Mäesalu
  */
 public class Book {
@@ -21,9 +21,10 @@ public class Book {
 	String ownerName;		// Name of the person who created the book (if blank, the e-mail is used)
 	String ownerInstitution;// Institution of the person who created the book (if blank, the e-mail is used)
 	String lastChapter;		// Last chapter (UUID) of this book opened by the student
+	List<Chapter> chapters; // The list of chapters in this book.
 	
 	/**
-	 * Constructor used when downloading a book from the web.
+	 * Constructor, used when downloading a book from the web.
 	 * @param context		The current activity's context (needed for network connection check).
 	 * @param ownerEmail	The book's owner's e-mail address.
 	 * @param title			The book's title.
@@ -31,7 +32,7 @@ public class Book {
 	 * @throws JSONException
 	 */
 	Book(Context context, String ownerEmail, String title) throws IOException, JSONException {
-		String url = WebRequestURLs.GET_BOOK.getAddress();
+		String url = "http://www.lasalara.com/getbook";
 		String urlParameters =
 				"em=" + URLEncoder.encode(ownerEmail, "UTF-8") +
 				"&bt=" + URLEncoder.encode(title, "UTF-8");
@@ -60,6 +61,59 @@ public class Book {
 		} catch (JSONException e) {
 			throw new JSONException(e.toString());
 		}
+	}
+	
+	/**
+	 * Load the chapters in this book.
+	 * @param context		The current activity's context (needed for network connection check).
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	private void loadChapters(Context context) throws IOException, JSONException {
+		chapters = new ArrayList<Chapter>();
+		String url = "http://www.lasalara.com/getmchapters";
+		System.out.println(url + ": " + key);
+		String urlParameters = "bk=" + URLEncoder.encode(key, "UTF-8");
+		System.out.println(urlParameters);
+		WebRequest request = new WebRequest(context, url, urlParameters);
+		try {
+			JSONObject result = request.getJSONObject();
+			System.out.println(result);
+			for (int i = 0; i < result.length(); i++) {
+				JSONObject chapterObject = result.getJSONObject(Integer.toString(i));
+				System.out.println(chapterObject.toString());
+				String chapterKey = result.get("ck").toString();
+				String chapterTitle = result.get("title").toString();
+				int chapterVersion = result.getInt("version");
+				String chapterAuthorEmail = result.get("email").toString();
+				String chapterAuthorName = null;
+				if (!result.isNull("name")) {
+					chapterAuthorName = result.get("name").toString();
+				}
+				String chapterAuthorInstitution = null;
+				if (!result.isNull("institution")) {
+					chapterAuthorInstitution = result.get("institution").toString();
+				}
+				boolean chapterAllowProposals = result.getBoolean("allowProp");
+				Chapter newChapter = new Chapter(chapterKey, chapterTitle, chapterVersion, 
+						chapterAuthorEmail, chapterAuthorName, chapterAuthorInstitution, 
+						chapterAllowProposals);
+				chapters.add(newChapter);
+			}
+		} catch (JSONException e) {
+			throw new JSONException(e.toString());
+		}
+	}
+	
+	/**
+	 * Reload the chapter list.
+	 * TODO: Currently never used but should be periodically used to update the content.
+	 * @param context		The current activity's context (needed for network connection check).
+	 * @throws IOException
+	 * @throws JSONException
+	 */
+	public void reloadChapters(Context context) throws IOException, JSONException {
+		loadChapters(context);
 	}
 
 	/**
@@ -102,5 +156,15 @@ public class Book {
 	 */
 	public String getLastChapter() {
 		return lastChapter;
+	}
+	
+	/**
+	 * @return the list of chapters in this book.
+	 * @throws JSONException 
+	 * @throws IOException 
+	 */
+	public List<Chapter> getChapters(Context context) throws IOException, JSONException {
+		loadChapters(context);
+		return chapters;
 	}
 }

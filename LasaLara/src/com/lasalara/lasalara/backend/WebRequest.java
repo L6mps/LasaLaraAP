@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
-import com.lasalara.lasalara.Backend;
 import com.lasalara.lasalara.LasaLaraApplication;
 import com.lasalara.lasalara.constants.StringConstants;
 
@@ -37,11 +36,12 @@ public class WebRequest {
 	public WebRequest(Context context, String url, String urlParameters) throws IOException {
 		disableConnectionReuseIfNecessary();
 		if (LasaLaraApplication.isNetworkConnected(context)) {
-			this.url = url;
-			this.urlParameters = urlParameters;
+			this.url = url.toLowerCase();
+			this.urlParameters = urlParameters.toLowerCase();
 			createConnection();
 			sendRequest();
 			getResponse();
+			connection.disconnect();
 		} else {
 			// TODO
 			Log.d(StringConstants.APP_NAME.getValue(), "No networks are connected.");
