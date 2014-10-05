@@ -1,6 +1,7 @@
 package com.lasalara.lasalara;
 
 import android.app.Application;
+import android.util.Log;
 
 /**
  * The main class of the Android application.
@@ -12,5 +13,6 @@ public class LasaLaraApplication extends Application {
 	public void onCreate() {
 		super.onCreate();
 		Backend.initializeInstance();
+		Backend.getInstance().testRequest();
 	}
 }
