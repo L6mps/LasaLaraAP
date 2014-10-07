@@ -7,8 +7,10 @@ import java.util.List;
 import org.json.JSONException;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.lasalara.lasalara.backend.Book;
+import com.lasalara.lasalara.constants.StringConstants;
 import com.lasalara.lasalara.database.DatabaseHelper;
 
 /**
@@ -51,8 +53,7 @@ public class Backend {
 	 * @param context	The current activity's context (needed for network connection check and SQLite database).
 	 * @return list of books in the SQLite database.
 	 */
-	private List<Book> preloadBooks(Context context) {
-		DatabaseHelper databaseHelper = new DatabaseHelper(context);
+	private List<Book> preloadBooks(DatabaseHelper databaseHelper) {
 		return databaseHelper.getBookHelper().getBooks();
 	}
 	
@@ -60,8 +61,12 @@ public class Backend {
 	 * Preload all of the data from the SQLite database.
 	 * @param context	The current activity's context (needed for network connection check and SQLite database).
 	 */
-	public void preloadData(Context context) {
-		books = preloadBooks(context);
+	public void preloadData(DatabaseHelper databaseHelper) {
+		try {
+			books = preloadBooks(databaseHelper); // TODO: Somewhy, this brings up the debugger
+		} catch (Exception e) {
+			Log.d(StringConstants.APP_NAME, e.toString());
+		}
 		// Chapters should be preloaded only when a book is opened - saves time.
 		// Questions should be preloaded at the same time the book is opened - the user
 		// needs to see chapters' progress. Maybe we could optimise it?

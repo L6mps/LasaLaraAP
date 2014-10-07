@@ -3,11 +3,14 @@ package com.lasalara.lasalara.activities;
 import com.lasalara.lasalara.Backend;
 import com.lasalara.lasalara.LasaLaraApplication;
 import com.lasalara.lasalara.R;
+import com.lasalara.lasalara.constants.StringConstants;
 import com.lasalara.lasalara.database.DatabaseHelper;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,7 +29,11 @@ public class BookListPageActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		application = (LasaLaraApplication) getApplication();
-		databaseHelper = new DatabaseHelper(this);
+		try {
+			databaseHelper = new DatabaseHelper(this);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		setContentView(R.layout.activity_booklistpage);
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
@@ -37,7 +44,7 @@ public class BookListPageActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Backend.getInstance().preloadData(this);
+		Backend.getInstance().preloadData(databaseHelper);
 		// TODO: ChapterListPageActivity should use getChapters() on startup, and on all of 
 		// the returned chapters getQuestions(). This way, the data is always up to date, 
 		// yet we do not (probably) use too much memory.

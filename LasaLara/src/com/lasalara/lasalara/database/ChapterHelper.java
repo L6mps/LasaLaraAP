@@ -9,6 +9,7 @@ import com.lasalara.lasalara.constants.StringConstants;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * Class that handles all of the SQLite database operations on chapters.
@@ -45,6 +46,8 @@ public class ChapterHelper {
      * @param database	The SQLite database.
      */
     public void onCreate(SQLiteDatabase database) {
+    	Log.d(StringConstants.APP_NAME, "ChapterHelper onCreate()");
+    	Log.d(StringConstants.APP_NAME, TABLE_CREATE);
         database.execSQL(TABLE_CREATE);
     }
 
@@ -68,7 +71,7 @@ public class ChapterHelper {
 	 */
 	public void insertChapter(Chapter chapter) {
 		// TODO: Check existence - update if exists?
-		SQLiteDatabase database = databaseHelper.getReadableDatabase();
+		SQLiteDatabase database = databaseHelper.getDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.CHAPTER_COLUMN_KEY, chapter.getKey());
 		contentValues.put(StringConstants.CHAPTER_COLUMN_TITLE, chapter.getTitle());
@@ -87,16 +90,16 @@ public class ChapterHelper {
 	 */
 	public List<Chapter> getChapters(String bookKey) {
 		List<Chapter> chapterList = new ArrayList<Chapter>();
-		SQLiteDatabase database = databaseHelper.getReadableDatabase();
+		SQLiteDatabase database = databaseHelper.getDatabase();
 		String selectChaptersQuery =
 				"SELECT * FROM " + StringConstants.CHAPTER_TABLE_NAME +  
 				" WHERE " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + 
 				"=" + bookKey;
 		Cursor results =  database.rawQuery(selectChaptersQuery, null);
-		results.moveToFirst();
-		while (!results.isAfterLast()) {
+		boolean moveSucceeded = results.moveToFirst();
+		while (moveSucceeded) {
 			chapterList.add(new Chapter(databaseHelper, results));
-			results.moveToNext();
+			moveSucceeded = results.moveToNext();
 		}
 		return chapterList;
 	}

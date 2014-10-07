@@ -6,12 +6,14 @@ import com.lasalara.lasalara.constants.StringConstants;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 /**
  * Class that handles all of the SQLite database operations.
  * @author Ants-Oskar Mäesalu
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
+	private SQLiteDatabase database;
 	private BookHelper bookHelper;
 	private ChapterHelper chapterHelper;
 	private QuestionHelper questionHelper;
@@ -22,6 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	public DatabaseHelper(Context context) {
 		super(context, StringConstants.DATABASE_NAME, null, NumericalConstants.DATABASE_VERSION);
+		database = getWritableDatabase();
 		bookHelper = new BookHelper(this);
 		chapterHelper = new ChapterHelper(this);
 		questionHelper = new QuestionHelper(this);
@@ -29,6 +32,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
+		Log.d(StringConstants.APP_NAME, "DatabaseHelper onCreate()");
 		bookHelper.onCreate(db);
 		chapterHelper.onCreate(db);
 		questionHelper.onCreate(db);
@@ -60,5 +64,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	public QuestionHelper getQuestionHelper() {
 		return questionHelper;
+	}
+	
+	/**
+	 * @return the writable SQLiteDatabase.
+	 */
+	public SQLiteDatabase getDatabase() {
+		return database;
 	}
 }

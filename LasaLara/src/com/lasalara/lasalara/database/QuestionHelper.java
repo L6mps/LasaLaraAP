@@ -9,6 +9,7 @@ import com.lasalara.lasalara.constants.StringConstants;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * Class that handles all of the SQLite database operations on questions.
@@ -40,6 +41,8 @@ public class QuestionHelper {
      * @param database	The SQLite database.
      */
     public void onCreate(SQLiteDatabase database) {
+    	Log.d(StringConstants.APP_NAME, "ChapterHelper onCreate()");
+    	Log.d(StringConstants.APP_NAME, TABLE_CREATE);
         database.execSQL(TABLE_CREATE);
     }
 
@@ -63,7 +66,7 @@ public class QuestionHelper {
 	 */
 	public void insertQuestion(Question question) {
 		// TODO: Check existence - update if exists?
-		SQLiteDatabase database = databaseHelper.getReadableDatabase();
+		SQLiteDatabase database = databaseHelper.getDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.QUESTION_COLUMN_QUESTION, question.getQuestion());
 		contentValues.put(StringConstants.QUESTION_COLUMN_ANSWER, question.getAnswer());
@@ -77,16 +80,16 @@ public class QuestionHelper {
 	 */
 	public List<Question> getQuestions(String chapterKey) {
 		List<Question> questionList = new ArrayList<Question>();
-		SQLiteDatabase database = databaseHelper.getReadableDatabase();
+		SQLiteDatabase database = databaseHelper.getDatabase();
 		String selectQuestionsQuery =
 				"SELECT * FROM " + StringConstants.QUESTION_TABLE_NAME +  
 				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + 
 				"=" + chapterKey;
 		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
-		results.moveToFirst();
-		while (!results.isAfterLast()) {
+		boolean moveSucceeded = results.moveToFirst();
+		while (moveSucceeded) {
 			questionList.add(new Question(databaseHelper, results));
-			results.moveToNext();
+			moveSucceeded = results.moveToNext();
 		}
 		return questionList;
 	}

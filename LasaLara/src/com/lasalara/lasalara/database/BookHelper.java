@@ -9,6 +9,7 @@ import com.lasalara.lasalara.constants.StringConstants;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * Class that handles all of the SQLite database operations on books.
@@ -36,6 +37,7 @@ public class BookHelper {
 	 */
     BookHelper(DatabaseHelper databaseHelper) {
         this.databaseHelper = databaseHelper;
+        Log.d(StringConstants.APP_NAME, "BookHelper constructor.");
     }
 
     /**
@@ -43,6 +45,8 @@ public class BookHelper {
      * @param database	The SQLite database.
      */
     public void onCreate(SQLiteDatabase database) {
+    	Log.d(StringConstants.APP_NAME, "BookHelper onCreate()");
+    	Log.d(StringConstants.APP_NAME, TABLE_CREATE);
         database.execSQL(TABLE_CREATE);
     }
 
@@ -66,7 +70,7 @@ public class BookHelper {
 	 */
 	public void insertBook(Book book) {
 		// TODO: Check existence - update if exists?
-		SQLiteDatabase database = databaseHelper.getReadableDatabase();
+		SQLiteDatabase database = databaseHelper.getDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.BOOK_COLUMN_KEY, book.getKey());
 		contentValues.put(StringConstants.BOOK_COLUMN_TITLE, book.getTitle());
@@ -81,14 +85,15 @@ public class BookHelper {
 	 * @return a list of books saved into the SQLite database.
 	 */
 	public List<Book> getBooks() {
+		Log.d(StringConstants.APP_NAME, "BookHelper getBooks()");
 		List<Book> bookList = new ArrayList<Book>();
-		SQLiteDatabase database = databaseHelper.getReadableDatabase();
+		SQLiteDatabase database = databaseHelper.getDatabase();
 		String selectBooksQuery = "SELECT * FROM " + StringConstants.BOOK_TABLE_NAME;
 		Cursor results =  database.rawQuery(selectBooksQuery, null);
-		results.moveToFirst();
-		while (!results.isAfterLast()) {
+		boolean moveSucceeded = results.moveToFirst();
+		while (moveSucceeded) {
 			bookList.add(new Book(databaseHelper, results));
-			results.moveToNext();
+			moveSucceeded = results.moveToNext();
 		}
 		return bookList;
 	}
