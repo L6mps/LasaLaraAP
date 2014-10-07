@@ -27,14 +27,6 @@ public class Book {
 	String lastChapter;		// Last chapter (UUID) of this book opened by the student
 	List<Chapter> chapters; // The list of chapters in this book.
 	
-	// TODO: Move to constants enumerator
-	private static final String COLUMN_KEY = "key";
-	private static final String COLUMN_TITLE = "title";
-	private static final String COLUMN_OWNER_EMAIL = "ownerEmail";
-	private static final String COLUMN_OWNER_NAME = "ownerName";
-	private static final String COLUMN_OWNER_INSTITUTION = "ownerInstitution";
-	private static final String COLUMN_LAST_CHAPTER = "lastChapter";
-	
 	/**
 	 * Constructor, used when downloading a book from the web.
 	 * @param context		The current activity's context (needed for network connection check).
@@ -81,23 +73,23 @@ public class Book {
 	 * @param dbResults
 	 */
 	public Book(Cursor dbResults) {
-		key = dbResults.getString(dbResults.getColumnIndex(COLUMN_KEY));
-		title = dbResults.getString(dbResults.getColumnIndex(COLUMN_TITLE));
-		ownerEmail = dbResults.getString(dbResults.getColumnIndex(COLUMN_OWNER_EMAIL));
-		if (dbResults.isNull(dbResults.getColumnIndex(COLUMN_OWNER_NAME))) {
+		key = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_KEY));
+		title = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_TITLE));
+		ownerEmail = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_OWNER_EMAIL));
+		if (dbResults.isNull(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_OWNER_NAME))) {
 			ownerName = null;
 		} else {
-			ownerName = dbResults.getString(dbResults.getColumnIndex(COLUMN_OWNER_NAME));
+			ownerName = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_OWNER_NAME));
 		}
-		if (dbResults.isNull(dbResults.getColumnIndex(COLUMN_OWNER_INSTITUTION))) {
+		if (dbResults.isNull(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_OWNER_INSTITUTION))) {
 			ownerInstitution = null;
 		} else {
-			ownerInstitution = dbResults.getString(dbResults.getColumnIndex(COLUMN_OWNER_INSTITUTION));
+			ownerInstitution = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_OWNER_INSTITUTION));
 		}
-		if (dbResults.isNull(dbResults.getColumnIndex(COLUMN_LAST_CHAPTER))) {
+		if (dbResults.isNull(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_LAST_CHAPTER))) {
 			lastChapter = null;
 		} else {
-			lastChapter = dbResults.getString(dbResults.getColumnIndex(COLUMN_LAST_CHAPTER));
+			lastChapter = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_LAST_CHAPTER));
 		}
 	}
 	
@@ -135,7 +127,6 @@ public class Book {
 						chapterAuthorEmail, chapterAuthorName, chapterAuthorInstitution, 
 						chapterProposalsAllowed, key));
 			}
-			// TODO: Insert chapters into database with book connections (or update, if already exists?), resolves #60, resolves #36.
 		} catch (JSONException e) {
 			throw new JSONException(e.toString());
 		}

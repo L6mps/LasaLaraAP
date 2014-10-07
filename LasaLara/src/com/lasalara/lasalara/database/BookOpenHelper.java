@@ -18,15 +18,15 @@ public class BookOpenHelper extends SQLiteOpenHelper {
 	// Basic database queries
 	private static final String TABLE_CREATE =
 			"CREATE TABLE " + 
-			StringConstants.BOOK_TABLE_NAME + " (" +
-			StringConstants.BOOK_COLUMN_KEY + " TEXT, " +
+			StringConstants.CHAPTER_TABLE_NAME + " (" +
+			StringConstants.CHAPTER_COLUMN_KEY + " TEXT, " +
 			StringConstants.BOOK_COLUMN_TITLE + " TEXT, " +
 			StringConstants.BOOK_COLUMN_OWNER_EMAIL + " TEXT, " +
 			StringConstants.BOOK_COLUMN_OWNER_NAME + " TEXT, " +
 			StringConstants.BOOK_COLUMN_OWNER_INSTITUTION + " TEXT, " +
 			StringConstants.BOOK_COLUMN_LAST_CHAPTER + " TEXT);";
 	private static final String TABLE_DROP = 
-			"DROP TABLE IF EXISTS " + StringConstants.BOOK_TABLE_NAME;
+			"DROP TABLE IF EXISTS " + StringConstants.CHAPTER_TABLE_NAME;
 
     BookOpenHelper(Context context) {
         super(context, StringConstants.DATABASE_NAME, null, NumericalConstants.DATABASE_VERSION);
@@ -46,7 +46,12 @@ public class BookOpenHelper extends SQLiteOpenHelper {
 		onCreate(db);
 	}
 	
+	/**
+	 * Insert a new book into the SQLite database.
+	 * @param book		The book object's instance.
+	 */
 	public void insertBook(Book book) {
+		// TODO: Check existence - update if exists?
 		SQLiteDatabase db = this.getReadableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.BOOK_COLUMN_KEY, book.getKey());
@@ -58,11 +63,13 @@ public class BookOpenHelper extends SQLiteOpenHelper {
 		db.insert(StringConstants.BOOK_TABLE_NAME, null, contentValues);
 	}
 	
-	public List<Book> getBooks(String bookKey) {
+	/**
+	 * @return a list of books saved into the SQLite database.
+	 */
+	public List<Book> getBooks() {
 		List<Book> bookList = new ArrayList<Book>();
 		SQLiteDatabase db = this.getReadableDatabase();
-		String selectBooksQuery = "SELECT * FROM " + StringConstants.BOOK_TABLE_NAME + 
-				" WHERE " + StringConstants.BOOK_COLUMN_KEY + "=" + bookKey;
+		String selectBooksQuery = "SELECT * FROM " + StringConstants.BOOK_TABLE_NAME;
 		Cursor results =  db.rawQuery(selectBooksQuery, null);
 		results.moveToFirst();
 		while (!results.isAfterLast()) {
@@ -72,19 +79,5 @@ public class BookOpenHelper extends SQLiteOpenHelper {
 		return bookList;
 	}
 	
-	public List<Chapter> getChapters(String bookKey) {
-		List<Chapter> chapterList = new ArrayList<Chapter>();
-		SQLiteDatabase db = this.getReadableDatabase();
-		String selectChaptersQuery =
-				"SELECT * FROM " + StringConstants.CHAPTER_TABLE_NAME +  
-				" WHERE " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + 
-				"=" + bookKey;
-		Cursor results =  db.rawQuery(selectChaptersQuery, null);
-		results.moveToFirst();
-		while (!results.isAfterLast()) {
-			// TODO: chapterList.add(new Chapter(results)); // Resolves #36
-			results.moveToNext();
-		}
-		return chapterList;
-	}
+	// TODO: getBook(String bookKey) - do we need this?
 }

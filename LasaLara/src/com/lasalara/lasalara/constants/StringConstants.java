@@ -24,6 +24,12 @@ public class StringConstants {
 	public static final String BOOK_COLUMN_LAST_CHAPTER = "lastChapter";
 	// Database chapter table constants
 	public static final String CHAPTER_TABLE_NAME = "chapter";
-	public static final String CHAPTER_COLUMN_KEY = "key"; // TODO: Resolve #36
+	public static final String CHAPTER_COLUMN_KEY = "key";
+	public static final String CHAPTER_COLUMN_TITLE = "title";
+	public static final String CHAPTER_COLUMN_VERSION = "version";
+	public static final String CHAPTER_COLUMN_AUTHOR_EMAIL = "authorEmail";
+	public static final String CHAPTER_COLUMN_AUTHOR_NAME = "authorName";
+	public static final String CHAPTER_COLUMN_AUTHOR_INSTITUTION = "authorInstitution";
+	public static final String CHAPTER_COLUMN_PROPOSALS_ALLOWED = "proposalsAllowed";
 	public static final String CHAPTER_COLUMN_BOOK_KEY = "bookKey";
 }

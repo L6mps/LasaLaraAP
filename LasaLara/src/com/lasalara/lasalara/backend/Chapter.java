@@ -11,13 +11,14 @@ import org.json.JSONObject;
 import com.lasalara.lasalara.constants.StringConstants;
 
 import android.content.Context;
+import android.database.Cursor;
 
 /**
  * Class responsible for holding a chapter's information and querying it's questions' information.
  * @author Ants-Oskar Mäesalu
  */
 public class Chapter {
-	private String key;					// The chapter's UUID, TODO: Own class for UUID?
+	private String key;					// The chapter's UUID
 	private String title;				// Name of the chapter
 	private int version;				// If the author updates a chapter, its version number is incremented. Version numbers let the app know when to re-download chapter questions.
 	private String authorEmail;			// E-mail address of the person who wrote the chapter, TODO: Own class for e-mail?
@@ -30,6 +31,7 @@ public class Chapter {
 
 	/**
 	 * Constructor, used when downloading a chapter from the web.
+	 * @param context		The current activity's context (needed for network connection check and SQLite database).
 	 * @param key				The chapter's UUID key.
 	 * @param title				The chapter's title.
 	 * @param version			The chapter's version. Version numbers let the app know when to re-download chapter questions.
@@ -39,8 +41,8 @@ public class Chapter {
 	 * @param proposalsAllowed	Boolean value, whether the author allows question proposals or not.
 	 * @param bookKey			The book the chapter is located in.
 	 */
-	Chapter(String key, String title, int version, String authorEmail, String authorName, 
-			String authorInstitution, boolean proposalsAllowed, String bookKey) {
+	Chapter(Context context, String key, String title, int version, String authorEmail, 
+			String authorName, String authorInstitution, boolean proposalsAllowed, String bookKey) {
 		this.key = key;
 		this.title = title;
 		this.version = version;
@@ -48,8 +50,33 @@ public class Chapter {
 		this.authorName = authorName;
 		this.authorInstitution = authorInstitution;
 		this.proposalsAllowed = proposalsAllowed;
+		this.bookKey = bookKey;
+		// TODO: Insert into database (or update if already exists?)
 	}
 	
+	/**
+	 * Constructor, used when querying data from the internal SQLite database.
+	 * @param dbResults
+	 */
+	public Chapter(Cursor dbResults) {
+		key = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_KEY));
+		title = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_TITLE));
+		version = dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_VERSION));
+		authorEmail = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_AUTHOR_EMAIL));
+		if (dbResults.isNull(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_AUTHOR_NAME))) {
+			authorName = null;
+		} else {
+			authorName = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_AUTHOR_NAME));
+		}
+		if (dbResults.isNull(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_AUTHOR_INSTITUTION))) {
+			authorInstitution = null;
+		} else {
+			authorInstitution = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_AUTHOR_INSTITUTION));
+		}
+		proposalsAllowed = (dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED)) == 1) ? true : false;
+		bookKey = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_BOOK_KEY));
+	}
+
 	/**
 	 * Load the questions in this book.
 	 * @param context			The current activity's context (needed for network connection check).
