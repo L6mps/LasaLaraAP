@@ -1,5 +1,6 @@
 package com.lasalara.lasalara.backend;
 
+
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.database.Cursor;
 
 /**
  * Class responsible for holding and querying a book's information and querying it's chapters' information.
@@ -22,6 +24,14 @@ public class Book {
 	String ownerInstitution;// Institution of the person who created the book (if blank, the e-mail is used)
 	String lastChapter;		// Last chapter (UUID) of this book opened by the student
 	List<Chapter> chapters; // The list of chapters in this book.
+	
+	// TODO: Move to constants enumerator
+	private static final String COLUMN_KEY = "key";
+	private static final String COLUMN_TITLE = "title";
+	private static final String COLUMN_OWNER_EMAIL = "ownerEmail";
+	private static final String COLUMN_OWNER_NAME = "ownerName";
+	private static final String COLUMN_OWNER_INSTITUTION = "ownerInstitution";
+	private static final String COLUMN_LAST_CHAPTER = "lastChapter";
 	
 	/**
 	 * Constructor, used when downloading a book from the web.
@@ -60,6 +70,31 @@ public class Book {
 			}
 		} catch (JSONException e) {
 			throw new JSONException(e.toString());
+		}
+	}
+	
+	/**
+	 * Constructor, used when querying data from the internal SQLite database.
+	 * @param dbResults
+	 */
+	public Book(Cursor dbResults) {
+		key = dbResults.getString(dbResults.getColumnIndex(COLUMN_KEY));
+		title = dbResults.getString(dbResults.getColumnIndex(COLUMN_TITLE));
+		ownerEmail = dbResults.getString(dbResults.getColumnIndex(COLUMN_OWNER_EMAIL));
+		if (dbResults.isNull(dbResults.getColumnIndex(COLUMN_OWNER_NAME))) {
+			ownerName = null;
+		} else {
+			ownerName = dbResults.getString(dbResults.getColumnIndex(COLUMN_OWNER_NAME));
+		}
+		if (dbResults.isNull(dbResults.getColumnIndex(COLUMN_OWNER_INSTITUTION))) {
+			ownerInstitution = null;
+		} else {
+			ownerInstitution = dbResults.getString(dbResults.getColumnIndex(COLUMN_OWNER_INSTITUTION));
+		}
+		if (dbResults.isNull(dbResults.getColumnIndex(COLUMN_LAST_CHAPTER))) {
+			lastChapter = null;
+		} else {
+			lastChapter = dbResults.getString(dbResults.getColumnIndex(COLUMN_LAST_CHAPTER));
 		}
 	}
 	
