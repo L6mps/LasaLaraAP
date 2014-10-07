@@ -65,6 +65,7 @@ public class Book {
 					ownerInstitution = result.get("institution").toString();
 				}
 				key = result.get("bk").toString();
+				// TODO: Insert into database (or update if already exists?)
 			} catch (JSONException e) {
 				int errorCode = result.getInt("err");
 				System.out.println(errorCode);
@@ -132,8 +133,9 @@ public class Book {
 				boolean chapterProposalsAllowed = result.getBoolean("allowProp");
 				chapters.add(new Chapter(chapterKey, chapterTitle, chapterVersion, 
 						chapterAuthorEmail, chapterAuthorName, chapterAuthorInstitution, 
-						chapterProposalsAllowed));
+						chapterProposalsAllowed, key));
 			}
+			// TODO: Insert chapters into database with book connections (or update, if already exists?), resolves #60, resolves #36.
 		} catch (JSONException e) {
 			throw new JSONException(e.toString());
 		}

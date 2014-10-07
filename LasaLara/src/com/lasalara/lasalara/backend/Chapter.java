@@ -17,15 +17,16 @@ import android.content.Context;
  * @author Ants-Oskar Mäesalu
  */
 public class Chapter {
-	String key;					// The chapter's UUID, TODO: Own class for UUID?
-	String title;				// Name of the chapter
-	int version;				// If the author updates a chapter, its version number is incremented. Version numbers let the app know when to re-download chapter questions.
-	String authorEmail;			// E-mail address of the person who wrote the chapter, TODO: Own class for e-mail?
-	String authorName;			// Name aof the person who wrote the chapter (if blank, the e-mail is used)
-	String authorInstitution;	// Institution of the person who wrote the chapter (if blank, the e-mail is used)
-	boolean proposalsAllowed;	// Has the author allowed question proposals for the chapter?
-	//int position;				// The position of the chapter in the book (the order is set by the book owner), TODO: How?
-	List<Question> questions;	// The list of questions in this book.
+	private String key;					// The chapter's UUID, TODO: Own class for UUID?
+	private String title;				// Name of the chapter
+	private int version;				// If the author updates a chapter, its version number is incremented. Version numbers let the app know when to re-download chapter questions.
+	private String authorEmail;			// E-mail address of the person who wrote the chapter, TODO: Own class for e-mail?
+	private String authorName;			// Name aof the person who wrote the chapter (if blank, the e-mail is used)
+	private String authorInstitution;	// Institution of the person who wrote the chapter (if blank, the e-mail is used)
+	private boolean proposalsAllowed;	// Has the author allowed question proposals for the chapter?
+	//private int position;				// The position of the chapter in the book (the order is set by the book owner), TODO: How?
+	private String bookKey;				// The book the chapter is located in.
+	private List<Question> questions;	// The list of questions in this book.
 
 	/**
 	 * Constructor, used when downloading a chapter from the web.
@@ -36,9 +37,10 @@ public class Chapter {
 	 * @param authorName		The chapter's author's name (or left null if blank).
 	 * @param authorInstitution	The chapter's author's institution (or left null if blank).
 	 * @param proposalsAllowed	Boolean value, whether the author allows question proposals or not.
+	 * @param bookKey			The book the chapter is located in.
 	 */
 	Chapter(String key, String title, int version, String authorEmail, String authorName, 
-			String authorInstitution, boolean proposalsAllowed) {
+			String authorInstitution, boolean proposalsAllowed, String bookKey) {
 		this.key = key;
 		this.title = title;
 		this.version = version;
@@ -138,6 +140,13 @@ public class Chapter {
 	 */
 	public boolean areProposalsAllowed() {
 		return proposalsAllowed;
+	}
+
+	/**
+	 * @return the book's key the chapter is located in.
+	 */
+	public String getBookKey() {
+		return bookKey;
 	}
 
 	/**

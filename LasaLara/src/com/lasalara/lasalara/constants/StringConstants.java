@@ -12,6 +12,8 @@ public class StringConstants {
 	public static final String URL_GET_CHAPTERS = "http://www.lasalara.com/getmchapters";
 	public static final String URL_GET_QUESTIONS = "http://www.lasalara.com/getquestions";
 	public static final String URL_POSE_QUESTION = "http://www.lasalara.com/posequestion";
+	// Database information
+	public static final String DATABASE_NAME = "LasaLaraAP.db";
 	// Database book table constants
 	public static final String BOOK_TABLE_NAME = "book";
 	public static final String BOOK_COLUMN_KEY = "key";
@@ -20,11 +22,8 @@ public class StringConstants {
 	public static final String BOOK_COLUMN_OWNER_NAME = "ownerName";
 	public static final String BOOK_COLUMN_OWNER_INSTITUTION = "ownerInstitution";
 	public static final String BOOK_COLUMN_LAST_CHAPTER = "lastChapter";
-	// Database chapter connection table constants
-	public static final String CHAPTER_CONNECTION_TABLE_NAME = "chapterInBook";
-	public static final String CHAPTER_CONNECTION_COLUMN_BOOK = "bookKey";
-	public static final String CHAPTER_CONNECTION_COLUMN_CHAPTER = "chapterKey";
 	// Database chapter table constants
 	public static final String CHAPTER_TABLE_NAME = "chapter";
-	public static final String CHAPTER_COLUMN_KEY = "key";
+	public static final String CHAPTER_COLUMN_KEY = "key"; // TODO: Resolve #36
+	public static final String CHAPTER_COLUMN_BOOK_KEY = "bookKey";
 }

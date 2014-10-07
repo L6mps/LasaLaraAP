@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.lasalara.lasalara.backend.Book;
 import com.lasalara.lasalara.backend.Chapter;
+import com.lasalara.lasalara.constants.NumericalConstants;
 import com.lasalara.lasalara.constants.StringConstants;
 
 import android.content.ContentValues;
@@ -14,10 +15,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class BookOpenHelper extends SQLiteOpenHelper {
-	
-	public static final String DATABASE_NAME = "LasaLaraAP.db";;
-	private static final int DATABASE_VERSION = 1;
-	
+	// Basic database queries
 	private static final String TABLE_CREATE =
 			"CREATE TABLE " + 
 			StringConstants.BOOK_TABLE_NAME + " (" +
@@ -31,7 +29,7 @@ public class BookOpenHelper extends SQLiteOpenHelper {
 			"DROP TABLE IF EXISTS " + StringConstants.BOOK_TABLE_NAME;
 
     BookOpenHelper(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, StringConstants.DATABASE_NAME, null, NumericalConstants.DATABASE_VERSION);
     }
 
     @Override
@@ -41,14 +39,14 @@ public class BookOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		// TODO: Create a better method of upgrading the database
+		// TODO: Create a better method of upgrading the database.
 		// Currently, the most straigthforward way to upgrade the database is to drop the
 		// previous database, create a new one and then repopulate it.
 		db.execSQL(TABLE_DROP);
 		onCreate(db);
 	}
 	
-	public boolean insertBook(Book book) {
+	public void insertBook(Book book) {
 		SQLiteDatabase db = this.getReadableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.BOOK_COLUMN_KEY, book.getKey());
@@ -58,7 +56,6 @@ public class BookOpenHelper extends SQLiteOpenHelper {
 		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_INSTITUTION, book.getOwnerInstitution());
 		contentValues.put(StringConstants.BOOK_COLUMN_LAST_CHAPTER, book.getLastChapter());
 		db.insert(StringConstants.BOOK_TABLE_NAME, null, contentValues);
-		return true; // TODO: Why do we need this?
 	}
 	
 	public List<Book> getBooks(String bookKey) {
@@ -79,18 +76,13 @@ public class BookOpenHelper extends SQLiteOpenHelper {
 		List<Chapter> chapterList = new ArrayList<Chapter>();
 		SQLiteDatabase db = this.getReadableDatabase();
 		String selectChaptersQuery =
-				"SELECT * FROM " + StringConstants.CHAPTER_TABLE_NAME + 
-				" INNER JOIN " + StringConstants.CHAPTER_CONNECTION_TABLE_NAME + 
-				" ON " + StringConstants.CHAPTER_CONNECTION_TABLE_NAME + 
-				"." + StringConstants.CHAPTER_CONNECTION_COLUMN_CHAPTER + 
-				"=" + StringConstants.CHAPTER_TABLE_NAME + "." + StringConstants.CHAPTER_COLUMN_KEY + 
-				" WHERE " + StringConstants.CHAPTER_CONNECTION_TABLE_NAME + 
-				"." + StringConstants.CHAPTER_CONNECTION_COLUMN_BOOK + 
+				"SELECT * FROM " + StringConstants.CHAPTER_TABLE_NAME +  
+				" WHERE " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + 
 				"=" + bookKey;
 		Cursor results =  db.rawQuery(selectChaptersQuery, null);
 		results.moveToFirst();
 		while (!results.isAfterLast()) {
-			// TODO: chapterList.add(new Chapter(results));
+			// TODO: chapterList.add(new Chapter(results)); // Resolves #36
 			results.moveToNext();
 		}
 		return chapterList;
