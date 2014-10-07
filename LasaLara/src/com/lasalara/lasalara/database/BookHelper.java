@@ -4,15 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lasalara.lasalara.backend.Book;
-import com.lasalara.lasalara.backend.Chapter;
-import com.lasalara.lasalara.constants.NumericalConstants;
 import com.lasalara.lasalara.constants.StringConstants;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 public class BookHelper {
 	// SQLite database helper class
@@ -87,7 +83,7 @@ public class BookHelper {
 		Cursor results =  db.rawQuery(selectBooksQuery, null);
 		results.moveToFirst();
 		while (!results.isAfterLast()) {
-			bookList.add(new Book(results));
+			bookList.add(new Book(databaseHelper, results));
 			results.moveToNext();
 		}
 		return bookList;

@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.lasalara.lasalara.constants.StringConstants;
+import com.lasalara.lasalara.database.DatabaseHelper;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -19,23 +20,25 @@ import android.database.Cursor;
  * @author Ants-Oskar Mäesalu
  */
 public class Book {
-	String key;				// The book's UUID
-	String title;			// Name of the book
-	String ownerEmail;		// E-mail of the person who created the book
-	String ownerName;		// Name of the person who created the book (if blank, the e-mail is used)
-	String ownerInstitution;// Institution of the person who created the book (if blank, the e-mail is used)
-	String lastChapter;		// Last chapter (UUID) of this book opened by the student
-	List<Chapter> chapters; // The list of chapters in this book.
+	private DatabaseHelper databaseHelper;	// SQLite database helper class
+	private String key;						// The book's UUID
+	private String title;					// Name of the book
+	private String ownerEmail;				// E-mail of the person who created the book
+	private String ownerName;				// Name of the person who created the book (if blank, the e-mail is used)
+	private String ownerInstitution;		// Institution of the person who created the book (if blank, the e-mail is used)
+	private String lastChapter;				// Last chapter (UUID) of this book opened by the student
+	private List<Chapter> chapters; 		// The list of chapters in this book.
 	
 	/**
 	 * Constructor, used when downloading a book from the web.
-	 * @param context		The current activity's context (needed for network connection check).
+	 * @param context		The current activity's context (needed for network connection check and SQLite database).
 	 * @param ownerEmail	The book's owner's e-mail address.
 	 * @param title			The book's title.
 	 * @throws IOException
 	 * @throws JSONException
 	 */
 	public Book(Context context, String ownerEmail, String title) throws IOException, JSONException {
+		databaseHelper = new DatabaseHelper(context);
 		String url = StringConstants.URL_GET_BOOK;
 		String urlParameters =
 				"em=" + URLEncoder.encode(ownerEmail, "UTF-8") +
@@ -57,7 +60,7 @@ public class Book {
 					ownerInstitution = result.get("institution").toString();
 				}
 				key = result.get("bk").toString();
-				// TODO: Insert into database (or update if already exists?)
+				databaseHelper.getBookHelper().insertBook(this); // TODO: Test
 			} catch (JSONException e) {
 				int errorCode = result.getInt("err");
 				System.out.println(errorCode);
@@ -70,9 +73,11 @@ public class Book {
 	
 	/**
 	 * Constructor, used when querying data from the internal SQLite database.
-	 * @param dbResults
+	 * @param databaseHelper	The SQLite database helper class.
+	 * @param dbResults			Database query results.
 	 */
-	public Book(Cursor dbResults) {
+	public Book(DatabaseHelper databaseHelper, Cursor dbResults) {
+		this.databaseHelper = databaseHelper;
 		key = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_KEY));
 		title = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_TITLE));
 		ownerEmail = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_OWNER_EMAIL));
@@ -123,7 +128,7 @@ public class Book {
 					chapterAuthorInstitution = result.get("institution").toString();
 				}
 				boolean chapterProposalsAllowed = result.getBoolean("allowProp");
-				chapters.add(new Chapter(chapterKey, chapterTitle, chapterVersion, 
+				chapters.add(new Chapter(context, chapterKey, chapterTitle, chapterVersion, 
 						chapterAuthorEmail, chapterAuthorName, chapterAuthorInstitution, 
 						chapterProposalsAllowed, key));
 			}

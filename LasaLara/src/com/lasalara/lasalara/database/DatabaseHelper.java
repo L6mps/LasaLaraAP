@@ -5,7 +5,6 @@ import com.lasalara.lasalara.constants.StringConstants;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -15,8 +14,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	public DatabaseHelper(Context context) {
 		super(context, StringConstants.DATABASE_NAME, null, NumericalConstants.DATABASE_VERSION);
-		BookHelper bookHelper = new BookHelper(this);
-		ChapterHelper chapterHelper = new ChapterHelper(this);
+		bookHelper = new BookHelper(this);
+		chapterHelper = new ChapterHelper(this);
 		// TODO: QuestionHelper questionHelper = new QuestionHelper(this); // Resolves #37
 	}
 

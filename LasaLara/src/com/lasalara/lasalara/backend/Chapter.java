@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.lasalara.lasalara.constants.StringConstants;
+import com.lasalara.lasalara.database.DatabaseHelper;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -18,16 +19,17 @@ import android.database.Cursor;
  * @author Ants-Oskar Mäesalu
  */
 public class Chapter {
-	private String key;					// The chapter's UUID
-	private String title;				// Name of the chapter
-	private int version;				// If the author updates a chapter, its version number is incremented. Version numbers let the app know when to re-download chapter questions.
-	private String authorEmail;			// E-mail address of the person who wrote the chapter, TODO: Own class for e-mail?
-	private String authorName;			// Name aof the person who wrote the chapter (if blank, the e-mail is used)
-	private String authorInstitution;	// Institution of the person who wrote the chapter (if blank, the e-mail is used)
-	private boolean proposalsAllowed;	// Has the author allowed question proposals for the chapter?
-	//private int position;				// The position of the chapter in the book (the order is set by the book owner), TODO: How?
-	private String bookKey;				// The book the chapter is located in.
-	private List<Question> questions;	// The list of questions in this book.
+	private DatabaseHelper databaseHelper;	// SQLite database helper class
+	private String key;						// The chapter's UUID
+	private String title;					// Name of the chapter
+	private int version;					// If the author updates a chapter, its version number is incremented. Version numbers let the app know when to re-download chapter questions.
+	private String authorEmail;				// E-mail address of the person who wrote the chapter, TODO: Own class for e-mail?
+	private String authorName;				// Name aof the person who wrote the chapter (if blank, the e-mail is used)
+	private String authorInstitution;		// Institution of the person who wrote the chapter (if blank, the e-mail is used)
+	private boolean proposalsAllowed;		// Has the author allowed question proposals for the chapter?
+	//private int position;					// The position of the chapter in the book (the order is set by the book owner), TODO: How?
+	private String bookKey;					// The book the chapter is located in.
+	private List<Question> questions;		// The list of questions in this book.
 
 	/**
 	 * Constructor, used when downloading a chapter from the web.
@@ -43,6 +45,7 @@ public class Chapter {
 	 */
 	Chapter(Context context, String key, String title, int version, String authorEmail, 
 			String authorName, String authorInstitution, boolean proposalsAllowed, String bookKey) {
+		databaseHelper = new DatabaseHelper(context);
 		this.key = key;
 		this.title = title;
 		this.version = version;
@@ -51,14 +54,16 @@ public class Chapter {
 		this.authorInstitution = authorInstitution;
 		this.proposalsAllowed = proposalsAllowed;
 		this.bookKey = bookKey;
-		// TODO: Insert into database (or update if already exists?)
+		databaseHelper.getChapterHelper().insertChapter(this); // TODO: Test
 	}
 	
 	/**
 	 * Constructor, used when querying data from the internal SQLite database.
-	 * @param dbResults
+	 * @param databaseHelper	The SQLite database helper class.
+	 * @param dbResults			Database query results.
 	 */
-	public Chapter(Cursor dbResults) {
+	public Chapter(DatabaseHelper databaseHelper, Cursor dbResults) {
+		this.databaseHelper = databaseHelper;
 		key = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_KEY));
 		title = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_TITLE));
 		version = dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_VERSION));

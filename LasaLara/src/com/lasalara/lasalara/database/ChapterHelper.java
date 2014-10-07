@@ -3,16 +3,12 @@ package com.lasalara.lasalara.database;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lasalara.lasalara.backend.Book;
 import com.lasalara.lasalara.backend.Chapter;
-import com.lasalara.lasalara.constants.NumericalConstants;
 import com.lasalara.lasalara.constants.StringConstants;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 public class ChapterHelper {
 	// SQLite database helper class
@@ -95,7 +91,7 @@ public class ChapterHelper {
 		Cursor results =  db.rawQuery(selectChaptersQuery, null);
 		results.moveToFirst();
 		while (!results.isAfterLast()) {
-			chapterList.add(new Chapter(results));
+			chapterList.add(new Chapter(databaseHelper, results));
 			results.moveToNext();
 		}
 		return chapterList;
