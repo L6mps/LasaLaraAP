@@ -19,7 +19,7 @@ public class QuestionHelper {
 	private DatabaseHelper databaseHelper;
 	// Basic database queries
 	private static final String TABLE_CREATE =
-			"CREATE TABLE " + 
+			"CREATE TABLE IF NOT EXISTS " + 
 			StringConstants.QUESTION_TABLE_NAME + " (" +
 			StringConstants.QUESTION_COLUMN_QUESTION + " TEXT, " +
 			StringConstants.QUESTION_COLUMN_ANSWER + " TEXT, " +

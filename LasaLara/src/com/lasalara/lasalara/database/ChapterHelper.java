@@ -19,15 +19,15 @@ public class ChapterHelper {
 	private DatabaseHelper databaseHelper;
 	// Basic database queries
 	private static final String TABLE_CREATE =
-			"CREATE TABLE " + 
+			"CREATE TABLE IF NOT EXISTS " + 
 			StringConstants.CHAPTER_TABLE_NAME + " (" +
 			StringConstants.CHAPTER_COLUMN_KEY + " TEXT, " +
 			StringConstants.CHAPTER_COLUMN_TITLE + " TEXT, " +
 			StringConstants.CHAPTER_COLUMN_VERSION + " INT, " +
 			StringConstants.CHAPTER_COLUMN_AUTHOR_EMAIL + " TEXT, " +
 			StringConstants.CHAPTER_COLUMN_AUTHOR_NAME + " TEXT, " +
-			StringConstants.CHAPTER_COLUMN_AUTHOR_INSTITUTION + " TEXT), " +
-			StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED + " INT), " +
+			StringConstants.CHAPTER_COLUMN_AUTHOR_INSTITUTION + " TEXT, " +
+			StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED + " INT, " +
 			StringConstants.CHAPTER_COLUMN_BOOK_KEY + " TEXT);";
 	private static final String TABLE_DROP = 
 			"DROP TABLE IF EXISTS " + StringConstants.CHAPTER_TABLE_NAME;

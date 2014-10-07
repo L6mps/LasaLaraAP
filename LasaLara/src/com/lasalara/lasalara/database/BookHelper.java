@@ -19,7 +19,7 @@ public class BookHelper {
 	private DatabaseHelper databaseHelper;
 	// Basic database queries
 	private static final String TABLE_CREATE =
-			"CREATE TABLE " + 
+			"CREATE TABLE IF NOT EXISTS " + 
 			StringConstants.CHAPTER_TABLE_NAME + " (" +
 			StringConstants.CHAPTER_COLUMN_KEY + " TEXT, " +
 			StringConstants.BOOK_COLUMN_TITLE + " TEXT, " +
