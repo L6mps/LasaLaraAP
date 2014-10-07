@@ -10,6 +10,10 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
+/**
+ * Class that handles all of the SQLite database operations on chapters.
+ * @author Ants-Oskar Mäesalu
+ */
 public class ChapterHelper {
 	// SQLite database helper class
 	private DatabaseHelper databaseHelper;
@@ -79,7 +83,7 @@ public class ChapterHelper {
 	
 	/**
 	 * @param bookKey	The UUID of a book.
-	 * @return a list of chapters in a certain book saved to the SQLite database.
+	 * @return a list of chapters in a certain book saved into the SQLite database.
 	 */
 	public List<Chapter> getChapters(String bookKey) {
 		List<Chapter> chapterList = new ArrayList<Chapter>();

@@ -33,7 +33,7 @@ public class Chapter {
 
 	/**
 	 * Constructor, used when downloading a chapter from the web.
-	 * @param context		The current activity's context (needed for network connection check and SQLite database).
+	 * @param context			The current activity's context (needed for network connection check and SQLite database).
 	 * @param key				The chapter's UUID key.
 	 * @param title				The chapter's title.
 	 * @param version			The chapter's version. Version numbers let the app know when to re-download chapter questions.
@@ -102,7 +102,7 @@ public class Chapter {
 				for (int i = 0; i < questionList.length(); i++) {
 					String question = questionList.getJSONObject(Integer.toString(i)).toString();
 					String answer = answerList.getJSONObject(Integer.toString(i)).toString();
-					questions.add(new Question(question, answer));
+					questions.add(new Question(context, question, answer, key));
 				}
 			} else {
 				throw new RuntimeException();

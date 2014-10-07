@@ -3,7 +3,7 @@ package com.lasalara.lasalara.database;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lasalara.lasalara.backend.Book;
+import com.lasalara.lasalara.backend.Question;
 import com.lasalara.lasalara.constants.StringConstants;
 
 import android.content.ContentValues;
@@ -11,30 +11,27 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
- * Class that handles all of the SQLite database operations on books.
+ * Class that handles all of the SQLite database operations on questions.
  * @author Ants-Oskar Mäesalu
  */
-public class BookHelper {
+public class QuestionHelper {
 	// SQLite database helper class
 	private DatabaseHelper databaseHelper;
 	// Basic database queries
 	private static final String TABLE_CREATE =
 			"CREATE TABLE " + 
-			StringConstants.CHAPTER_TABLE_NAME + " (" +
-			StringConstants.CHAPTER_COLUMN_KEY + " TEXT, " +
-			StringConstants.BOOK_COLUMN_TITLE + " TEXT, " +
-			StringConstants.BOOK_COLUMN_OWNER_EMAIL + " TEXT, " +
-			StringConstants.BOOK_COLUMN_OWNER_NAME + " TEXT, " +
-			StringConstants.BOOK_COLUMN_OWNER_INSTITUTION + " TEXT, " +
-			StringConstants.BOOK_COLUMN_LAST_CHAPTER + " TEXT);";
+			StringConstants.QUESTION_TABLE_NAME + " (" +
+			StringConstants.QUESTION_COLUMN_QUESTION + " TEXT, " +
+			StringConstants.QUESTION_COLUMN_ANSWER + " TEXT, " +
+			StringConstants.QUESTION_COLUMN_CHAPTER_KEY + " TEXT);";
 	private static final String TABLE_DROP = 
-			"DROP TABLE IF EXISTS " + StringConstants.CHAPTER_TABLE_NAME;
+			"DROP TABLE IF EXISTS " + StringConstants.QUESTION_TABLE_NAME;
 
 	/**
 	 * Constructor.
 	 * @param databaseHelper	The SQLite database helper class.
 	 */
-    BookHelper(DatabaseHelper databaseHelper) {
+    QuestionHelper(DatabaseHelper databaseHelper) {
         this.databaseHelper = databaseHelper;
     }
 
@@ -61,37 +58,36 @@ public class BookHelper {
 	}
 	
 	/**
-	 * Insert a new book into the SQLite database.
-	 * @param book		The book object's instance.
+	 * Insert a new question into the SQLite database.
+	 * @param question	The question object's instance.
 	 */
-	public void insertBook(Book book) {
+	public void insertQuestion(Question question) {
 		// TODO: Check existence - update if exists?
 		SQLiteDatabase db = databaseHelper.getReadableDatabase();
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(StringConstants.BOOK_COLUMN_KEY, book.getKey());
-		contentValues.put(StringConstants.BOOK_COLUMN_TITLE, book.getTitle());
-		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_EMAIL, book.getOwnerEmail());
-		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_NAME, book.getOwnerName());
-		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_INSTITUTION, book.getOwnerInstitution());
-		contentValues.put(StringConstants.BOOK_COLUMN_LAST_CHAPTER, book.getLastChapter());
-		db.insert(StringConstants.BOOK_TABLE_NAME, null, contentValues);
+		contentValues.put(StringConstants.QUESTION_COLUMN_QUESTION, question.getQuestion());
+		contentValues.put(StringConstants.QUESTION_COLUMN_ANSWER, question.getAnswer());
+		contentValues.put(StringConstants.QUESTION_COLUMN_CHAPTER_KEY, question.getChapterKey());
+		db.insert(StringConstants.QUESTION_TABLE_NAME, null, contentValues);
 	}
 	
 	/**
-	 * @return a list of books saved into the SQLite database.
+	 * @param chapterKey	The UUID of a chapter.
+	 * @return a list of questions in a certain chapter saved into the SQLite database.
 	 */
-	public List<Book> getBooks() {
-		List<Book> bookList = new ArrayList<Book>();
+	public List<Question> getQuestions(String chapterKey) {
+		List<Question> questionList = new ArrayList<Question>();
 		SQLiteDatabase db = databaseHelper.getReadableDatabase();
-		String selectBooksQuery = "SELECT * FROM " + StringConstants.BOOK_TABLE_NAME;
-		Cursor results =  db.rawQuery(selectBooksQuery, null);
+		String selectQuestionsQuery =
+				"SELECT * FROM " + StringConstants.QUESTION_TABLE_NAME +  
+				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + 
+				"=" + chapterKey;
+		Cursor results =  db.rawQuery(selectQuestionsQuery, null);
 		results.moveToFirst();
 		while (!results.isAfterLast()) {
-			bookList.add(new Book(databaseHelper, results));
+			questionList.add(new Question(databaseHelper, results));
 			results.moveToNext();
 		}
-		return bookList;
+		return questionList;
 	}
-	
-	// TODO: getBook(String bookKey) - do we need this?
 }

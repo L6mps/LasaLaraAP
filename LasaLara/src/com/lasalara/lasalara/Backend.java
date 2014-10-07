@@ -17,7 +17,7 @@ import com.lasalara.lasalara.backend.Book;
  */
 public class Backend {
 	private static Backend instance;
-	List<Book> books;
+	private List<Book> books;
 	
 	/**
 	 * Constructor.

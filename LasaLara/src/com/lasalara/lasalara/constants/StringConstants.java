@@ -32,4 +32,9 @@ public class StringConstants {
 	public static final String CHAPTER_COLUMN_AUTHOR_INSTITUTION = "authorInstitution";
 	public static final String CHAPTER_COLUMN_PROPOSALS_ALLOWED = "proposalsAllowed";
 	public static final String CHAPTER_COLUMN_BOOK_KEY = "bookKey";
+	// Database question table constants
+	public static final String QUESTION_TABLE_NAME = "question";
+	public static final String QUESTION_COLUMN_QUESTION = "question";
+	public static final String QUESTION_COLUMN_ANSWER = "answer";
+	public static final String QUESTION_COLUMN_CHAPTER_KEY = "chapterKey";
 }
