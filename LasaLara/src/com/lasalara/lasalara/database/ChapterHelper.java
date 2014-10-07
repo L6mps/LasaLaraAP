@@ -14,8 +14,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class ChapterOpenHelper extends SQLiteOpenHelper {
-	
+public class ChapterHelper {
+	// SQLite database helper class
+	private DatabaseHelper databaseHelper;
 	// Basic database queries
 	private static final String TABLE_CREATE =
 			"CREATE TABLE " + 
@@ -31,16 +32,28 @@ public class ChapterOpenHelper extends SQLiteOpenHelper {
 	private static final String TABLE_DROP = 
 			"DROP TABLE IF EXISTS " + StringConstants.CHAPTER_TABLE_NAME;
 
-    ChapterOpenHelper(Context context) {
-        super(context, StringConstants.DATABASE_NAME, null, NumericalConstants.DATABASE_VERSION);
+	/**
+	 * Constructor.
+	 * @param databaseHelper	The SQLite database helper class.
+	 */
+    ChapterHelper(DatabaseHelper databaseHelper) {
+        this.databaseHelper = databaseHelper;
     }
 
-    @Override
+    /**
+     * Actions conducted on database creation.
+     * @param db	The SQLite database.
+     */
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(TABLE_CREATE);
     }
 
-	@Override
+    /**
+     * Actions conducted on database upgrade.
+     * @param db			The SQLite database.
+     * @param oldVersion	The old database's version number.
+     * @param newVersion	The new database's version number.
+     */
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// TODO: Create a better method of upgrading the database.
 		// Currently, the most straigthforward way to upgrade the database is to drop the
@@ -55,7 +68,7 @@ public class ChapterOpenHelper extends SQLiteOpenHelper {
 	 */
 	public void insertChapter(Chapter chapter) {
 		// TODO: Check existence - update if exists?
-		SQLiteDatabase db = this.getReadableDatabase();
+		SQLiteDatabase db = databaseHelper.getReadableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.CHAPTER_COLUMN_KEY, chapter.getKey());
 		contentValues.put(StringConstants.CHAPTER_COLUMN_TITLE, chapter.getTitle());
@@ -74,7 +87,7 @@ public class ChapterOpenHelper extends SQLiteOpenHelper {
 	 */
 	public List<Chapter> getChapters(String bookKey) {
 		List<Chapter> chapterList = new ArrayList<Chapter>();
-		SQLiteDatabase db = this.getReadableDatabase();
+		SQLiteDatabase db = databaseHelper.getReadableDatabase();
 		String selectChaptersQuery =
 				"SELECT * FROM " + StringConstants.CHAPTER_TABLE_NAME +  
 				" WHERE " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + 
