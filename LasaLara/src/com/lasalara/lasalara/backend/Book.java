@@ -9,6 +9,8 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.lasalara.lasalara.constants.StringConstants;
+
 import android.content.Context;
 import android.database.Cursor;
 
@@ -42,7 +44,7 @@ public class Book {
 	 * @throws JSONException
 	 */
 	public Book(Context context, String ownerEmail, String title) throws IOException, JSONException {
-		String url = "http://www.lasalara.com/getbook";
+		String url = StringConstants.URL_GET_BOOK;
 		String urlParameters =
 				"em=" + URLEncoder.encode(ownerEmail, "UTF-8") +
 				"&bt=" + URLEncoder.encode(title, "UTF-8");
@@ -106,7 +108,7 @@ public class Book {
 	 */
 	private void loadChapters(Context context) throws IOException, JSONException {
 		chapters = new ArrayList<Chapter>();
-		String url = "http://www.lasalara.com/getmchapters";
+		String url = StringConstants.URL_GET_CHAPTERS;
 		String urlParameters = "bk=" + URLEncoder.encode(key, "UTF-8");
 		WebRequest request = new WebRequest(context, url, urlParameters);
 		try {

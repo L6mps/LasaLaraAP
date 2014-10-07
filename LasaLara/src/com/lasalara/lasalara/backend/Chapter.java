@@ -8,6 +8,8 @@ import java.util.List;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.lasalara.lasalara.constants.StringConstants;
+
 import android.content.Context;
 
 /**
@@ -54,7 +56,7 @@ public class Chapter {
 	 */
 	public void loadQuestions(Context context) throws IOException, JSONException {
 		questions = new ArrayList<Question>();
-		String url = "http://www.lasalara.com/getquestions";
+		String url = StringConstants.URL_GET_QUESTIONS;
 		String urlParameters = "ck=" + URLEncoder.encode(key, "UTF-8");
 		WebRequest request = new WebRequest(context, url, urlParameters);
 		try {

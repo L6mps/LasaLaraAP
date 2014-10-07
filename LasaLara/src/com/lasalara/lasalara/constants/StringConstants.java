@@ -1,26 +1,13 @@
 package com.lasalara.lasalara.constants;
 
 /**
- * Enumerator for all of the string constants in the application.
+ * Class for all of the string constants in the application.
  * @author Ants-Oskar Mäesalu
  */
-public enum StringConstants {
-	APP_NAME("LasaLara");
-	
-	private String value;
-	
-	/**
-	 * Private constructor.
-	 * @param value	The constant's value.
-	 */
-	private StringConstants(String value) {
-		this.value = value;
-	}
-	
-	/**
-	 * @return the string constant's value.
-	 */
-	public String getValue() {
-		return value;
-	}
+public class StringConstants {
+	public static String APP_NAME = "LasaLara";
+	public static String URL_GET_BOOK = "http://www.lasalara.com/getbook";
+	public static String URL_GET_CHAPTERS = "http://www.lasalara.com/getmchapters";
+	public static String URL_GET_QUESTIONS = "http://www.lasalara.com/getquestions";
+	public static String URL_POSE_QUESTION = "http://www.lasalara.com/posequestion";
 }

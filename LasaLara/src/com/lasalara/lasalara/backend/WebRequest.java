@@ -44,7 +44,7 @@ public class WebRequest {
 			connection.disconnect();
 		} else {
 			// TODO
-			Log.d(StringConstants.APP_NAME.getValue(), "No networks are connected.");
+			Log.d(StringConstants.APP_NAME, "No networks are connected.");
 		}
 	}
 	

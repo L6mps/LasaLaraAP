@@ -21,7 +21,7 @@ public class LasaLaraApplication extends Application {
 	}
 	
 	public static boolean isNetworkConnected(Context context) {
-		Log.d(StringConstants.APP_NAME.getValue(), "Checking network connection.");
+		Log.d(StringConstants.APP_NAME, "Checking network connection.");
 		ConnectivityManager connectivityManager = 
 				(ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 		NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
