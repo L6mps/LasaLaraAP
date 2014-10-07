@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,24 +49,31 @@ public class Book {
 		try {
 			JSONObject result = request.getJSONObject();
 			try {
-				this.ownerEmail = ownerEmail;
-				this.title = title;
-				if (result.isNull("name")) {
-					ownerName = null;
+				if (validateEmail(ownerEmail)) {
+					this.ownerEmail = ownerEmail;
+					this.title = title;
+					if (result.isNull("name")) {
+						ownerName = null;
+					} else {
+						ownerName = result.get("name").toString();
+					}
+					if (result.isNull("institution")) {
+						ownerInstitution = null;
+					} else {
+						ownerInstitution = result.get("institution").toString();
+					}
+					key = result.get("bk").toString();
+					databaseHelper.getBookHelper().insertBook(this); // TODO: Test
 				} else {
-					ownerName = result.get("name").toString();
+					// TODO: Throw error: The e-mail address does not correspond to an e-mail address' format.
 				}
-				if (result.isNull("institution")) {
-					ownerInstitution = null;
-				} else {
-					ownerInstitution = result.get("institution").toString();
-				}
-				key = result.get("bk").toString();
-				databaseHelper.getBookHelper().insertBook(this); // TODO: Test
 			} catch (JSONException e) {
 				int errorCode = result.getInt("err");
-				System.out.println(errorCode);
-				// TODO: Handle error code
+				if (errorCode == 0) {
+					// TODO: Throw error: The e-mail address was not found.
+				} else {
+					// TODO: Throw error: No book with that title was found.
+				}
 			}
 		} catch (JSONException e) {
 			throw new JSONException(e.toString());
@@ -96,6 +105,19 @@ public class Book {
 		} else {
 			lastChapter = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_LAST_CHAPTER));
 		}
+	}
+	
+	/**
+	 * Validate the e-mail.
+	 * @param email	The e-mail string.
+	 * @return if the e-mail corresponds to an e-mail's format.
+	 */
+	private boolean validateEmail(String email) {
+		String emailPattern = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@" +
+		"[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+		Pattern pattern = Pattern.compile(emailPattern);
+		Matcher matcher = pattern.matcher(email);
+		return matcher.matches();
 	}
 	
 	/**

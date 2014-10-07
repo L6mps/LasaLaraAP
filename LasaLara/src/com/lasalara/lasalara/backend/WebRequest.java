@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,14 +37,14 @@ public class WebRequest {
 	public WebRequest(Context context, String url, String urlParameters) throws IOException {
 		disableConnectionReuseIfNecessary();
 		if (LasaLaraApplication.isNetworkConnected(context)) {
-			this.url = url.toLowerCase();
-			this.urlParameters = urlParameters.toLowerCase();
+			this.url = url.toLowerCase(Locale.ENGLISH);
+			this.urlParameters = urlParameters.toLowerCase(Locale.ENGLISH);
 			createConnection();
 			sendRequest();
 			getResponse();
 			connection.disconnect();
 		} else {
-			// TODO
+			// TODO: Throw error message: No networks are connected
 			Log.d(StringConstants.APP_NAME, "No networks are connected.");
 		}
 	}
