@@ -1,6 +1,9 @@
 package com.lasalara.lasalara.activities;
 
+import com.lasalara.lasalara.Backend;
+import com.lasalara.lasalara.LasaLaraApplication;
 import com.lasalara.lasalara.R;
+import com.lasalara.lasalara.database.DatabaseHelper;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -11,16 +14,33 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+/**
+ * 
+ * @author Ants-Oskar Mäesalu
+ */
 public class BookListPageActivity extends Activity {
+	protected LasaLaraApplication application;
+	protected DatabaseHelper databaseHelper;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		application = (LasaLaraApplication) getApplication();
+		databaseHelper = new DatabaseHelper(this);
 		setContentView(R.layout.activity_booklistpage);
 		if (savedInstanceState == null) {
 			getFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Backend.getInstance().preloadData(this);
+		// TODO: ChapterListPageActivity should use getChapters() on startup, and on all of 
+		// the returned chapters getQuestions(). This way, the data is always up to date, 
+		// yet we do not (probably) use too much memory.
 	}
 
 	@Override

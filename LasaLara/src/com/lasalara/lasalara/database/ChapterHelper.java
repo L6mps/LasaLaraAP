@@ -42,24 +42,24 @@ public class ChapterHelper {
 
     /**
      * Actions conducted on database creation.
-     * @param db	The SQLite database.
+     * @param database	The SQLite database.
      */
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TABLE_CREATE);
+    public void onCreate(SQLiteDatabase database) {
+        database.execSQL(TABLE_CREATE);
     }
 
     /**
      * Actions conducted on database upgrade.
-     * @param db			The SQLite database.
+     * @param database			The SQLite database.
      * @param oldVersion	The old database's version number.
      * @param newVersion	The new database's version number.
      */
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 		// TODO: Create a better method of upgrading the database.
 		// Currently, the most straigthforward way to upgrade the database is to drop the
 		// previous database, create a new one and then repopulate it.
-		db.execSQL(TABLE_DROP);
-		onCreate(db);
+		database.execSQL(TABLE_DROP);
+		onCreate(database);
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public class ChapterHelper {
 	 */
 	public void insertChapter(Chapter chapter) {
 		// TODO: Check existence - update if exists?
-		SQLiteDatabase db = databaseHelper.getReadableDatabase();
+		SQLiteDatabase database = databaseHelper.getReadableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.CHAPTER_COLUMN_KEY, chapter.getKey());
 		contentValues.put(StringConstants.CHAPTER_COLUMN_TITLE, chapter.getTitle());
@@ -78,7 +78,7 @@ public class ChapterHelper {
 		contentValues.put(StringConstants.CHAPTER_COLUMN_AUTHOR_INSTITUTION, chapter.getAuthorInstitution());
 		contentValues.put(StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED, chapter.areProposalsAllowed() ? 1 : 0);
 		contentValues.put(StringConstants.CHAPTER_COLUMN_BOOK_KEY, chapter.getBookKey());
-		db.insert(StringConstants.CHAPTER_TABLE_NAME, null, contentValues);
+		database.insert(StringConstants.CHAPTER_TABLE_NAME, null, contentValues);
 	}
 	
 	/**
@@ -87,12 +87,12 @@ public class ChapterHelper {
 	 */
 	public List<Chapter> getChapters(String bookKey) {
 		List<Chapter> chapterList = new ArrayList<Chapter>();
-		SQLiteDatabase db = databaseHelper.getReadableDatabase();
+		SQLiteDatabase database = databaseHelper.getReadableDatabase();
 		String selectChaptersQuery =
 				"SELECT * FROM " + StringConstants.CHAPTER_TABLE_NAME +  
 				" WHERE " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + 
 				"=" + bookKey;
-		Cursor results =  db.rawQuery(selectChaptersQuery, null);
+		Cursor results =  database.rawQuery(selectChaptersQuery, null);
 		results.moveToFirst();
 		while (!results.isAfterLast()) {
 			chapterList.add(new Chapter(databaseHelper, results));

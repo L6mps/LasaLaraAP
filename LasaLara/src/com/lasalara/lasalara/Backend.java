@@ -9,6 +9,7 @@ import org.json.JSONException;
 import android.content.Context;
 
 import com.lasalara.lasalara.backend.Book;
+import com.lasalara.lasalara.database.DatabaseHelper;
 
 /**
  * The main class of the back end of the application.
@@ -26,7 +27,6 @@ public class Backend {
 	private Backend() {
 		super();
 		books = new ArrayList<Book>();
-		// TODO: Load already existing books from internal memory.
 	}
 	
 	/**
@@ -47,20 +47,43 @@ public class Backend {
 	}
 	
 	/**
-	 * Find if the book list already contains a book with the same key.
+	 * Preload all of the book data from the SQLite database.
+	 * @param context	The current activity's context (needed for network connection check and SQLite database).
+	 * @return list of books in the SQLite database.
+	 */
+	private List<Book> preloadBooks(Context context) {
+		DatabaseHelper databaseHelper = new DatabaseHelper(context);
+		return databaseHelper.getBookHelper().getBooks();
+	}
+	
+	/**
+	 * Preload all of the data from the SQLite database.
+	 * @param context	The current activity's context (needed for network connection check and SQLite database).
+	 */
+	public void preloadData(Context context) {
+		books = preloadBooks(context);
+		// Chapters should be preloaded only when a book is opened - saves time.
+		// Questions should be preloaded at the same time the book is opened - the user
+		// needs to see chapters' progress. Maybe we could optimise it?
+	}
+	
+	/**
+	 * Find if the book list already contains a book with the same key. If so, return the index,
+	 * if not, return -1.
 	 * The method is used before adding a downloaded book to the book list.
-	 * The method is needed because the chapter and question lists may vary, hence the objects might be different.
+	 * The method is needed because the chapter and question lists may vary, 
+	 * hence the objects might be different.
 	 * The method uses linear search.
 	 * @param book
 	 * @return
 	 */
-	private boolean bookListContains(Book book) {
+	private int getBookFromBookList(Book book) {
 		for (int i = 0; i < books.size(); i++) {
 			if (books.get(i).getKey().equals(book.getKey())) {
-				return true;
+				return i;
 			}
 		}
-		return false;
+		return -1;
 	}
 	
 	/**
@@ -72,12 +95,13 @@ public class Backend {
 	 */
 	public void downloadBook(Context context, String ownerEmail, String bookTitle) {
 		try {
-			Book book = new Book(context, ownerEmail, bookTitle);
-			if (bookListContains(book)) {
-				books.add(book);
+			Book newBook = new Book(context, ownerEmail, bookTitle);
+			int index = getBookFromBookList(newBook);
+			if (index == -1) {
+				books.add(newBook);
 			} else {
-				// TODO: Book already exists, throw error message
-				// Maybe update the book?
+				// TODO: Throw error message: book already exists
+				books.set(index, newBook);// Update the book
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

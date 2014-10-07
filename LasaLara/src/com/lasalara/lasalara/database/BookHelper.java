@@ -40,24 +40,24 @@ public class BookHelper {
 
     /**
      * Actions conducted on database creation.
-     * @param db	The SQLite database.
+     * @param database	The SQLite database.
      */
-    public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TABLE_CREATE);
+    public void onCreate(SQLiteDatabase database) {
+        database.execSQL(TABLE_CREATE);
     }
 
     /**
      * Actions conducted on database upgrade.
-     * @param db			The SQLite database.
+     * @param database			The SQLite database.
      * @param oldVersion	The old database's version number.
      * @param newVersion	The new database's version number.
      */
-	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
 		// TODO: Create a better method of upgrading the database.
 		// Currently, the most straigthforward way to upgrade the database is to drop the
 		// previous database, create a new one and then repopulate it.
-		db.execSQL(TABLE_DROP);
-		onCreate(db);
+		database.execSQL(TABLE_DROP);
+		onCreate(database);
 	}
 	
 	/**
@@ -66,7 +66,7 @@ public class BookHelper {
 	 */
 	public void insertBook(Book book) {
 		// TODO: Check existence - update if exists?
-		SQLiteDatabase db = databaseHelper.getReadableDatabase();
+		SQLiteDatabase database = databaseHelper.getReadableDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.BOOK_COLUMN_KEY, book.getKey());
 		contentValues.put(StringConstants.BOOK_COLUMN_TITLE, book.getTitle());
@@ -74,7 +74,7 @@ public class BookHelper {
 		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_NAME, book.getOwnerName());
 		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_INSTITUTION, book.getOwnerInstitution());
 		contentValues.put(StringConstants.BOOK_COLUMN_LAST_CHAPTER, book.getLastChapter());
-		db.insert(StringConstants.BOOK_TABLE_NAME, null, contentValues);
+		database.insert(StringConstants.BOOK_TABLE_NAME, null, contentValues);
 	}
 	
 	/**
@@ -82,9 +82,9 @@ public class BookHelper {
 	 */
 	public List<Book> getBooks() {
 		List<Book> bookList = new ArrayList<Book>();
-		SQLiteDatabase db = databaseHelper.getReadableDatabase();
+		SQLiteDatabase database = databaseHelper.getReadableDatabase();
 		String selectBooksQuery = "SELECT * FROM " + StringConstants.BOOK_TABLE_NAME;
-		Cursor results =  db.rawQuery(selectBooksQuery, null);
+		Cursor results =  database.rawQuery(selectBooksQuery, null);
 		results.moveToFirst();
 		while (!results.isAfterLast()) {
 			bookList.add(new Book(databaseHelper, results));

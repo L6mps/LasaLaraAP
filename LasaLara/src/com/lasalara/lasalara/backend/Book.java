@@ -191,12 +191,19 @@ public class Book {
 	}
 	
 	/**
+	 * Return a list of chapters in this book. Used when the user has opened a book.
+	 * If the user has internet connection, the chapters are queried from the web
+	 * and the data in the SQLite database is overwritten.
+	 * If the user doesn't have internet connection, the chapters are read from the
+	 * SQLite database.
 	 * @param context		The current activity's context (needed for network connection check).
 	 * @return the list of chapters in this book.
 	 * @throws JSONException 
 	 * @throws IOException 
 	 */
 	public List<Chapter> getChapters(Context context) throws IOException, JSONException {
+		// TODO: If the user has internet connection, rewrite the chapters in the database.
+		// If not, use the chapters from the SQLite database.
 		loadChapters(context);
 		return chapters;
 	}
