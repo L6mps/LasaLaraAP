@@ -44,7 +44,7 @@ public class BookListPageActivity extends Activity {
 	@Override
 	protected void onStart() {
 		super.onStart();
-		Backend.getInstance().preloadData(databaseHelper);
+		// Backend.getInstance().preloadData(databaseHelper); // TODO: Debug
 		// TODO: ChapterListPageActivity should use getChapters() on startup, and on all of 
 		// the returned chapters getQuestions(). This way, the data is always up to date, 
 		// yet we do not (probably) use too much memory.
