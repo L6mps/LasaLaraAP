@@ -4,7 +4,6 @@
     <string name="app_name">LasaLaraAP</string>
     <string name="action_settings">Settings</string>
     
-    
     <!-- Action Bar action items -->
     <string name="action_search">Reset Progress</string>
     <string name="action_location_found">Turn Page View ON</string>
