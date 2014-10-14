@@ -8,7 +8,7 @@
   <packaging>apk</packaging>
 
   <name>LasaLara</name>
-
+  
   <dependencies>
     <dependency>
       <groupId>com.google.android</groupId>
@@ -43,7 +43,7 @@
         <artifactId>android-maven-plugin</artifactId>
         <configuration>
           <sdk>
-                        <!-- platform as api level (api level 16 = platform 4.1)-->
+            <path>C:\adt-bundle-windows-x86_64-20140702\sdk</path>
             <platform>14</platform>
           </sdk>
         </configuration>
