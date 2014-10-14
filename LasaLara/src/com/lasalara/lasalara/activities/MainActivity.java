@@ -43,6 +43,5 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
         return super.onCreateOptionsMenu(menu);
     }
 	
-
 	
 }
