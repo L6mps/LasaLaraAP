@@ -9,6 +9,10 @@ import android.view.Menu;
 import android.view.MenuInflater;
 
 public class MainActivity extends FragmentActivity implements BookFragment.OnBookSelectedListener,ChapterFragment.OnChapterSelectedListener  {
+	
+	private BookFragment bFragment;
+	private ChapterFragment cFragment;
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.contentlists);
@@ -16,7 +20,9 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 			if(savedInstanceState != null) {
 				return;
 			}
-			BookFragment bFragment = new BookFragment();
+			cFragment = new ChapterFragment();
+			cFragment.setArguments(getIntent().getExtras());
+			bFragment = new BookFragment();
 			bFragment.setArguments(getIntent().getExtras());
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, bFragment).addToBackStack("bookList").commit();
 		}
@@ -24,8 +30,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 
 	@Override
 	public void onBookSelected(int position) {
-		ChapterFragment cFragment = new ChapterFragment();
-		cFragment.setArguments(getIntent().getExtras());
+		cFragment.changeData(position);
 		getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, cFragment).addToBackStack("chapterList").commit();
 	}
 

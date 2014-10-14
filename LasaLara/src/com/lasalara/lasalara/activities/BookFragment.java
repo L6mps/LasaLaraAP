@@ -8,7 +8,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class BookFragment extends ListFragment{
@@ -42,7 +41,7 @@ public class BookFragment extends ListFragment{
 			tmp[3]=d[i];
 			info.add(tmp);
 		}
-		setListAdapter(new BookListAdapter(getActivity(), info, layout));
+		setListAdapter(new CustomListAdapter(getActivity(), info, layout));
 		//setListAdapter(new ArrayAdapter<String>(getActivity(), R.layout.listelement_book,R.id.bookTitle.toString(), R.id.bookAuthorInfo.toString(),a, b));
 	}
 	

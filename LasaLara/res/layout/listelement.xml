@@ -6,10 +6,10 @@
     android:padding="6dip" >
     
 	<TextView
-        android:id="@+id/bookTitle"
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bookTitle"
+        android:layout_above="@id/title"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignWithParentIfMissing="true"
@@ -19,19 +19,19 @@
         android:textSize="18sp" />
         
     <TextView
-        android:id="@+id/bookAuthorInfo"
+        android:id="@+id/author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/bookTitle"
+        android:layout_below="@+id/title"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text=""
         android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/bookDonePercentage"
+        android:id="@+id/donePercentage"
         android:layout_width="40sp"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
@@ -43,13 +43,13 @@
         android:textSize="18sp" />
     
 	<TextView
-        android:id="@+id/bookFractionDone"
+        android:id="@+id/doneFraction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignTop="@id/bookAuthorInfo"
-        android:layout_alignLeft="@id/bookDonePercentage"
+        android:layout_alignTop="@id/author"
+        android:layout_alignLeft="@id/donePercentage"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text=""
