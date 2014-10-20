@@ -28,7 +28,7 @@ public class Question {
 	 */
 	Question(Context context, String question, String answer, String chapterKey) {
 		Log.d(StringConstants.APP_NAME, "Question constructor: " + chapterKey + ", " + question + ", " + answer + ".");
-		DatabaseHelper databaseHelper = new DatabaseHelper(context);
+		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		this.question = question;
 		this.answer = answer;
 		this.chapterKey = chapterKey;

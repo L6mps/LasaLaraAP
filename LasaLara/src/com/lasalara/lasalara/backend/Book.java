@@ -42,7 +42,7 @@ public class Book {
 	 */
 	public Book(Context context, String ownerEmail, String title) throws IOException, JSONException {
 		Log.d(StringConstants.APP_NAME, "Book constructor.");
-		DatabaseHelper databaseHelper = new DatabaseHelper(context);
+		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		String url = StringConstants.URL_GET_BOOK;
 		UrlParameters urlParameters = new UrlParameters();
 		urlParameters.addPair("em", ownerEmail);

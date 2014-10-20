@@ -1,5 +1,6 @@
 package com.lasalara.lasalara.database;
 
+import com.lasalara.lasalara.Backend;
 import com.lasalara.lasalara.constants.NumericalConstants;
 import com.lasalara.lasalara.constants.StringConstants;
 
@@ -13,22 +14,41 @@ import android.util.Log;
  * @author Ants-Oskar Mäesalu
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
+	private static DatabaseHelper instance;
 	private SQLiteDatabase database;
 	private BookHelper bookHelper;
 	private ChapterHelper chapterHelper;
 	private QuestionHelper questionHelper;
 
 	/**
-	 * Constructor.	 
+	 * Constructor.
+	 * Private because this is a singleton class.
 	 * @param context	The current activity's context.
 	 */
-	public DatabaseHelper(Context context) {
+	private DatabaseHelper(Context context) {
 		super(context, StringConstants.DATABASE_NAME, null, NumericalConstants.DATABASE_VERSION);
 		Log.d(StringConstants.APP_NAME, "DatabaseHelper constructor.");
 		database = getWritableDatabase(); // Responsible for calling the onCreate(db) method
 		bookHelper = new BookHelper(database);
 		chapterHelper = new ChapterHelper(database);
 		questionHelper = new QuestionHelper(database);
+	}
+	
+	/**
+	 * Initialize the singleton database helper class.
+	 */
+	
+	public static void initializeInstance(Context context) {
+		if (instance == null) { // NB: Not thread-safe
+			instance = new DatabaseHelper(context);
+		}
+	}
+	
+	/**
+	 * @return the instance of the database helper.
+	 */
+	public static DatabaseHelper getInstance() {
+		return instance;
 	}
 
 	@Override

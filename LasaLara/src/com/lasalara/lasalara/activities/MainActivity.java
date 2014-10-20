@@ -39,8 +39,9 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, bFragment).commit();
 		}
 		Backend.initializeInstance();
+		DatabaseHelper.initializeInstance(this);
 		Backend.getInstance().downloadBook(this, "lasalara.help@gmail.com", "Welcome to LasaLara"); // TODO: Only for testing
-		Backend.getInstance().preloadData(new DatabaseHelper(this));
+		Backend.getInstance().preloadData(DatabaseHelper.getInstance());
 	}
 
 	@Override

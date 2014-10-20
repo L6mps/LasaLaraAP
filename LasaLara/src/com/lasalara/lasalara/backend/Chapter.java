@@ -46,7 +46,7 @@ public class Chapter {
 	Chapter(Context context, String key, String title, int version, String authorEmail, 
 			String authorName, String authorInstitution, boolean proposalsAllowed, String bookKey) {
 		Log.d(StringConstants.APP_NAME, "Chapter constructor: " + key + ", " + title + ".");
-		DatabaseHelper databaseHelper = new DatabaseHelper(context);
+		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		this.key = key;
 		this.title = title;
 		this.version = version;
