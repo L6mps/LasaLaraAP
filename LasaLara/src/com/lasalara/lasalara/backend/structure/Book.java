@@ -2,6 +2,7 @@ package com.lasalara.lasalara.backend.structure;
 
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +16,6 @@ import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
 import com.lasalara.lasalara.backend.webRequest.WebRequest;
-import com.lasalara.lasalara.backend.webRequest.WebRequestParameters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -39,52 +39,71 @@ public class Book {
 	 * @param context		The current activity's context (needed for network connection check and SQLite database).
 	 * @param ownerEmail	The book's owner's e-mail address.
 	 * @param title			The book's title.
-	 * @throws IOException
-	 * @throws JSONException
 	 */
-	public Book(Context context, String ownerEmail, String title) throws IOException, JSONException {
-		Log.d(StringConstants.APP_NAME, "Book constructor.");
-		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
-		String url = StringConstants.URL_GET_BOOK;
-		UrlParameters urlParameters = new UrlParameters();
-		urlParameters.addPair("em", ownerEmail);
-		urlParameters.addPair("bt", title);
-		WebRequest request = new WebRequest(context);
-		request.execute(new WebRequestParameters(url, urlParameters));
-		try {
-			Log.d(StringConstants.APP_NAME, "Book: Getting JSONObject.");
-			JSONObject result = request.getJSONObject();
-			Log.d(StringConstants.APP_NAME, "Book: Got JSONObject.");
-			try {
-				if (validateEmail(ownerEmail)) {
-					this.ownerEmail = ownerEmail;
-					this.title = title;
-					if (result.isNull("name")) {
-						ownerName = null;
-					} else {
-						ownerName = result.get("name").toString();
-					}
-					if (result.isNull("institution")) {
-						ownerInstitution = null;
-					} else {
-						ownerInstitution = result.get("institution").toString();
-					}
-					key = result.get("bk").toString();
-					databaseHelper.getBookHelper().insertBook(this); // TODO: Test
-				} else {
-					// TODO: Throw error: The e-mail address does not correspond to an e-mail address' format.
+	public Book(final Context context, final String ownerEmail, final String title) {
+		new Thread() {
+			@Override
+			public void run() {
+				Log.d(StringConstants.APP_NAME, "Book constructor.");
+				DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+				String url = StringConstants.URL_GET_BOOK;
+				UrlParameters urlParameters = new UrlParameters();
+				try {
+					urlParameters.addPair("em", ownerEmail);
+				} catch (UnsupportedEncodingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-			} catch (JSONException e) {
-				int errorCode = result.getInt("err");
-				if (errorCode == 0) {
-					// TODO: Throw error: The e-mail address was not found.
-				} else {
-					// TODO: Throw error: No book with that title was found.
+				try {
+					urlParameters.addPair("bt", title);
+				} catch (UnsupportedEncodingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				WebRequest request = null;
+				try {
+					request = new WebRequest(context, url, urlParameters);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				try {
+					Log.d(StringConstants.APP_NAME, "Book: Getting JSONObject.");
+					JSONObject result = request.getJSONObject();
+					Log.d(StringConstants.APP_NAME, "Book: Got JSONObject.");
+					try {
+						if (validateEmail(ownerEmail)) {
+							getBookInstance().ownerEmail = ownerEmail;
+							getBookInstance().title = title;
+							if (result.isNull("name")) {
+								ownerName = null;
+							} else {
+								ownerName = result.get("name").toString();
+							}
+							if (result.isNull("institution")) {
+								ownerInstitution = null;
+							} else {
+								ownerInstitution = result.get("institution").toString();
+							}
+							key = result.get("bk").toString();
+							databaseHelper.getBookHelper().insertBook(getBookInstance()); // TODO: Test
+						} else {
+							// TODO: Throw error: The e-mail address does not correspond to an e-mail address' format.
+						}
+					} catch (JSONException e) {
+						int errorCode = result.getInt("err");
+						if (errorCode == 0) {
+							// TODO: Throw error: The e-mail address was not found.
+						} else {
+							// TODO: Throw error: No book with that title was found.
+						}
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-		} catch (JSONException e) {
-			throw new JSONException(e.toString());
-		}
+		}.start();
 	}
 	
 	/**
@@ -131,39 +150,55 @@ public class Book {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	private void loadChapters(Context context) throws IOException, JSONException {
-		chapters = new ArrayList<Chapter>();
-		String url = StringConstants.URL_GET_CHAPTERS;
-		UrlParameters urlParameters = new UrlParameters();
-		urlParameters.addPair("bk", URLEncoder.encode(key, "UTF-8"));
-		WebRequest request = new WebRequest(context);
-		request.execute(new WebRequestParameters(url, urlParameters));
-		try {
-			JSONObject result = request.getJSONObject();
-			System.out.println(result);
-			for (int i = 0; i < result.length(); i++) {
-				JSONObject chapterObject = result.getJSONObject(Integer.toString(i));
-				System.out.println(chapterObject.toString());
-				String chapterKey = result.get("ck").toString();
-				String chapterTitle = result.get("title").toString();
-				int chapterVersion = result.getInt("version");
-				String chapterAuthorEmail = result.get("email").toString();
-				String chapterAuthorName = null;
-				if (!result.isNull("name")) {
-					chapterAuthorName = result.get("name").toString();
+	private void loadChapters(final Context context) {
+		new Thread() {
+			@Override
+			public void run() {
+				chapters = new ArrayList<Chapter>();
+				String url = StringConstants.URL_GET_CHAPTERS;
+				UrlParameters urlParameters = new UrlParameters();
+				try {
+					urlParameters.addPair("bk", URLEncoder.encode(key, "UTF-8"));
+				} catch (UnsupportedEncodingException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-				String chapterAuthorInstitution = null;
-				if (!result.isNull("institution")) {
-					chapterAuthorInstitution = result.get("institution").toString();
+				WebRequest request = null;
+				try {
+					request = new WebRequest(context, url, urlParameters);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
 				}
-				boolean chapterProposalsAllowed = result.getBoolean("allowProp");
-				chapters.add(new Chapter(context, chapterKey, chapterTitle, chapterVersion, 
-						chapterAuthorEmail, chapterAuthorName, chapterAuthorInstitution, 
-						chapterProposalsAllowed, key));
+				try {
+					JSONObject result = request.getJSONObject();
+					System.out.println(result);
+					for (int i = 0; i < result.length(); i++) {
+						JSONObject chapterObject = result.getJSONObject(Integer.toString(i));
+						System.out.println(chapterObject.toString());
+						String chapterKey = result.get("ck").toString();
+						String chapterTitle = result.get("title").toString();
+						int chapterVersion = result.getInt("version");
+						String chapterAuthorEmail = result.get("email").toString();
+						String chapterAuthorName = null;
+						if (!result.isNull("name")) {
+							chapterAuthorName = result.get("name").toString();
+						}
+						String chapterAuthorInstitution = null;
+						if (!result.isNull("institution")) {
+							chapterAuthorInstitution = result.get("institution").toString();
+						}
+						boolean chapterProposalsAllowed = result.getBoolean("allowProp");
+						chapters.add(new Chapter(context, chapterKey, chapterTitle, chapterVersion, 
+								chapterAuthorEmail, chapterAuthorName, chapterAuthorInstitution, 
+								chapterProposalsAllowed, key));
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
-		} catch (JSONException e) {
-			throw new JSONException(e.toString());
-		}
+		}.start();
 	}
 	
 	/**
@@ -175,6 +210,14 @@ public class Book {
 	 */
 	public void reloadChapters(Context context) throws IOException, JSONException {
 		loadChapters(context);
+	}
+	
+	/**
+	 * Used inside the web request thread.
+	 * @return the instance of the book.
+	 */
+	public Book getBookInstance() {
+		return this;
 	}
 
 	/**
