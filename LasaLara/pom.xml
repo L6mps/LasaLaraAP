@@ -22,6 +22,12 @@
       <version>r7</version>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>com.google.android</groupId>
+      <artifactId>annotations</artifactId>
+      <version>4.1.1.4</version>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -44,7 +50,7 @@
         <configuration>
 			<sdk>
 				<!-- platform as api level (api level 16 = platform 4.1)-->
-				<platform>19</platform>
+				<platform>20</platform>
 			</sdk>
 		</configuration>
       </plugin>
