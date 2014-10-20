@@ -47,9 +47,12 @@ public class Book {
 		UrlParameters urlParameters = new UrlParameters();
 		urlParameters.addPair("em", ownerEmail);
 		urlParameters.addPair("bt", title);
-		WebRequest request = new WebRequest(context, url, urlParameters);
+		WebRequest request = new WebRequest(context);
+		request.execute(new WebRequestParameters(url, urlParameters));
 		try {
+			Log.d(StringConstants.APP_NAME, "Book: Getting JSONObject.");
 			JSONObject result = request.getJSONObject();
+			Log.d(StringConstants.APP_NAME, "Book: Got JSONObject.");
 			try {
 				if (validateEmail(ownerEmail)) {
 					this.ownerEmail = ownerEmail;
@@ -131,7 +134,8 @@ public class Book {
 		String url = StringConstants.URL_GET_CHAPTERS;
 		UrlParameters urlParameters = new UrlParameters();
 		urlParameters.addPair("bk", URLEncoder.encode(key, "UTF-8"));
-		WebRequest request = new WebRequest(context, url, urlParameters);
+		WebRequest request = new WebRequest(context);
+		request.execute(new WebRequestParameters(url, urlParameters));
 		try {
 			JSONObject result = request.getJSONObject();
 			System.out.println(result);

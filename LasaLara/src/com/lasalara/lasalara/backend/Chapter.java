@@ -92,7 +92,8 @@ public class Chapter {
 		String url = StringConstants.URL_GET_QUESTIONS;
 		UrlParameters urlParameters = new UrlParameters();
 		urlParameters.addPair("ck", key);
-		WebRequest request = new WebRequest(context, url, urlParameters);
+		WebRequest request = new WebRequest(context);
+		request.execute(new WebRequestParameters(url, urlParameters));
 		try {
 			JSONObject result = request.getJSONObject();
 			System.out.println(result);

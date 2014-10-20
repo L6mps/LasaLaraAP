@@ -1,6 +1,7 @@
 package com.lasalara.lasalara.backend;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
@@ -30,34 +31,42 @@ import org.json.JSONObject;
  * Class that handles all of the web requests.
  * @author Ants-Oskar Mäesalu
  */
-public class WebRequest {
+public class WebRequest extends AsyncTask<WebRequestParameters, Void, Void> {
+	private Context context;
 	private String url;
 	private UrlParameters parameterList;
 	private HttpResponse response;
 	private String result;
-	
+
 	/**
-	 * @param context		The current activity's context (needed for network connection check).
-	 * @param url			The URL of the web request.
-	 * @param urlParameters	The URL parameters string.
-	 * @throws IOException
+	 * Constructor.
+	 * @param context		The current application context (needed for network connection check).
 	 */
-	public WebRequest(Context context, String url, UrlParameters parameterList) throws IOException {
-		disableConnectionReuseIfNecessary();
-		if (LasaLaraApplication.isNetworkConnected(context)) {
-			Log.d(StringConstants.APP_NAME, "Network is connected.");
-			this.url = url.toLowerCase(Locale.ENGLISH);
-			this.parameterList = parameterList;
-			new Thread(){ // Android no longer supports running network requests on the UI thread
-			    public void run(){
-					sendRequest();
-					getResponse();
-			    }
-			}.start();
-		} else {
-			// TODO: Throw error message: No networks are connected
-			Log.d(StringConstants.APP_NAME, "No networks are connected.");
+	public WebRequest(Context context) {
+		this.context = context;
+	}
+	
+	@Override
+	protected Void doInBackground(WebRequestParameters... params) {
+		for (int i = 0; i < params.length; i++) {
+			disableConnectionReuseIfNecessary();
+			if (LasaLaraApplication.isNetworkConnected(context)) {
+				Log.d(StringConstants.APP_NAME, "Network is connected.");
+				this.url = params[i].getUrl().toLowerCase(Locale.ENGLISH);
+				this.parameterList = params[i].getParameterList();
+				new Thread(){ // Android no longer supports running network requests on the UI thread
+				    public void run(){
+						sendRequest();
+						getResponse();
+				    }
+				}.start();
+				Log.d(StringConstants.APP_NAME, "Ending web request.");
+			} else {
+				// TODO: Throw error message: No networks are connected
+				Log.d(StringConstants.APP_NAME, "No networks are connected.");
+			}
 		}
+		return null;
 	}
 	
 	/**
@@ -93,11 +102,11 @@ public class WebRequest {
 			response = client.execute(post);
 			Log.d(StringConstants.APP_NAME, "Got HTTP response.");
 		} catch (ClientProtocolException e) {
-			Log.d(StringConstants.APP_NAME, "ClientProtocolException: " + e.getStackTrace()); // TODO
+			Log.d(StringConstants.APP_NAME, "ClientProtocolException: " + e.getMessage() + ": " + e.getStackTrace()); // TODO
 		} catch (IOException e) {
-			Log.d(StringConstants.APP_NAME, "IOException: " + e.getStackTrace()); // TODO
+			Log.d(StringConstants.APP_NAME, "IOException: " + e.getMessage() + ": " + e.getStackTrace()); // TODO
 		} catch (Exception e) {
-			Log.d(StringConstants.APP_NAME, "Jumaliku käe exception: " + e.getStackTrace()); // TODO
+			Log.d(StringConstants.APP_NAME, "Jumaliku käe exception (sendRequest): " + e.getMessage() + ": " + e.getStackTrace()); // TODO
 		}
 	}
 	
@@ -108,14 +117,17 @@ public class WebRequest {
 		result = null;
 		try {
 			Log.d(StringConstants.APP_NAME, "Getting response.");
-			result = EntityUtils.toString(response.getEntity());
+			Log.d(StringConstants.APP_NAME, "Response: " + response.toString());
+			Log.d(StringConstants.APP_NAME, "Response entity: " + response.getEntity().toString());
+			result = EntityUtils.toString(response.getEntity()).toString();
 			Log.d(StringConstants.APP_NAME, "Got response.");
+			Log.d(StringConstants.APP_NAME, "Result: " + result);
 		} catch (ParseException e) {
-			Log.d(StringConstants.APP_NAME, "ParseException: " + e.getStackTrace());
+			Log.d(StringConstants.APP_NAME, "ParseException: " + e.getMessage() + ": " + e.getStackTrace()); // TODO
 		} catch (IOException e) {
-			Log.d(StringConstants.APP_NAME, "IOException: " + e.getStackTrace());
+			Log.d(StringConstants.APP_NAME, "IOException: " + e.getMessage() + ": " + e.getStackTrace()); // TODO
 		} catch (Exception e) {
-			Log.d(StringConstants.APP_NAME, "Jumaliku käe exception: " + e.getStackTrace());
+			Log.d(StringConstants.APP_NAME, "Jumaliku käe exception (getResponse): " + e.getMessage() + ": " + e.getStackTrace()); // TODO
 		}
 	}
 	
@@ -124,6 +136,7 @@ public class WebRequest {
 	 * @throws JSONException
 	 */
 	public JSONObject getJSONObject() throws JSONException {
+		Log.d(StringConstants.APP_NAME, "Converting to JSONObject: " + result);
 		return new JSONObject(result);
 	}
 }
