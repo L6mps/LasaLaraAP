@@ -1,10 +1,10 @@
-package com.lasalara.lasalara.database;
+package com.lasalara.lasalara.backend.database;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.lasalara.lasalara.backend.Book;
-import com.lasalara.lasalara.constants.StringConstants;
+import com.lasalara.lasalara.backend.constants.StringConstants;
+import com.lasalara.lasalara.backend.structure.Book;
 
 import android.content.ContentValues;
 import android.database.Cursor;

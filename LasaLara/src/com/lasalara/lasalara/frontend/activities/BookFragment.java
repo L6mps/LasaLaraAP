@@ -1,4 +1,4 @@
-package com.lasalara.lasalara.activities;
+package com.lasalara.lasalara.frontend.activities;
 
 import java.util.ArrayList;
 

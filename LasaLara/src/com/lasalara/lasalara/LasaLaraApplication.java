@@ -1,6 +1,7 @@
 package com.lasalara.lasalara;
 
-import com.lasalara.lasalara.constants.StringConstants;
+import com.lasalara.lasalara.backend.Backend;
+import com.lasalara.lasalara.backend.constants.StringConstants;
 
 import android.app.Application;
 import android.content.Context;

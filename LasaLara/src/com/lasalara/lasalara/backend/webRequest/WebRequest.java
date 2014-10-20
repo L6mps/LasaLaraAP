@@ -1,4 +1,4 @@
-package com.lasalara.lasalara.backend;
+package com.lasalara.lasalara.backend.webRequest;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -6,7 +6,7 @@ import android.os.Build;
 import android.util.Log;
 
 import com.lasalara.lasalara.LasaLaraApplication;
-import com.lasalara.lasalara.constants.StringConstants;
+import com.lasalara.lasalara.backend.constants.StringConstants;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
