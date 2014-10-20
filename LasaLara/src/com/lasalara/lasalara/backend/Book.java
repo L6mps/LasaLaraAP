@@ -17,6 +17,7 @@ import com.lasalara.lasalara.database.DatabaseHelper;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 /**
  * Class responsible for holding and querying a book's information and querying it's chapters' information.
@@ -40,6 +41,7 @@ public class Book {
 	 * @throws JSONException
 	 */
 	public Book(Context context, String ownerEmail, String title) throws IOException, JSONException {
+		Log.d(StringConstants.APP_NAME, "Book constructor.");
 		DatabaseHelper databaseHelper = new DatabaseHelper(context);
 		String url = StringConstants.URL_GET_BOOK;
 		UrlParameters urlParameters = new UrlParameters();

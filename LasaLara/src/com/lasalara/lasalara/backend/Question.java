@@ -2,6 +2,7 @@ package com.lasalara.lasalara.backend;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 import com.lasalara.lasalara.constants.StringConstants;
 import com.lasalara.lasalara.database.DatabaseHelper;
@@ -26,6 +27,7 @@ public class Question {
 	 * @param bookKey	The book the chapter is located in.
 	 */
 	Question(Context context, String question, String answer, String chapterKey) {
+		Log.d(StringConstants.APP_NAME, "Question constructor: " + chapterKey + ", " + question + ", " + answer + ".");
 		DatabaseHelper databaseHelper = new DatabaseHelper(context);
 		this.question = question;
 		this.answer = answer;

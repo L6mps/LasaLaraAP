@@ -24,7 +24,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	public DatabaseHelper(Context context) {
 		super(context, StringConstants.DATABASE_NAME, null, NumericalConstants.DATABASE_VERSION);
-		Log.d(StringConstants.APP_NAME, "DatabaseHelper constructor");
+		Log.d(StringConstants.APP_NAME, "DatabaseHelper constructor.");
 		database = getWritableDatabase(); // Responsible for calling the onCreate(db) method
 		bookHelper = new BookHelper(database);
 		chapterHelper = new ChapterHelper(database);

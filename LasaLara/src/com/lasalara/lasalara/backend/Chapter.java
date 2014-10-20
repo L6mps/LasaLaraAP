@@ -13,6 +13,7 @@ import com.lasalara.lasalara.database.DatabaseHelper;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.util.Log;
 
 /**
  * Class responsible for holding a chapter's information and querying it's questions' information.
@@ -44,6 +45,7 @@ public class Chapter {
 	 */
 	Chapter(Context context, String key, String title, int version, String authorEmail, 
 			String authorName, String authorInstitution, boolean proposalsAllowed, String bookKey) {
+		Log.d(StringConstants.APP_NAME, "Chapter constructor: " + key + ", " + title + ".");
 		DatabaseHelper databaseHelper = new DatabaseHelper(context);
 		this.key = key;
 		this.title = title;
