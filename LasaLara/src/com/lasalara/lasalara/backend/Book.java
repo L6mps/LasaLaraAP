@@ -42,9 +42,9 @@ public class Book {
 	public Book(Context context, String ownerEmail, String title) throws IOException, JSONException {
 		databaseHelper = new DatabaseHelper(context);
 		String url = StringConstants.URL_GET_BOOK;
-		String urlParameters =
-				"em=" + URLEncoder.encode(ownerEmail, "UTF-8") +
-				"&bt=" + URLEncoder.encode(title, "UTF-8");
+		UrlParameters urlParameters = new UrlParameters();
+		urlParameters.addPair("em", URLEncoder.encode(ownerEmail, "UTF-8"));
+		urlParameters.addPair("bt", URLEncoder.encode(title, "UTF-8"));
 		WebRequest request = new WebRequest(context, url, urlParameters);
 		try {
 			JSONObject result = request.getJSONObject();
@@ -129,7 +129,8 @@ public class Book {
 	private void loadChapters(Context context) throws IOException, JSONException {
 		chapters = new ArrayList<Chapter>();
 		String url = StringConstants.URL_GET_CHAPTERS;
-		String urlParameters = "bk=" + URLEncoder.encode(key, "UTF-8");
+		UrlParameters urlParameters = new UrlParameters();
+		urlParameters.addPair("bk", URLEncoder.encode(key, "UTF-8"));
 		WebRequest request = new WebRequest(context, url, urlParameters);
 		try {
 			JSONObject result = request.getJSONObject();

@@ -11,10 +11,23 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.ParseException;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,8 +37,8 @@ import org.json.JSONObject;
  */
 public class WebRequest {
 	private String url;
-	private String urlParameters;
-	private HttpURLConnection connection;
+	private UrlParameters parameterList;
+	private HttpResponse response;
 	private String result;
 	
 	/**
@@ -34,15 +47,13 @@ public class WebRequest {
 	 * @param urlParameters	The URL parameters string.
 	 * @throws IOException
 	 */
-	public WebRequest(Context context, String url, String urlParameters) throws IOException {
+	public WebRequest(Context context, String url, UrlParameters parameterList) throws IOException {
 		disableConnectionReuseIfNecessary();
 		if (LasaLaraApplication.isNetworkConnected(context)) {
 			this.url = url.toLowerCase(Locale.ENGLISH);
-			this.urlParameters = urlParameters.toLowerCase(Locale.ENGLISH);
-			createConnection();
+			this.parameterList = parameterList;
 			sendRequest();
 			getResponse();
-			connection.disconnect();
 		} else {
 			// TODO: Throw error message: No networks are connected
 			Log.d(StringConstants.APP_NAME, "No networks are connected.");
@@ -59,44 +70,30 @@ public class WebRequest {
 	}
 	
 	/**
-	 * Create a connection with the specified URL.
-	 * @throws IOException
-	 */
-	private void createConnection() throws IOException {
-		URL urlObject = new URL(url);
-		connection = (HttpURLConnection) urlObject.openConnection();
-		connection.setRequestMethod("POST");
-		connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-		connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
-		connection.setUseCaches(false);
-		connection.setDoInput(true);
-		connection.setDoOutput(true);
-	}
-	
-	/**
 	 * Send a POST web request to the site.
-	 * @throws IOException
+	 * @throws IOException 
+	 * @throws UnsupportedEncodingException
+	 * @throws ClientProtocolException 
 	 */
-	private void sendRequest() throws IOException {
-		DataOutputStream writer = new DataOutputStream(connection.getOutputStream());
-		writer.writeBytes(urlParameters);
-		writer.flush();
-		writer.close();
+	private void sendRequest() throws IOException, UnsupportedEncodingException, ClientProtocolException {
+		HttpClient client = new DefaultHttpClient();
+		HttpPost post = new HttpPost(url);
+		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
+		for (int i = 0; i < parameterList.getSize(); i++) {
+			pairs.add(new BasicNameValuePair(parameterList.getKey(i), parameterList.getValue(i)));
+		}
+		post.setEntity(new UrlEncodedFormEntity(pairs));
+		response = client.execute(post);
 	}
 	
 	/**
 	 * Get a response from the web request.
+	 * @throws ParseException 
 	 * @throws IOException
 	 */
-	private void getResponse() throws IOException {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-		StringBuffer response = new StringBuffer();
-		String line;
-		while ((line = reader.readLine()) != null) {
-			response.append(line);
-		}
-		reader.close();
-		result = response.toString();
+	private void getResponse() throws ParseException, IOException {
+		result = null;
+		result = EntityUtils.toString(response.getEntity());
 	}
 	
 	/**

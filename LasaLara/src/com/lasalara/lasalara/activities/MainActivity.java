@@ -1,6 +1,9 @@
 package com.lasalara.lasalara.activities;
 
+import com.lasalara.lasalara.Backend;
 import com.lasalara.lasalara.R;
+import com.lasalara.lasalara.constants.StringConstants;
+import com.lasalara.lasalara.database.DatabaseHelper;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -18,6 +21,13 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 			bFragment.setArguments(getIntent().getExtras());
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, bFragment).addToBackStack("bookList").commit();
 		}
+		Backend.initializeInstance();
+		/*try { // TODO: Needs debugging
+			Backend.getInstance().preloadData(new DatabaseHelper(this));
+		} catch (Exception e) {
+			Log.d(StringConstants.APP_NAME, e.getMessage());
+			e.printStackTrace();
+		}*/
 	}
 
 	@Override
