@@ -95,15 +95,21 @@ public class Backend {
 	 * @param bookTitle		The book's title.
 	 */
 	public void downloadBook(Context context, String ownerEmail, String bookTitle) {
-		Book newBook = new Book(context, ownerEmail, bookTitle);
-		int index = getBookFromBookList(newBook);
-		if (index == -1) {
-			Log.d(StringConstants.APP_NAME, "Book didn't exist, added it to the list.");
-			books.add(newBook);
-		} else {
-			Log.d(StringConstants.APP_NAME, "Book already existed, updated it.");
-			// TODO: Throw error message: book already exists
-			books.set(index, newBook);// Update the book
+		try {
+			Book newBook = new Book(context, ownerEmail, bookTitle);
+			int index = getBookFromBookList(newBook);
+			if (index == -1) {
+				books.add(newBook);
+			} else {
+				// TODO: Throw error message: book already exists
+				books.set(index, newBook);// Update the book
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	

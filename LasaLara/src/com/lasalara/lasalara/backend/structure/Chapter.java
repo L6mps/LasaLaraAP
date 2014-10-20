@@ -1,7 +1,6 @@
 package com.lasalara.lasalara.backend.structure;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +11,7 @@ import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
 import com.lasalara.lasalara.backend.webRequest.WebRequest;
+import com.lasalara.lasalara.backend.webRequest.WebRequestParameters;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -89,47 +89,31 @@ public class Chapter {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	public void loadQuestions(final Context context) throws IOException, JSONException {
-		new Thread() {
-			@Override
-			public void run() {
-				questions = new ArrayList<Question>();
-				String url = StringConstants.URL_GET_QUESTIONS;
-				UrlParameters urlParameters = new UrlParameters();
-				try {
-					urlParameters.addPair("ck", key);
-				} catch (UnsupportedEncodingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+	public void loadQuestions(Context context) throws IOException, JSONException {
+		questions = new ArrayList<Question>();
+		String url = StringConstants.URL_GET_QUESTIONS;
+		UrlParameters urlParameters = new UrlParameters();
+		urlParameters.addPair("ck", key);
+		WebRequest request = new WebRequest(context);
+		request.execute(new WebRequestParameters(url, urlParameters));
+		try {
+			JSONObject result = request.getJSONObject();
+			System.out.println(result);
+			JSONObject questionList = result.getJSONObject("questions");
+			JSONObject answerList = result.getJSONObject("answers");
+			if (questionList.length() == answerList.length()) {
+				for (int i = 0; i < questionList.length(); i++) {
+					String question = questionList.getJSONObject(Integer.toString(i)).toString();
+					String answer = answerList.getJSONObject(Integer.toString(i)).toString();
+					questions.add(new Question(context, question, answer, key));
 				}
-				WebRequest request = null;
-				try {
-					request = new WebRequest(context, url, urlParameters);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				try {
-					JSONObject result = request.getJSONObject();
-					System.out.println(result);
-					JSONObject questionList = result.getJSONObject("questions");
-					JSONObject answerList = result.getJSONObject("answers");
-					if (questionList.length() == answerList.length()) {
-						for (int i = 0; i < questionList.length(); i++) {
-							String question = questionList.getJSONObject(Integer.toString(i)).toString();
-							String answer = answerList.getJSONObject(Integer.toString(i)).toString();
-							questions.add(new Question(context, question, answer, key));
-						}
-					} else {
-						throw new RuntimeException();
-						// TODO: Parse error
-					}
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+			} else {
+				throw new RuntimeException();
+				// TODO: Parse error
 			}
-		}.start();
+		} catch (JSONException e) {
+			throw new JSONException(e.toString());
+		}
 	}
 	
 	/**
