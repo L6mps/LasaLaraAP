@@ -19,7 +19,6 @@ import android.database.Cursor;
  * @author Ants-Oskar Mäesalu
  */
 public class Chapter {
-	private DatabaseHelper databaseHelper;	// SQLite database helper class
 	private String key;						// The chapter's UUID
 	private String title;					// Name of the chapter
 	private int version;					// If the author updates a chapter, its version number is incremented. Version numbers let the app know when to re-download chapter questions.
@@ -45,7 +44,7 @@ public class Chapter {
 	 */
 	Chapter(Context context, String key, String title, int version, String authorEmail, 
 			String authorName, String authorInstitution, boolean proposalsAllowed, String bookKey) {
-		databaseHelper = new DatabaseHelper(context);
+		DatabaseHelper databaseHelper = new DatabaseHelper(context);
 		this.key = key;
 		this.title = title;
 		this.version = version;
@@ -59,11 +58,9 @@ public class Chapter {
 	
 	/**
 	 * Constructor, used when querying data from the internal SQLite database.
-	 * @param databaseHelper	The SQLite database helper class.
 	 * @param dbResults			Database query results.
 	 */
-	public Chapter(DatabaseHelper databaseHelper, Cursor dbResults) {
-		this.databaseHelper = databaseHelper;
+	public Chapter(Cursor dbResults) {
 		key = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_KEY));
 		title = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_TITLE));
 		version = dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_VERSION));

@@ -24,25 +24,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	public DatabaseHelper(Context context) {
 		super(context, StringConstants.DATABASE_NAME, null, NumericalConstants.DATABASE_VERSION);
-		database = getWritableDatabase();
-		bookHelper = new BookHelper(this);
-		chapterHelper = new ChapterHelper(this);
-		questionHelper = new QuestionHelper(this);
+		Log.d(StringConstants.APP_NAME, "DatabaseHelper constructor");
+		database = getWritableDatabase(); // Responsible for calling the onCreate(db) method
+		bookHelper = new BookHelper(database);
+		chapterHelper = new ChapterHelper(database);
+		questionHelper = new QuestionHelper(database);
 	}
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		Log.d(StringConstants.APP_NAME, "DatabaseHelper onCreate()");
-		bookHelper.onCreate(db);
-		chapterHelper.onCreate(db);
-		questionHelper.onCreate(db);
+		bookHelper.onCreate();
+		chapterHelper.onCreate();
+		questionHelper.onCreate();
 	}
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		bookHelper.onUpgrade(db, oldVersion, newVersion);
-		chapterHelper.onUpgrade(db, oldVersion, newVersion);
-		questionHelper.onUpgrade(db, oldVersion, newVersion);
+		bookHelper.onUpgrade(oldVersion, newVersion);
+		chapterHelper.onUpgrade(oldVersion, newVersion);
+		questionHelper.onUpgrade(oldVersion, newVersion);
 	}
 
 	/**

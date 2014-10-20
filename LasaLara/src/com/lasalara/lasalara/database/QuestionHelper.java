@@ -16,8 +16,8 @@ import android.util.Log;
  * @author Ants-Oskar Mäesalu
  */
 public class QuestionHelper {
-	// SQLite database helper class
-	private DatabaseHelper databaseHelper;
+	// SQLite database class
+	private SQLiteDatabase database;
 	// Basic database queries
 	private static final String TABLE_CREATE =
 			"CREATE TABLE IF NOT EXISTS " + 
@@ -30,34 +30,33 @@ public class QuestionHelper {
 
 	/**
 	 * Constructor.
-	 * @param databaseHelper	The SQLite database helper class.
+	 * @param database		The SQLite database class.
 	 */
-    QuestionHelper(DatabaseHelper databaseHelper) {
-        this.databaseHelper = databaseHelper;
+    QuestionHelper(SQLiteDatabase database) {
+        this.database = database;
+		Log.d(StringConstants.APP_NAME, "QuestionHelper constructor.");
     }
 
     /**
      * Actions conducted on database creation.
-     * @param database	The SQLite database.
      */
-    public void onCreate(SQLiteDatabase database) {
-    	Log.d(StringConstants.APP_NAME, "ChapterHelper onCreate()");
+    public void onCreate() {
+    	Log.d(StringConstants.APP_NAME, "QuestionHelper onCreate()");
     	Log.d(StringConstants.APP_NAME, TABLE_CREATE);
         database.execSQL(TABLE_CREATE);
     }
 
     /**
      * Actions conducted on database upgrade.
-     * @param database			The SQLite database.
      * @param oldVersion	The old database's version number.
      * @param newVersion	The new database's version number.
      */
-	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+	public void onUpgrade(int oldVersion, int newVersion) {
 		// TODO: Create a better method of upgrading the database.
 		// Currently, the most straigthforward way to upgrade the database is to drop the
 		// previous database, create a new one and then repopulate it.
 		database.execSQL(TABLE_DROP);
-		onCreate(database);
+		onCreate();
 	}
 	
 	/**
@@ -66,7 +65,6 @@ public class QuestionHelper {
 	 */
 	public void insertQuestion(Question question) {
 		// TODO: Check existence - update if exists?
-		SQLiteDatabase database = databaseHelper.getDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.QUESTION_COLUMN_QUESTION, question.getQuestion());
 		contentValues.put(StringConstants.QUESTION_COLUMN_ANSWER, question.getAnswer());
@@ -80,7 +78,6 @@ public class QuestionHelper {
 	 */
 	public List<Question> getQuestions(String chapterKey) {
 		List<Question> questionList = new ArrayList<Question>();
-		SQLiteDatabase database = databaseHelper.getDatabase();
 		String selectQuestionsQuery =
 				"SELECT * FROM " + StringConstants.QUESTION_TABLE_NAME +  
 				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + 
@@ -88,7 +85,7 @@ public class QuestionHelper {
 		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {
-			questionList.add(new Question(databaseHelper, results));
+			questionList.add(new Question(results));
 			moveSucceeded = results.moveToNext();
 		}
 		return questionList;

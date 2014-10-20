@@ -61,11 +61,7 @@ public class Backend {
 	 * @param context	The current activity's context (needed for network connection check and SQLite database).
 	 */
 	public void preloadData(DatabaseHelper databaseHelper) {
-		try {
-			books = preloadBooks(databaseHelper); // TODO: Somewhy, this brings up the debugger
-		} catch (Exception e) {
-			Log.d(StringConstants.APP_NAME, e.toString());
-		}
+		books = preloadBooks(databaseHelper);
 		// Chapters should be preloaded only when a book is opened - saves time.
 		// Questions should be preloaded at the same time the book is opened - the user
 		// needs to see chapters' progress. Maybe we could optimise it?

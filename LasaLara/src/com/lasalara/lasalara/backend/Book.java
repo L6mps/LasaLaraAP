@@ -16,13 +16,13 @@ import com.lasalara.lasalara.database.DatabaseHelper;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
 /**
  * Class responsible for holding and querying a book's information and querying it's chapters' information.
  * @author Ants-Oskar Mäesalu
  */
 public class Book {
-	private DatabaseHelper databaseHelper;	// SQLite database helper class
 	private String key;						// The book's UUID
 	private String title;					// Name of the book
 	private String ownerEmail;				// E-mail of the person who created the book
@@ -40,7 +40,7 @@ public class Book {
 	 * @throws JSONException
 	 */
 	public Book(Context context, String ownerEmail, String title) throws IOException, JSONException {
-		databaseHelper = new DatabaseHelper(context);
+		DatabaseHelper databaseHelper = new DatabaseHelper(context);
 		String url = StringConstants.URL_GET_BOOK;
 		UrlParameters urlParameters = new UrlParameters();
 		urlParameters.addPair("em", URLEncoder.encode(ownerEmail, "UTF-8"));
@@ -82,11 +82,9 @@ public class Book {
 	
 	/**
 	 * Constructor, used when querying data from the internal SQLite database.
-	 * @param databaseHelper	The SQLite database helper class.
 	 * @param dbResults			Database query results.
 	 */
-	public Book(DatabaseHelper databaseHelper, Cursor dbResults) {
-		this.databaseHelper = databaseHelper;
+	public Book(Cursor dbResults) {
 		key = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_KEY));
 		title = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_TITLE));
 		ownerEmail = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_OWNER_EMAIL));

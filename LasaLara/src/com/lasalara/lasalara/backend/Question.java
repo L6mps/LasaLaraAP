@@ -11,7 +11,6 @@ import com.lasalara.lasalara.database.DatabaseHelper;
  * @author Ants-Oskar Mäesalu
  */
 public class Question {
-	private DatabaseHelper databaseHelper;	// SQLite database helper class
 	private String question;				// Text of the question
 	private String answer;					// Text of the answer
 	// private int position;				// The position of the question in the book (the order is set by the book owner but students can change the order locally)
@@ -27,7 +26,7 @@ public class Question {
 	 * @param bookKey	The book the chapter is located in.
 	 */
 	Question(Context context, String question, String answer, String chapterKey) {
-		databaseHelper = new DatabaseHelper(context);
+		DatabaseHelper databaseHelper = new DatabaseHelper(context);
 		this.question = question;
 		this.answer = answer;
 		this.chapterKey = chapterKey;
@@ -36,11 +35,9 @@ public class Question {
 	
 	/**
 	 * Constructor, used when querying data from the internal SQLite database.
-	 * @param databaseHelper	The SQLite database helper class.
 	 * @param dbResults			Database query results.
 	 */
-	public Question(DatabaseHelper databaseHelper, Cursor dbResults) {
-		this.databaseHelper = databaseHelper;
+	public Question(Cursor dbResults) {
 		question = dbResults.getString(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_QUESTION));
 		answer = dbResults.getString(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_ANSWER));
 		chapterKey = dbResults.getString(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_CHAPTER_KEY));

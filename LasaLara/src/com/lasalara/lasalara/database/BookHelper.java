@@ -16,13 +16,13 @@ import android.util.Log;
  * @author Ants-Oskar Mäesalu
  */
 public class BookHelper {
-	// SQLite database helper class
-	private DatabaseHelper databaseHelper;
+	// SQLite database class
+	private SQLiteDatabase database;
 	// Basic database queries
 	private static final String TABLE_CREATE =
 			"CREATE TABLE IF NOT EXISTS " + 
-			StringConstants.CHAPTER_TABLE_NAME + " (" +
-			StringConstants.CHAPTER_COLUMN_KEY + " TEXT, " +
+			StringConstants.BOOK_TABLE_NAME + " (" +
+			StringConstants.BOOK_COLUMN_KEY + " TEXT, " +
 			StringConstants.BOOK_COLUMN_TITLE + " TEXT, " +
 			StringConstants.BOOK_COLUMN_OWNER_EMAIL + " TEXT, " +
 			StringConstants.BOOK_COLUMN_OWNER_NAME + " TEXT, " +
@@ -33,35 +33,33 @@ public class BookHelper {
 
 	/**
 	 * Constructor.
-	 * @param databaseHelper	The SQLite database helper class.
+	 * @param database		The SQLite database class.
 	 */
-    BookHelper(DatabaseHelper databaseHelper) {
-        this.databaseHelper = databaseHelper;
-        Log.d(StringConstants.APP_NAME, "BookHelper constructor.");
-    }
+	BookHelper(SQLiteDatabase database) {
+		this.database = database;
+		Log.d(StringConstants.APP_NAME, "BookHelper constructor.");
+	}
 
-    /**
-     * Actions conducted on database creation.
-     * @param database	The SQLite database.
-     */
-    public void onCreate(SQLiteDatabase database) {
-    	Log.d(StringConstants.APP_NAME, "BookHelper onCreate()");
-    	Log.d(StringConstants.APP_NAME, TABLE_CREATE);
-        database.execSQL(TABLE_CREATE);
-    }
+	/**
+	 * Actions conducted on database creation.
+	 */
+	public void onCreate() {
+		Log.d(StringConstants.APP_NAME, "BookHelper onCreate()");
+		Log.d(StringConstants.APP_NAME, TABLE_CREATE);
+		database.execSQL(TABLE_CREATE);
+	}
 
     /**
      * Actions conducted on database upgrade.
-     * @param database			The SQLite database.
      * @param oldVersion	The old database's version number.
      * @param newVersion	The new database's version number.
      */
-	public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
+	public void onUpgrade(int oldVersion, int newVersion) {
 		// TODO: Create a better method of upgrading the database.
 		// Currently, the most straigthforward way to upgrade the database is to drop the
 		// previous database, create a new one and then repopulate it.
 		database.execSQL(TABLE_DROP);
-		onCreate(database);
+		onCreate();
 	}
 	
 	/**
@@ -70,7 +68,6 @@ public class BookHelper {
 	 */
 	public void insertBook(Book book) {
 		// TODO: Check existence - update if exists?
-		SQLiteDatabase database = databaseHelper.getDatabase();
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.BOOK_COLUMN_KEY, book.getKey());
 		contentValues.put(StringConstants.BOOK_COLUMN_TITLE, book.getTitle());
@@ -87,12 +84,11 @@ public class BookHelper {
 	public List<Book> getBooks() {
 		Log.d(StringConstants.APP_NAME, "BookHelper getBooks()");
 		List<Book> bookList = new ArrayList<Book>();
-		SQLiteDatabase database = databaseHelper.getDatabase();
 		String selectBooksQuery = "SELECT * FROM " + StringConstants.BOOK_TABLE_NAME;
 		Cursor results =  database.rawQuery(selectBooksQuery, null);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {
-			bookList.add(new Book(databaseHelper, results));
+			bookList.add(new Book(results));
 			moveSucceeded = results.moveToNext();
 		}
 		return bookList;
