@@ -48,8 +48,12 @@ public class WebRequest {
 			Log.d(StringConstants.APP_NAME, "Network is connected.");
 			this.url = url.toLowerCase(Locale.ENGLISH);
 			this.parameterList = parameterList;
-			sendRequest();
-			getResponse();
+			new Thread(){ // Android no longer supports running network requests on the UI thread
+			    public void run(){
+					sendRequest();
+					getResponse();
+			    }
+			}.start();
 		} else {
 			// TODO: Throw error message: No networks are connected
 			Log.d(StringConstants.APP_NAME, "No networks are connected.");
@@ -89,11 +93,11 @@ public class WebRequest {
 			response = client.execute(post);
 			Log.d(StringConstants.APP_NAME, "Got HTTP response.");
 		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.d(StringConstants.APP_NAME, "ClientProtocolException: " + e.getStackTrace()); // TODO
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.d(StringConstants.APP_NAME, "IOException: " + e.getStackTrace()); // TODO
+		} catch (Exception e) {
+			Log.d(StringConstants.APP_NAME, "Jumaliku käe exception: " + e.getStackTrace()); // TODO
 		}
 	}
 	
@@ -101,16 +105,17 @@ public class WebRequest {
 	 * Get a response from the web request.
 	 */
 	private void getResponse() {
-		Log.d(StringConstants.APP_NAME, "Getting response.");
 		result = null;
 		try {
+			Log.d(StringConstants.APP_NAME, "Getting response.");
 			result = EntityUtils.toString(response.getEntity());
+			Log.d(StringConstants.APP_NAME, "Got response.");
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.d(StringConstants.APP_NAME, "ParseException: " + e.getStackTrace());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Log.d(StringConstants.APP_NAME, "IOException: " + e.getStackTrace());
+		} catch (Exception e) {
+			Log.d(StringConstants.APP_NAME, "Jumaliku käe exception: " + e.getStackTrace());
 		}
 	}
 	
