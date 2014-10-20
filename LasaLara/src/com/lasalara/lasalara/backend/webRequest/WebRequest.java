@@ -48,8 +48,20 @@ public class WebRequest {
 			Log.d(StringConstants.APP_NAME, "Network is connected.");
 			this.url = url.toLowerCase(Locale.ENGLISH);
 			this.parameterList = parameterList;
-			sendRequest();
-			getResponse();
+			Thread thread = new Thread() {
+				@Override
+				public void run() {
+					sendRequest();
+					getResponse();
+				}
+			};
+			thread.start();
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		} else {
 			// TODO: Throw error message: No networks are connected
 			Log.d(StringConstants.APP_NAME, "No networks are connected.");

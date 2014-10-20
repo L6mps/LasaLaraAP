@@ -67,6 +67,7 @@ public class BookHelper {
 	 * @param book		The book object's instance.
 	 */
 	public void insertBook(Book book) {
+		Log.d(StringConstants.APP_NAME, "BookHelper: insertBook \"" + book.getTitle() + "\"");
 		// TODO: Check existence - update if exists?
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.BOOK_COLUMN_KEY, book.getKey());
