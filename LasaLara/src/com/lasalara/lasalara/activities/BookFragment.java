@@ -1,12 +1,13 @@
 package com.lasalara.lasalara.activities;
 
+import java.util.ArrayList;
+
 import com.lasalara.lasalara.R;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class BookFragment extends ListFragment{
@@ -23,9 +24,25 @@ public class BookFragment extends ListFragment{
 		
 		//List of books
 		String[] a = new String[5];
+		String[] b = new String[5];
+		String[] c = new String[5];
+		String[] d = new String[5];
 		a[0] = "Book 1"; a[1]="Book 2"; a[2]="Book 3"; a[3]="Book 4"; a[4]="Book 5";
+		b[0] = "Abe"; b[1]="Ben"; b[2]="Chuck"; b[3]="Dylan"; b[4]="Edward";
+		c[0] = "17%"; c[1]="20%"; c[2]="50%"; c[3]="10%"; c[4]="5%";
+		d[0] = "2/7"; d[1]="1/5"; d[2]="2/4"; d[3]="1/10"; d[4]="1/20";
 		
-		setListAdapter(new ArrayAdapter<String>(getActivity(), layout, a));
+		ArrayList<String[]> info = new ArrayList<String[]>();
+		for(int i=0; i<5; i++) {
+			String[] tmp = new String[4];
+			tmp[0]=a[i];
+			tmp[1]=b[i];
+			tmp[2]=c[i];
+			tmp[3]=d[i];
+			info.add(tmp);
+		}
+		setListAdapter(new CustomListAdapter(getActivity(), info, layout));
+		//setListAdapter(new ArrayAdapter<String>(getActivity(), R.layout.listelement_book,R.id.bookTitle.toString(), R.id.bookAuthorInfo.toString(),a, b));
 	}
 	
 	public void onStart() {
@@ -46,7 +63,6 @@ public class BookFragment extends ListFragment{
 	
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		mCallback.onBookSelected(position);
-		getListView().setItemChecked(position,  true);
 	}
 	
 	

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="?android:attr/listPreferredItemHeight"
+    android:gravity="left"
+    android:padding="6dip" >
+    
+	<TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/title"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:text=""
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:textSize="18sp" />
+        
+    <TextView
+        android:id="@+id/author"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/title"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text=""
+        android:textSize="12sp" />
+
+    <TextView
+        android:id="@+id/donePercentage"
+        android:layout_width="40sp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignWithParentIfMissing="true"
+        android:text=""
+        
+        android:singleLine="true"
+        android:textSize="18sp" />
+    
+	<TextView
+        android:id="@+id/doneFraction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignTop="@id/author"
+        android:layout_alignLeft="@id/donePercentage"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:text=""
+        android:textSize="12sp" />
+
+
+
+</RelativeLayout> 
