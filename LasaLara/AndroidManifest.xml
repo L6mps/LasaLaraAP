@@ -18,7 +18,7 @@
         android:theme="@style/AppTheme"
 		android:name="com.lasalara.lasalara.LasaLaraApplication">
         <activity
-            android:name="com.lasalara.lasalara.frontend.activities.MainActivity"
+            android:name="com.lasalara.lasalara.activities.MainActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

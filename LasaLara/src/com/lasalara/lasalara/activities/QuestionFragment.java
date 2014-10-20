@@ -1,4 +1,4 @@
-package com.lasalara.lasalara.frontend.activities;
+package com.lasalara.lasalara.activities;
 
 import android.app.Activity;
 import android.os.Bundle;

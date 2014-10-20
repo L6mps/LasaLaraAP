@@ -1,8 +1,9 @@
-package com.lasalara.lasalara.backend.webRequest;
+package com.lasalara.lasalara.backend;
+
+import android.content.Context;
 
 /**
- * Class responsible for holding a web request's parameter data.
- * Used when executing the asynchronous WebRequest class.
+ * 
  * @author Ants-Oskar Mäesalu
  */
 public class WebRequestParameters {
@@ -14,7 +15,7 @@ public class WebRequestParameters {
 	 * @param url			The request's URL.
 	 * @param parameterList	The parameter list sent as a POST header.
 	 */
-	public WebRequestParameters(String url, UrlParameters parameterList) {
+	WebRequestParameters(String url, UrlParameters parameterList) {
 		this.url = url;
 		this.parameterList = parameterList;
 	}

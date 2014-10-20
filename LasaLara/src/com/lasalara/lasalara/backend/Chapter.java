@@ -1,17 +1,15 @@
-package com.lasalara.lasalara.backend.structure;
+package com.lasalara.lasalara.backend;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.lasalara.lasalara.backend.constants.StringConstants;
-import com.lasalara.lasalara.backend.database.DatabaseHelper;
-import com.lasalara.lasalara.backend.webRequest.UrlParameters;
-import com.lasalara.lasalara.backend.webRequest.WebRequest;
-import com.lasalara.lasalara.backend.webRequest.WebRequestParameters;
+import com.lasalara.lasalara.constants.StringConstants;
+import com.lasalara.lasalara.database.DatabaseHelper;
 
 import android.content.Context;
 import android.database.Cursor;

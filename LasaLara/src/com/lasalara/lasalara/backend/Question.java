@@ -1,11 +1,11 @@
-package com.lasalara.lasalara.backend.structure;
+package com.lasalara.lasalara.backend;
 
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
-import com.lasalara.lasalara.backend.constants.StringConstants;
-import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.constants.StringConstants;
+import com.lasalara.lasalara.database.DatabaseHelper;
 
 /**
  * Class responsible for holding a question's information

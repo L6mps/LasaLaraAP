@@ -1,7 +1,8 @@
-package com.lasalara.lasalara.backend.database;
+package com.lasalara.lasalara.database;
 
-import com.lasalara.lasalara.backend.constants.NumericalConstants;
-import com.lasalara.lasalara.backend.constants.StringConstants;
+import com.lasalara.lasalara.Backend;
+import com.lasalara.lasalara.constants.NumericalConstants;
+import com.lasalara.lasalara.constants.StringConstants;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

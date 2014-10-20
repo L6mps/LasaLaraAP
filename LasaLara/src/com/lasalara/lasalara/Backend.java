@@ -1,4 +1,4 @@
-package com.lasalara.lasalara.backend;
+package com.lasalara.lasalara;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,9 +9,9 @@ import org.json.JSONException;
 import android.content.Context;
 import android.util.Log;
 
-import com.lasalara.lasalara.backend.constants.StringConstants;
-import com.lasalara.lasalara.backend.database.DatabaseHelper;
-import com.lasalara.lasalara.backend.structure.Book;
+import com.lasalara.lasalara.backend.Book;
+import com.lasalara.lasalara.constants.StringConstants;
+import com.lasalara.lasalara.database.DatabaseHelper;
 
 /**
  * The main class of the back end of the application.

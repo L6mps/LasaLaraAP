@@ -1,9 +1,9 @@
-package com.lasalara.lasalara.frontend.activities;
+package com.lasalara.lasalara.activities;
 
+import com.lasalara.lasalara.Backend;
 import com.lasalara.lasalara.R;
-import com.lasalara.lasalara.backend.Backend;
-import com.lasalara.lasalara.backend.constants.StringConstants;
-import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.constants.StringConstants;
+import com.lasalara.lasalara.database.DatabaseHelper;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
