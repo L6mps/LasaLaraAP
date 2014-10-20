@@ -40,11 +40,10 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 			qFragment.setArguments(getIntent().getExtras());
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, bFragment).commit();
 		}
-		Backend.initializeInstance();
-		DatabaseHelper.initializeInstance(this);
+		Log.d(StringConstants.APP_NAME, "Initialising database helper.");
+		DatabaseHelper.initialiseInstance(this);
 		Log.d(StringConstants.APP_NAME, "Downloading book.");
 		Backend.getInstance().downloadBook(this, "lasalara.help@gmail.com", "Welcome to LasaLara"); // TODO: Only for testing
-		Log.d(StringConstants.APP_NAME, "Downloaded book.");
 		Log.d(StringConstants.APP_NAME, "Downloaded book.");
 		Backend.getInstance().preloadData(DatabaseHelper.getInstance());
 	}

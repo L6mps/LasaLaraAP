@@ -40,70 +40,65 @@ public class Book {
 	 * @param ownerEmail	The book's owner's e-mail address.
 	 * @param title			The book's title.
 	 */
-	public Book(final Context context, final String ownerEmail, final String title) {
-		new Thread() {
-			@Override
-			public void run() {
-				Log.d(StringConstants.APP_NAME, "Book constructor.");
-				DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
-				String url = StringConstants.URL_GET_BOOK;
-				UrlParameters urlParameters = new UrlParameters();
-				try {
-					urlParameters.addPair("em", ownerEmail);
-				} catch (UnsupportedEncodingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				try {
-					urlParameters.addPair("bt", title);
-				} catch (UnsupportedEncodingException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				WebRequest request = null;
-				try {
-					request = new WebRequest(context, url, urlParameters);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				try {
-					Log.d(StringConstants.APP_NAME, "Book: Getting JSONObject.");
-					JSONObject result = request.getJSONObject();
-					Log.d(StringConstants.APP_NAME, "Book: Got JSONObject.");
-					try {
-						if (validateEmail(ownerEmail)) {
-							getBookInstance().ownerEmail = ownerEmail;
-							getBookInstance().title = title;
-							if (result.isNull("name")) {
-								ownerName = null;
-							} else {
-								ownerName = result.get("name").toString();
-							}
-							if (result.isNull("institution")) {
-								ownerInstitution = null;
-							} else {
-								ownerInstitution = result.get("institution").toString();
-							}
-							key = result.get("bk").toString();
-							databaseHelper.getBookHelper().insertBook(getBookInstance()); // TODO: Test
-						} else {
-							// TODO: Throw error: The e-mail address does not correspond to an e-mail address' format.
-						}
-					} catch (JSONException e) {
-						int errorCode = result.getInt("err");
-						if (errorCode == 0) {
-							// TODO: Throw error: The e-mail address was not found.
-						} else {
-							// TODO: Throw error: No book with that title was found.
-						}
+	public Book(Context context, String ownerEmail, String title) {
+		Log.d(StringConstants.APP_NAME, "Book constructor.");
+		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+		String url = StringConstants.URL_GET_BOOK;
+		UrlParameters urlParameters = new UrlParameters();
+		try {
+			urlParameters.addPair("em", ownerEmail);
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			urlParameters.addPair("bt", title);
+		} catch (UnsupportedEncodingException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		WebRequest request = null;
+		try {
+			request = new WebRequest(context, url, urlParameters);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		try {
+			Log.d(StringConstants.APP_NAME, "Book: Getting JSONObject.");
+			JSONObject result = request.getJSONObject();
+			Log.d(StringConstants.APP_NAME, "Book: Got JSONObject.");
+			try {
+				if (validateEmail(ownerEmail)) {
+					getBookInstance().ownerEmail = ownerEmail;
+					getBookInstance().title = title;
+					if (result.isNull("name")) {
+						ownerName = null;
+					} else {
+						ownerName = result.get("name").toString();
 					}
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if (result.isNull("institution")) {
+						ownerInstitution = null;
+					} else {
+						ownerInstitution = result.get("institution").toString();
+					}
+					key = result.get("bk").toString();
+					databaseHelper.getBookHelper().insertBook(getBookInstance()); // TODO: Test
+				} else {
+					// TODO: Throw error: The e-mail address does not correspond to an e-mail address' format.
+				}
+			} catch (JSONException e) {
+				int errorCode = result.getInt("err");
+				if (errorCode == 0) {
+					// TODO: Throw error: The e-mail address was not found.
+				} else {
+					// TODO: Throw error: No book with that title was found.
 				}
 			}
-		}.start();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**

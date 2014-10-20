@@ -28,16 +28,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		super(context, StringConstants.DATABASE_NAME, null, NumericalConstants.DATABASE_VERSION);
 		Log.d(StringConstants.APP_NAME, "DatabaseHelper constructor.");
 		database = getWritableDatabase(); // Responsible for calling the onCreate(db) method
-		bookHelper = new BookHelper(database);
-		chapterHelper = new ChapterHelper(database);
-		questionHelper = new QuestionHelper(database);
+		Log.d(StringConstants.APP_NAME, "Got the database.");
 	}
 	
 	/**
 	 * Initialize the singleton database helper class.
 	 */
 	
-	public static void initializeInstance(Context context) {
+	public static void initialiseInstance(Context context) {
 		if (instance == null) { // NB: Not thread-safe
 			instance = new DatabaseHelper(context);
 		}
@@ -53,6 +51,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		Log.d(StringConstants.APP_NAME, "DatabaseHelper onCreate()");
+		bookHelper = new BookHelper(db);
+		chapterHelper = new ChapterHelper(db);
+		questionHelper = new QuestionHelper(db);
 		bookHelper.onCreate();
 		chapterHelper.onCreate();
 		questionHelper.onCreate();
