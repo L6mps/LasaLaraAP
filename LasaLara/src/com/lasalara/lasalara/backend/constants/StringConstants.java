@@ -1,4 +1,4 @@
-package com.lasalara.lasalara.constants;
+package com.lasalara.lasalara.backend.constants;
 
 /**
  * Class for all of the string constants in the application.

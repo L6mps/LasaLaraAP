@@ -1,13 +1,12 @@
-package com.lasalara.lasalara.backend;
+package com.lasalara.lasalara.backend.webRequest;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
 /**
- * Class responsible for holding web request's URL parameter data.
+ * Class responsible for holding a web request's URL parameter data.
  * @author Ants-Oskar Mäesalu
  */
 public class UrlParameters {
@@ -17,7 +16,7 @@ public class UrlParameters {
 	/**
 	 * COnstructor without any parameters. Initializes the key and value lists.
 	 */
-	UrlParameters() {
+	public UrlParameters() {
 		keyList = new ArrayList<String>();
 		valueList = new ArrayList<String>();
 	}
