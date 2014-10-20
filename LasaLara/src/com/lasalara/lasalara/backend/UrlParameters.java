@@ -1,5 +1,7 @@
 package com.lasalara.lasalara.backend;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -24,10 +26,11 @@ public class UrlParameters {
 	 * Add a new parameter pair to the list of URL parameters.
 	 * @param key		The parameter's key string.
 	 * @param value		The parameter's value string.
+	 * @throws UnsupportedEncodingException 
 	 */
-	public void addPair(String key, String value) {
+	public void addPair(String key, String value) throws UnsupportedEncodingException {
 		keyList.add(key.toLowerCase(Locale.ENGLISH));
-		valueList.add(value.toLowerCase(Locale.ENGLISH));
+		valueList.add(URLEncoder.encode(value, "UTF-8").toLowerCase(Locale.ENGLISH));
 	}
 	
 	/**

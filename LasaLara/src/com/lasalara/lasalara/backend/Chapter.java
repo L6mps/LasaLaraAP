@@ -91,7 +91,7 @@ public class Chapter {
 		questions = new ArrayList<Question>();
 		String url = StringConstants.URL_GET_QUESTIONS;
 		UrlParameters urlParameters = new UrlParameters();
-		urlParameters.addPair("ck", URLEncoder.encode(key, "UTF-8"));
+		urlParameters.addPair("ck", key);
 		WebRequest request = new WebRequest(context, url, urlParameters);
 		try {
 			JSONObject result = request.getJSONObject();

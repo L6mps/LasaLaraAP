@@ -45,8 +45,8 @@ public class Book {
 		DatabaseHelper databaseHelper = new DatabaseHelper(context);
 		String url = StringConstants.URL_GET_BOOK;
 		UrlParameters urlParameters = new UrlParameters();
-		urlParameters.addPair("em", URLEncoder.encode(ownerEmail, "UTF-8"));
-		urlParameters.addPair("bt", URLEncoder.encode(title, "UTF-8"));
+		urlParameters.addPair("em", ownerEmail);
+		urlParameters.addPair("bt", title);
 		WebRequest request = new WebRequest(context, url, urlParameters);
 		try {
 			JSONObject result = request.getJSONObject();

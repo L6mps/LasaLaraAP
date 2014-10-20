@@ -45,6 +45,7 @@ public class WebRequest {
 	public WebRequest(Context context, String url, UrlParameters parameterList) throws IOException {
 		disableConnectionReuseIfNecessary();
 		if (LasaLaraApplication.isNetworkConnected(context)) {
+			Log.d(StringConstants.APP_NAME, "Network is connected.");
 			this.url = url.toLowerCase(Locale.ENGLISH);
 			this.parameterList = parameterList;
 			sendRequest();
@@ -66,29 +67,51 @@ public class WebRequest {
 	
 	/**
 	 * Send a POST web request to the site.
-	 * @throws IOException 
-	 * @throws UnsupportedEncodingException
-	 * @throws ClientProtocolException 
 	 */
-	private void sendRequest() throws IOException, UnsupportedEncodingException, ClientProtocolException {
+	private void sendRequest() {
+		Log.d(StringConstants.APP_NAME, "Sending request.");
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(url);
 		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 		for (int i = 0; i < parameterList.getSize(); i++) {
+			Log.d(StringConstants.APP_NAME, "Web request parameter: " + parameterList.getKey(i) + ", " + parameterList.getValue(i) + ".");
 			pairs.add(new BasicNameValuePair(parameterList.getKey(i), parameterList.getValue(i)));
 		}
-		post.setEntity(new UrlEncodedFormEntity(pairs));
-		response = client.execute(post);
+		try {
+			Log.d(StringConstants.APP_NAME, "Setting URL entity.");
+			post.setEntity(new UrlEncodedFormEntity(pairs));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			Log.d(StringConstants.APP_NAME, "Getting HTTP response.");
+			response = client.execute(post);
+			Log.d(StringConstants.APP_NAME, "Got HTTP response.");
+		} catch (ClientProtocolException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
 	 * Get a response from the web request.
-	 * @throws ParseException 
-	 * @throws IOException
 	 */
-	private void getResponse() throws ParseException, IOException {
+	private void getResponse() {
+		Log.d(StringConstants.APP_NAME, "Getting response.");
 		result = null;
-		result = EntityUtils.toString(response.getEntity());
+		try {
+			result = EntityUtils.toString(response.getEntity());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
