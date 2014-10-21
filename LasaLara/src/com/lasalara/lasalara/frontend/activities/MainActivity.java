@@ -21,6 +21,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	private BookFragment bFragment;
 	private ChapterFragment cFragment;
 	private QuestionFragment qFragment;
+	private AddBookFragment abFragment;
 	private GestureDetector gd;
 	
 	@SuppressWarnings("deprecation")
@@ -38,20 +39,28 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 			bFragment.setArguments(getIntent().getExtras());
 			qFragment = new QuestionFragment();
 			qFragment.setArguments(getIntent().getExtras());
+			abFragment = new AddBookFragment();
+			abFragment.setArguments(getIntent().getExtras());
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, bFragment).commit();
 		}
+		/*
 		Log.d(StringConstants.APP_NAME, "Initialising database helper.");
 		DatabaseHelper.initialiseInstance(this);
 		Log.d(StringConstants.APP_NAME, "Downloading book.");
 		Backend.getInstance().downloadBook(this, "lasalara.help@gmail.com", "Welcome to LasaLara"); // TODO: Only for testing
 		Log.d(StringConstants.APP_NAME, "Downloaded book.");
 		Backend.getInstance().preloadData(DatabaseHelper.getInstance());
+		*/
 	}
 
 	@Override
 	public void onBookSelected(int position) {
-		cFragment.changeData(position);
-		changeFragment(cFragment);
+		if(position == 4)
+			changeFragment(abFragment);
+		else {
+			cFragment.changeData(position);
+			changeFragment(cFragment);
+		}
 	}
 
 	@Override
@@ -66,7 +75,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.activity_main_actions, menu);
+        inflater.inflate(R.menu.question_fragment_settings, menu);
         return super.onCreateOptionsMenu(menu);
     }
 

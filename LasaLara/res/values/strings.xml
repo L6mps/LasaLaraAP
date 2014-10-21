@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">LasaLaraAP</string>
     <string name="action_settings">Settings</string>
     
-    
     <!-- Action Bar action items -->
+
     <string name="reset_progress">Reset Progress</string>
     <string name="turn_page_view_on">Turn Page View ON</string>
     <string name="Switch_QA">Switch Question/Answer</string>
     <string name="propose_question">Propose Question</string>
     <string name="scramble_question_order">Scramble Question Order</string>
-    
     <string name="add_book">Add Book</string>
     
-
-</resources>
+    <!--  Add Book screen items -->
+    
+    <string name="addAuthorEmail">Author\'s e-mail address</string>
+    <string name="addBook">Title of the book</string>
+    <string name="author">Author</string>
+    <string name="book">Book</string>
+    <string name="cancel">Cancel</string>
+    <string name="done">Done</string>
+ 
+ </resources>
