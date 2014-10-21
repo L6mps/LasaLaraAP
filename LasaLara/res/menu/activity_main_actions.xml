@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <!-- Search / will display always -->
-    <item android:id="@+id/action_search"
-          android:title="@string/action_search"
+    
+    <!-- Reset Progress -->
+    <item android:id="@+id/reset_progress"
+          android:title="@string/reset_progress"
           android:showAsAction="never"/>
      
-    <!-- Location Found -->
-    <item android:id="@+id/action_location_found"
-          android:title="@string/action_location_found"
+    <!-- Turn Page View ON -->
+    <item android:id="@+id/turn_page_view_on"
+          android:title="@string/turn_page_view_on"
           android:showAsAction="never" />
      
-    <!-- Refresh -->
-    <item android:id="@+id/action_refresh"
-          android:title="@string/action_refresh"
+    <!-- Switch Question/Answer -->
+    <item android:id="@+id/Switch_QA"
+          android:title="@string/Switch_QA"
           android:showAsAction="never" />
      
-    <!-- Help -->
-    <item android:id="@+id/action_help"
-          android:title="@string/action_help"
+    <!-- Propose Question -->
+    <item android:id="@+id/propose_question"
+          android:title="@string/propose_question"
           android:showAsAction="never"/>
      
-    <!-- Check updates -->
-    <item android:id="@+id/action_check_updates"
-          android:title="@string/action_check_updates"
+    <!-- Scramble Question Order -->
+    <item android:id="@+id/scramble_question_order"
+          android:title="@string/scramble_question_order"
           android:showAsAction="never" />
     
 </menu> 

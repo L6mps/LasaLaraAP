@@ -6,10 +6,10 @@
     
     
     <!-- Action Bar action items -->
-    <string name="action_search">Reset Progress</string>
-    <string name="action_location_found">Turn Page View ON</string>
-    <string name="action_refresh">Switch Question/Answer</string>
-    <string name="action_help">Propose Question</string>
-    <string name="action_check_updates">Scramble Question Order</string>
+    <string name="reset_progress">Reset Progress</string>
+    <string name="turn_page_view_on">Turn Page View ON</string>
+    <string name="Switch_QA">Switch Question/Answer</string>
+    <string name="propose_question">Propose Question</string>
+    <string name="scramble_question_order">Scramble Question Order</string>
 
 </resources>
