@@ -27,10 +27,10 @@ public class BookFragment extends ListFragment{
 		String[] b = new String[5];
 		String[] c = new String[5];
 		String[] d = new String[5];
-		a[0] = "Book 1"; a[1]="Book 2"; a[2]="Book 3"; a[3]="Book 4"; a[4]="Add new book...";
-		b[0] = "Abe"; b[1]="Ben"; b[2]="Chuck"; b[3]="Dylan"; b[4]="";
-		c[0] = "17%"; c[1]="20%"; c[2]="50%"; c[3]="10%"; c[4]="";
-		d[0] = "2/7"; d[1]="1/5"; d[2]="2/4"; d[3]="1/10"; d[4]="";
+		a[0] = "LasaLara"; a[1]="Book 2"; a[2]="Book 3"; a[3]="Book 4"; a[4]="Add new book...";
+		b[0] = "LasaLara"; b[1]="Ben"; b[2]="Chuck"; b[3]="Dylan"; b[4]="";
+		c[0] = "100%"; c[1]="20%"; c[2]="50%"; c[3]="10%"; c[4]="";
+		d[0] = "4/4"; d[1]="1/5"; d[2]="2/4"; d[3]="1/10"; d[4]="";
 		
 		ArrayList<String[]> info = new ArrayList<String[]>();
 		for(int i=0; i<5; i++) {

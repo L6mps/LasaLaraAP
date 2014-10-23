@@ -38,7 +38,8 @@
         android:layout_height="wrap_content"
 		android:layout_alignLeft="@+id/author"
 		android:layout_below="@+id/book"
-        android:text="@string/done" />
+        android:text="@string/done"
+        android:onClick="addBookListener" />
 
     <TextView
         android:id="@+id/bookLabel"
@@ -55,7 +56,8 @@
         android:layout_below="@+id/book"
         android:layout_toRightOf="@+id/done"
         android:layout_alignBaseline="@+id/done"
-        android:text="@string/cancel" />
+        android:text="@string/cancel"
+        android:onClick="cancelListener" />
 
 </RelativeLayout>
 

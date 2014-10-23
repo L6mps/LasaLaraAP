@@ -56,11 +56,29 @@ OnChapterSelectedListener mCallback;
 
 	public void changeData(int position) {
 		parentBook = position+1;
+		
+		//LasaLara chapter demo
+		if(parentBook==1) {
+			String a[] = new String[4];
+			a[0] = "LasaLara for students";
+			a[1] = "LasaLara creator";
+			a[2] = "100%";
+			a[3] = "4/4";
+			ArrayList<String[]> info = new ArrayList<String[]>();
+			info.add(a);
+			this.info = info;
+			if(cla!=null)
+				cla.setAllListItems(info);
+			return;
+		}
+		
+		//Other debug demo
 		//List of chapters
 		String[] a = new String[5];
 		String[] b = new String[5];
 		String[] c = new String[5];
 		String[] d = new String[5];
+		
 		a[0] = "Chapter 1, book "+parentBook; a[1]="Chapter 2, book "+parentBook; a[2]="Chapter 3, book "+parentBook; a[3]="Chapter 4, book "+parentBook; a[4]="Chapter 5, book "+parentBook;
 		b[0] = "Abe"; b[1]="Ben"; b[2]="Chuck"; b[3]="Dylan"; b[4]="Edward";
 		c[0] = "0%"; c[1]="0%"; c[2]="0%"; c[3]="0%"; c[4]="0%";

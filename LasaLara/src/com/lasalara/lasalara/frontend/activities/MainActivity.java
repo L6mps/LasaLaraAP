@@ -14,6 +14,8 @@ import android.view.GestureDetector.OnGestureListener;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.EditText;
 
 public class MainActivity extends FragmentActivity implements BookFragment.OnBookSelectedListener,
 															  ChapterFragment.OnChapterSelectedListener, OnGestureListener {
@@ -24,10 +26,9 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	private AddBookFragment abFragment;
 	private GestureDetector gd;
 	
-	@SuppressWarnings("deprecation")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.gd = new GestureDetector(this);
+		this.gd = new GestureDetector(this,this);
 		setContentView(R.layout.contentlists);
 		if(findViewById(R.id.fragment_container) != null) {
 			if(savedInstanceState != null) {
@@ -86,14 +87,23 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-		if((e1.getX() - e2.getX()) > 150) {
-			qFragment.screenSwiped();
+		if(!qFragment.isVisible())
+			return false;
+		else if((e1.getX() - e2.getX()) > 150) {
+			qFragment.screenSwiped('r');
+			return true;
+		}
+		else if((e2.getX() - e1.getX()) > 150) {
+			qFragment.screenSwiped('l');
+			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public void onLongPress(MotionEvent e) {		
+	public void onLongPress(MotionEvent e) {	
+		if(qFragment.isVisible())
+			qFragment.screenTapped();
 	}
 
 	@Override
@@ -114,6 +124,18 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	@Override
 	public boolean onTouchEvent(MotionEvent me) {
 		return gd.onTouchEvent(me);
+	}
+	
+	public void addBookListener(View v) {
+		changeFragment(bFragment);
+		((EditText) abFragment.getView().findViewById(R.id.author)).setText("");
+		((EditText) abFragment.getView().findViewById(R.id.book)).setText("");
+	}
+	
+	public void cancelListener(View v){
+		changeFragment(bFragment);
+		((EditText) abFragment.getView().findViewById(R.id.author)).setText("");
+		((EditText) abFragment.getView().findViewById(R.id.book)).setText("");
 	}
 	
 	
