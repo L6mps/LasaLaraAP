@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -170,8 +171,9 @@ public class Book {
 			e1.printStackTrace();
 		}
 		try {
-			JSONObject result = request.getJSONObject();
-			for (int i = 0; i < result.length(); i++) {
+			JSONArray resultArray = request.getJSONArray();
+			for (int i = 0; i < resultArray.length(); i++) {
+				JSONObject result = resultArray.getJSONObject(i);
 				String chapterKey = result.get("ck").toString();
 				String chapterTitle = result.get("title").toString();
 				int chapterVersion = result.getInt("version");

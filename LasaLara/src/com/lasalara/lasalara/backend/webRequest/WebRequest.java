@@ -21,6 +21,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -113,6 +114,7 @@ public class WebRequest {
 			Log.d(StringConstants.APP_NAME, "Getting response.");
 			result = EntityUtils.toString(response.getEntity());
 			Log.d(StringConstants.APP_NAME, "Got response.");
+			Log.d(StringConstants.APP_NAME, result);
 		} catch (ParseException e) {
 			Log.d(StringConstants.APP_NAME, "ParseException: " + e.getStackTrace());
 		} catch (IOException e) {
@@ -129,5 +131,13 @@ public class WebRequest {
 	public JSONObject getJSONObject() throws JSONException {
 		Log.e("debug",result.substring(result.indexOf("{"), result.lastIndexOf("}")+1));
 		return new JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}")+1));
+	}
+	
+	/**
+	 * @return the result of the web request as a JSONArray.
+	 * @throws JSONException
+	 */
+	public JSONArray getJSONArray() throws JSONException {
+		return new JSONArray(result);
 	}
 }
