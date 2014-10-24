@@ -4,14 +4,12 @@ import android.content.Context;
 import android.os.Build;
 import android.util.Log;
 
-import com.lasalara.lasalara.LasaLaraApplication;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -44,10 +42,11 @@ public class WebRequest {
 	 */
 	public WebRequest(Context context, String url, UrlParameters parameterList) throws IOException {
 		disableConnectionReuseIfNecessary();
-		if (LasaLaraApplication.isNetworkConnected(context)) {
 			Log.d(StringConstants.APP_NAME, "Network is connected.");
-			this.url = url.toLowerCase(Locale.ENGLISH);
+			//this.url = url.toLowerCase(Locale.ENGLISH);
+			this.url = url;
 			this.parameterList = parameterList;
+			Log.e("debug",parameterList.valueList.get(0));
 			Thread thread = new Thread() {
 				@Override
 				public void run() {
@@ -62,10 +61,6 @@ public class WebRequest {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		} else {
-			// TODO: Throw error message: No networks are connected
-			Log.d(StringConstants.APP_NAME, "No networks are connected.");
-		}
 	}
 	
 	/**
@@ -132,6 +127,7 @@ public class WebRequest {
 	 * @throws JSONException
 	 */
 	public JSONObject getJSONObject() throws JSONException {
-		return new JSONObject(result);
+		Log.e("debug",result.substring(result.indexOf("{"), result.lastIndexOf("}")+1));
+		return new JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}")+1));
 	}
 }

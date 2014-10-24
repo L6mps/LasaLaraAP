@@ -34,6 +34,8 @@ public class Book {
 	private String lastChapter;				// Last chapter (UUID) of this book opened by the student
 	private List<Chapter> chapters; 		// The list of chapters in this book.
 	
+	private Context context;
+	
 	/**
 	 * Constructor, used when downloading a book from the web.
 	 * @param context		The current activity's context (needed for network connection check and SQLite database).
@@ -41,6 +43,7 @@ public class Book {
 	 * @param title			The book's title.
 	 */
 	public Book(Context context, String ownerEmail, String title) {
+		this.context = context;
 		Log.d(StringConstants.APP_NAME, "Book constructor.");
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		String url = StringConstants.URL_GET_BOOK;
@@ -83,6 +86,10 @@ public class Book {
 						ownerInstitution = result.get("institution").toString();
 					}
 					key = result.get("bk").toString();
+					
+					if(databaseHelper.getBookHelper() == null)
+						Log.e("debug","Database helper's book helper is null");
+					
 					databaseHelper.getBookHelper().insertBook(this); // TODO: Test
 				} else {
 					// TODO: Throw error: The e-mail address does not correspond to an e-mail address' format.
@@ -145,7 +152,7 @@ public class Book {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	private void loadChapters(Context context) {
+	private void loadChapters() {
 		chapters = new ArrayList<Chapter>();
 		String url = StringConstants.URL_GET_CHAPTERS;
 		UrlParameters urlParameters = new UrlParameters();
@@ -164,10 +171,7 @@ public class Book {
 		}
 		try {
 			JSONObject result = request.getJSONObject();
-			System.out.println(result);
 			for (int i = 0; i < result.length(); i++) {
-				JSONObject chapterObject = result.getJSONObject(Integer.toString(i));
-				System.out.println(chapterObject.toString());
 				String chapterKey = result.get("ck").toString();
 				String chapterTitle = result.get("title").toString();
 				int chapterVersion = result.getInt("version");
@@ -198,8 +202,8 @@ public class Book {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	public void reloadChapters(Context context) throws IOException, JSONException {
-		loadChapters(context);
+	public void reloadChapters() throws IOException, JSONException {
+		loadChapters();
 	}
 
 	/**
@@ -255,10 +259,10 @@ public class Book {
 	 * @throws JSONException 
 	 * @throws IOException 
 	 */
-	public List<Chapter> getChapters(Context context) throws IOException, JSONException {
+	public List<Chapter> getChapters() throws IOException, JSONException {
 		// TODO: If the user has internet connection, rewrite the chapters in the database.
 		// If not, use the chapters from the SQLite database.
-		loadChapters(context);
+		loadChapters();
 		return chapters;
 	}
 }

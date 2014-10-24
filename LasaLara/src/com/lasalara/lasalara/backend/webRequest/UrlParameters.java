@@ -29,7 +29,7 @@ public class UrlParameters {
 	 */
 	public void addPair(String key, String value) throws UnsupportedEncodingException {
 		keyList.add(key.toLowerCase(Locale.ENGLISH));
-		valueList.add(/*URLEncoder.encode(value, "UTF-8")*/value.toLowerCase(Locale.ENGLISH));
+		valueList.add(value);
 	}
 	
 	/**

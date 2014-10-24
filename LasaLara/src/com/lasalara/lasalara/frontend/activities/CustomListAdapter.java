@@ -1,6 +1,8 @@
 package com.lasalara.lasalara.frontend.activities;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import com.lasalara.lasalara.R;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -29,16 +31,16 @@ public class CustomListAdapter extends BaseAdapter {
 	private LayoutInflater inflater;
 	private ArrayList<Info> info;
 	
-	public CustomListAdapter(Context context, ArrayList<String[]> i, int layout) {
+	public CustomListAdapter(Context context, List<String[]> info, int layout) {
 		this.info = new ArrayList<Info>();
 		inflater = LayoutInflater.from(context);
-	    for(String[] s: i) {
+	    for(String[] s: info) {
 	    	this.info.add(new Info(s[0],s[1],s[2],s[3]));
 	    }
 	}
 	
-	public void setAllListItems(ArrayList<String[]> i) {
-		for(String[] s: i) {
+	public void setAllListItems(List<String[]> info2) {
+		for(String[] s: info2) {
 	    	this.info.add(new Info(s[0],s[1],s[2],s[3]));
 	    }
 	}

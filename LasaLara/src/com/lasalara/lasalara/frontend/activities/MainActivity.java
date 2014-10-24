@@ -1,5 +1,9 @@
 package com.lasalara.lasalara.frontend.activities;
 
+import java.io.IOException;
+
+import org.json.JSONException;
+
 import com.lasalara.lasalara.R;
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
@@ -28,44 +32,54 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		Log.d(StringConstants.APP_NAME, "Initialising database helper.");
+		DatabaseHelper.initialiseInstance(this);
+		Log.d(StringConstants.APP_NAME, "Getting books.");
+		Backend.getInstance().preloadData(DatabaseHelper.getInstance());
+		
 		this.gd = new GestureDetector(this,this);
 		setContentView(R.layout.contentlists);
 		if(findViewById(R.id.fragment_container) != null) {
 			if(savedInstanceState != null) {
 				return;
 			}
+			bFragment = new BookFragment(Backend.getInstance().getBooks());
+			bFragment.setArguments(getIntent().getExtras());
+			
 			cFragment = new ChapterFragment();
 			cFragment.setArguments(getIntent().getExtras());
-			bFragment = new BookFragment();
-			bFragment.setArguments(getIntent().getExtras());
+			
 			qFragment = new QuestionFragment();
 			qFragment.setArguments(getIntent().getExtras());
 			abFragment = new AddBookFragment();
 			abFragment.setArguments(getIntent().getExtras());
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, bFragment).commit();
 		}
-		/*
-		Log.d(StringConstants.APP_NAME, "Initialising database helper.");
-		DatabaseHelper.initialiseInstance(this);
-		Log.d(StringConstants.APP_NAME, "Downloading book.");
-		Backend.getInstance().downloadBook(this, "lasalara.help@gmail.com", "Welcome to LasaLara"); // TODO: Only for testing
-		Log.d(StringConstants.APP_NAME, "Downloaded book.");
-		Backend.getInstance().preloadData(DatabaseHelper.getInstance());
-		*/
 	}
 
 	@Override
 	public void onBookSelected(int position) {
-		if(position == 4)
+		//If the last element of the list "Add a book..." has been selected
+		if(bFragment.getBookCount() == position)
 			changeFragment(abFragment);
 		else {
-			cFragment.changeData(position);
+			cFragment.changeData(bFragment.getBookChapters(position));
 			changeFragment(cFragment);
 		}
 	}
 
 	@Override
-	public void onChapterSelected(int position) {
+	public void onChapterSelected(int position)  {
+		try {
+			qFragment.changeData(cFragment.getChapter(position).getQuestions(this));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		changeFragment(qFragment);
 	}
 	
@@ -127,6 +141,8 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	}
 	
 	public void addBookListener(View v) {
+		Backend.getInstance().downloadBook(this, ((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString(),((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString());
+		bFragment.bookAddedNotification();
 		changeFragment(bFragment);
 		((EditText) abFragment.getView().findViewById(R.id.author)).setText("");
 		((EditText) abFragment.getView().findViewById(R.id.book)).setText("");

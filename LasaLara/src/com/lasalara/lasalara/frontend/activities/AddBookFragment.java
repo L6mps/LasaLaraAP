@@ -13,9 +13,6 @@ import com.lasalara.lasalara.R;
 
 public class AddBookFragment extends Fragment {
 	
-	private String author;
-	private String book;
-	
 	public void onCreate(Bundle savedInstance) {
 		super.onCreate(savedInstance);
 	}

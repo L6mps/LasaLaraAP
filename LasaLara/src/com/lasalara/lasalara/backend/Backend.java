@@ -1,10 +1,7 @@
 package com.lasalara.lasalara.backend;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONException;
 
 import android.content.Context;
 import android.util.Log;

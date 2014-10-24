@@ -1,48 +1,56 @@
 package com.lasalara.lasalara.frontend.activities;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
-import com.lasalara.lasalara.R;
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
+import com.lasalara.lasalara.R;
+import com.lasalara.lasalara.backend.structure.Book;
+import com.lasalara.lasalara.backend.structure.Chapter;
+
 public class BookFragment extends ListFragment{
 	OnBookSelectedListener mCallback;
+	private List<Book> books;
+	private int bookCount;
+	private int layout;
 	
 	public interface OnBookSelectedListener {
 		public void onBookSelected(int position);
 	}
 	
+	public BookFragment(List<Book> books) {
+		this.books = books;
+		this.bookCount = books.size();
+	}
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		int layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
+		layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
                 android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
+		refresh();
 		
-		//List of books
-		String[] a = new String[5];
-		String[] b = new String[5];
-		String[] c = new String[5];
-		String[] d = new String[5];
-		a[0] = "LasaLara"; a[1]="Book 2"; a[2]="Book 3"; a[3]="Book 4"; a[4]="Add new book...";
-		b[0] = "LasaLara"; b[1]="Ben"; b[2]="Chuck"; b[3]="Dylan"; b[4]="";
-		c[0] = "100%"; c[1]="20%"; c[2]="50%"; c[3]="10%"; c[4]="";
-		d[0] = "4/4"; d[1]="1/5"; d[2]="2/4"; d[3]="1/10"; d[4]="";
-		
-		ArrayList<String[]> info = new ArrayList<String[]>();
-		for(int i=0; i<5; i++) {
-			String[] tmp = new String[4];
-			tmp[0]=a[i];
-			tmp[1]=b[i];
-			tmp[2]=c[i];
-			tmp[3]=d[i];
-			info.add(tmp);
+	}
+	
+	public void refresh() {
+		List<String[]> info = new ArrayList<String[]>();
+		for(Book i: books) {
+			String[] s = {i.getTitle(),i.getOwnerName(),"0%","0/?"};
+			info.add(s);
+			Log.e("debug",i.getKey());
 		}
+		String[] newBook = {"Add new book...","","",""};
+		info.add(newBook);
 		setListAdapter(new CustomListAdapter(getActivity(), info, layout));
-		//setListAdapter(new ArrayAdapter<String>(getActivity(), R.layout.listelement_book,R.id.bookTitle.toString(), R.id.bookAuthorInfo.toString(),a, b));
 	}
 	
 	public void onStart() {
@@ -63,6 +71,30 @@ public class BookFragment extends ListFragment{
 	
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		mCallback.onBookSelected(position);
+	}
+	
+	public int getBookCount() {
+		return this.bookCount;
+	}
+
+	public List<Chapter> getBookChapters(int position) {
+		// TODO Auto-generated method stub
+		try {
+			return books.get(position).getChapters();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
+	public void bookAddedNotification() {
+		bookCount++;
+		refresh();
 	}
 	
 	

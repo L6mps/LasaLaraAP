@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -109,12 +110,12 @@ public class Chapter {
 		try {
 			JSONObject result = request.getJSONObject();
 			System.out.println(result);
-			JSONObject questionList = result.getJSONObject("questions");
-			JSONObject answerList = result.getJSONObject("answers");
+			JSONArray questionList = result.getJSONArray("questions");
+			JSONArray answerList = result.getJSONArray("answers");
 			if (questionList.length() == answerList.length()) {
 				for (int i = 0; i < questionList.length(); i++) {
-					String question = questionList.getJSONObject(Integer.toString(i)).toString();
-					String answer = answerList.getJSONObject(Integer.toString(i)).toString();
+					String question = questionList.getString(i);
+					String answer = answerList.getString(i);
 					questions.add(new Question(context, question, answer, key));
 				}
 			} else {

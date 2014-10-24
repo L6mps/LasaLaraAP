@@ -72,7 +72,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	public BookHelper getBookHelper() {
 		return bookHelper;
 	}
-
+	
+	//Joos addition
+	@Override
+	public void onOpen(SQLiteDatabase db) {
+		Log.d(StringConstants.APP_NAME, "DatabaseHelper onOpen() yay");
+		bookHelper = new BookHelper(db);
+		chapterHelper = new ChapterHelper(db);
+		questionHelper = new QuestionHelper(db);
+		bookHelper.onCreate();
+		chapterHelper.onCreate();
+		questionHelper.onCreate();
+	}
 	/**
 	 * @return the chapter helper class for the SQLite database.
 	 */
