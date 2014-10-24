@@ -65,7 +65,6 @@ OnChapterSelectedListener mCallback;
 		List<String[]> info = new ArrayList<String[]>();
 		for(Chapter i:list) {
 			String[] tmp = {i.getTitle(),i.getAuthorName(),"",""};
-			Log.d("debug",i.getTitle());
 			info.add(tmp);
 		}
 		this.info = info;

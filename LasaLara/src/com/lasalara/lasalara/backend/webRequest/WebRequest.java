@@ -43,25 +43,23 @@ public class WebRequest {
 	 */
 	public WebRequest(Context context, String url, UrlParameters parameterList) throws IOException {
 		disableConnectionReuseIfNecessary();
-			Log.d(StringConstants.APP_NAME, "Network is connected.");
-			//this.url = url.toLowerCase(Locale.ENGLISH);
-			this.url = url;
-			this.parameterList = parameterList;
-			Log.e("debug",parameterList.valueList.get(0));
-			Thread thread = new Thread() {
-				@Override
-				public void run() {
-					sendRequest();
-					getResponse();
-				}
-			};
-			thread.start();
-			try {
-				thread.join();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+		Log.d(StringConstants.APP_NAME, "Network is connected.");
+		this.url = url;
+		this.parameterList = parameterList;
+		Thread thread = new Thread() {
+			@Override
+			public void run() {
+				sendRequest();
+				getResponse();
 			}
+		};
+		thread.start();
+		try {
+			thread.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -129,7 +127,6 @@ public class WebRequest {
 	 * @throws JSONException
 	 */
 	public JSONObject getJSONObject() throws JSONException {
-		Log.e("debug",result.substring(result.indexOf("{"), result.lastIndexOf("}")+1));
 		return new JSONObject(result.substring(result.indexOf("{"), result.lastIndexOf("}")+1));
 	}
 	

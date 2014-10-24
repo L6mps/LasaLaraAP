@@ -1,6 +1,7 @@
 package com.lasalara.lasalara.frontend.activities;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import org.json.JSONException;
 
@@ -141,7 +142,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	}
 	
 	public void addBookListener(View v) {
-		Backend.getInstance().downloadBook(this, ((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString(),((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString());
+		Backend.getInstance().downloadBook(this, ((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString().toLowerCase(Locale.ENGLISH),((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString().toLowerCase(Locale.ENGLISH));
 		bFragment.bookAddedNotification();
 		changeFragment(bFragment);
 		((EditText) abFragment.getView().findViewById(R.id.author)).setText("");

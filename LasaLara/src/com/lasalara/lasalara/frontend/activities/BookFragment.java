@@ -10,7 +10,6 @@ import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -46,7 +45,6 @@ public class BookFragment extends ListFragment{
 		for(Book i: books) {
 			String[] s = {i.getTitle(),i.getOwnerName(),"0%","0/?"};
 			info.add(s);
-			Log.e("debug",i.getKey());
 		}
 		String[] newBook = {"Add new book...","","",""};
 		info.add(newBook);
@@ -96,6 +94,4 @@ public class BookFragment extends ListFragment{
 		bookCount++;
 		refresh();
 	}
-	
-	
 }
