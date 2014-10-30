@@ -21,6 +21,11 @@ public class AddBookFragment extends Fragment {
 		super.onStart();
 	}
 	
+	public void onResume() {
+		super.onResume();
+		getActivity().invalidateOptionsMenu();
+	}
+	
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 	}

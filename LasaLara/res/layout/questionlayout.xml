@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
-        android:gravity="center_horizontal"
+        android:gravity="left"
         android:text="" />
     
 	<View
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/separator"
         android:layout_alignParentLeft="true"
-        android:gravity="center"
+        android:gravity="left"
         android:text="" />
 
 </RelativeLayout>

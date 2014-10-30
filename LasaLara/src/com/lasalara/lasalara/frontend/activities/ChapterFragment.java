@@ -8,7 +8,6 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 
@@ -29,6 +28,11 @@ OnChapterSelectedListener mCallback;
 	
 	public ChapterFragment() {
 		this.info = new ArrayList<String[]>();
+	}
+	
+	public void onResume() {
+		super.onResume();
+		getActivity().invalidateOptionsMenu();
 	}
 	
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +68,7 @@ OnChapterSelectedListener mCallback;
 		this.chapters = list;
 		List<String[]> info = new ArrayList<String[]>();
 		for(Chapter i:list) {
-			String[] tmp = {i.getTitle(),i.getAuthorName(),"",""};
+			String[] tmp = {i.getTitle(),i.getAuthorName(),"0%","0/?"};
 			info.add(tmp);
 		}
 		this.info = info;

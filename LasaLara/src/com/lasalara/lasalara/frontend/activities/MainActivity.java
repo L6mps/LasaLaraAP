@@ -13,17 +13,19 @@ import com.lasalara.lasalara.backend.database.DatabaseHelper;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.EditText;
 
 public class MainActivity extends FragmentActivity implements BookFragment.OnBookSelectedListener,
-															  ChapterFragment.OnChapterSelectedListener, OnGestureListener {
+															  ChapterFragment.OnChapterSelectedListener, 
+															  OnGestureListener {
 	
 	private BookFragment bFragment;
 	private ChapterFragment cFragment;
@@ -33,7 +35,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+				
 		Log.d(StringConstants.APP_NAME, "Initialising database helper.");
 		DatabaseHelper.initialiseInstance(this);
 		Log.d(StringConstants.APP_NAME, "Getting books.");
@@ -61,13 +63,8 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 
 	@Override
 	public void onBookSelected(int position) {
-		//If the last element of the list "Add a book..." has been selected
-		if(bFragment.getBookCount() == position)
-			changeFragment(abFragment);
-		else {
-			cFragment.changeData(bFragment.getBookChapters(position));
-			changeFragment(cFragment);
-		}
+		cFragment.changeData(bFragment.getBookChapters(position));
+		changeFragment(cFragment);
 	}
 
 	@Override
@@ -75,30 +72,38 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 		try {
 			qFragment.changeData(cFragment.getChapter(position).getQuestions(this));
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		changeFragment(qFragment);
 	}
 	
 	private void changeFragment(Fragment f) {
-		getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).addToBackStack(f.getTag()).commit();
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
+		ft.replace(R.id.fragment_container, f).addToBackStack(f.getTag());
+		ft.commit();
+		this.invalidateOptionsMenu();
 	}
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.question_fragment_settings, menu);
+        if(qFragment.isVisible())
+        	inflater.inflate(R.menu.question_fragment_settings, menu);
+        else if(cFragment.isVisible())
+        	inflater.inflate(R.menu.chapter_fragment_settings, menu);
+        else if(bFragment.isVisible())
+        	inflater.inflate(R.menu.book_fragment_settings, menu);
+        else if(abFragment.isVisible())
+        	inflater.inflate(R.menu.addbook_fragment_settings, menu);
+        else
+        	inflater.inflate(R.menu.question_fragment_settings, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
-	@Override
-	public boolean onDown(MotionEvent e) {
-		return false;
-	}
+	
 
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
@@ -117,8 +122,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 
 	@Override
 	public void onLongPress(MotionEvent e) {	
-		if(qFragment.isVisible())
-			qFragment.screenTapped();
+		
 	}
 
 	@Override
@@ -133,7 +137,9 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 
 	@Override
 	public boolean onSingleTapUp(MotionEvent e) {
-		return false;
+		if(qFragment.isVisible())
+			qFragment.screenTapped();
+		return true;
 	}
 	
 	@Override
@@ -141,19 +147,30 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 		return gd.onTouchEvent(me);
 	}
 	
-	public void addBookListener(View v) {
-		Backend.getInstance().downloadBook(this, ((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString().toLowerCase(Locale.ENGLISH),((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString().toLowerCase(Locale.ENGLISH));
-		bFragment.bookAddedNotification();
+	@Override
+	public boolean onDown(MotionEvent e) {
+		return false;
+	}
+	
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    if(item.getItemId() == R.id.add_book) {
+	        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, abFragment).commit();
+	        return true;
+	    }
+	    else if(item.getItemId() == R.id.done) {
+	    	Backend.getInstance().downloadBook(this, ((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString().toLowerCase(Locale.ENGLISH),((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString().toLowerCase(Locale.ENGLISH));
+	    	changeFragment(bFragment);
+	    	//bFragment.bookAddedNotification();
+			((EditText) abFragment.getView().findViewById(R.id.author)).setText("");
+			((EditText) abFragment.getView().findViewById(R.id.book)).setText("");
+	    }
+	    return super.onOptionsItemSelected(item);
+	}
+	
+	//cancel removed from addBook fragment, TODO: set texts to blank elsewhere
+	/*public void cancelListener(View v){
 		changeFragment(bFragment);
 		((EditText) abFragment.getView().findViewById(R.id.author)).setText("");
 		((EditText) abFragment.getView().findViewById(R.id.book)).setText("");
-	}
-	
-	public void cancelListener(View v){
-		changeFragment(bFragment);
-		((EditText) abFragment.getView().findViewById(R.id.author)).setText("");
-		((EditText) abFragment.getView().findViewById(R.id.book)).setText("");
-	}
-	
-	
+	}	*/
 }

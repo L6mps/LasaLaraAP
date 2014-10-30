@@ -41,6 +41,11 @@ public class QuestionFragment extends Fragment {
 		super.onAttach(activity);
 	}
 	
+	public void onResume() {
+		super.onResume();
+		getActivity().invalidateOptionsMenu();
+	}
+	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	        View v = inflater.inflate(R.layout.questionlayout, container, false);
 	        TextView q = (TextView) v.findViewById(R.id.questionView);

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center" >
+    android:gravity="center_horizontal" >
       
     <TextView
         android:id="@+id/authorLabel"
@@ -12,52 +12,27 @@
     
     <EditText
         android:id="@+id/author"
-        android:layout_width="wrap_content"
-        android:maxWidth="200dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/authorLabel"
-        android:layout_toRightOf="@+id/authorLabel"
+        android:layout_below="@+id/authorLabel"
         android:hint="@string/addAuthorEmail"
         android:inputType="textEmailAddress"
         android:imeOptions="flagNoExtractUi" />
-            
-    <EditText
-        android:id="@+id/book"
-        android:layout_width="wrap_content"
-        android:maxWidth="200dp"
-        android:layout_height="wrap_content"        
-        android:layout_alignLeft="@+id/author"
-        android:layout_alignRight="@+id/author"
-        android:layout_below="@+id/author"
-        android:hint="@string/addBook"
-        android:inputType="text"/>
-
-    <Button
-        android:id="@+id/done"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-		android:layout_alignLeft="@+id/author"
-		android:layout_below="@+id/book"
-        android:text="@string/done"
-        android:onClick="addBookListener" />
-
+    
     <TextView
         android:id="@+id/bookLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/book"
-        android:layout_alignRight="@+id/authorLabel"
+        android:layout_below="@+id/author"
         android:text="@string/book" />
-
-    <Button
-        android:id="@+id/cancel"
-        android:layout_width="wrap_content"
+            
+    <EditText
+        android:id="@+id/book"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/book"
-        android:layout_toRightOf="@+id/done"
-        android:layout_alignBaseline="@+id/done"
-        android:text="@string/cancel"
-        android:onClick="cancelListener" />
-
+        android:layout_below="@+id/bookLabel"
+        android:hint="@string/addBook"
+        android:inputType="text"/>
+    
 </RelativeLayout>
 
