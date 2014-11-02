@@ -74,7 +74,7 @@ public class Book {
 			try {
 				if (validateEmail(ownerEmail)) {
 					this.ownerEmail = ownerEmail;
-					this.title = title;
+					this.title = result.get("title").toString();
 					if (result.isNull("name")) {
 						ownerName = null;
 					} else {
