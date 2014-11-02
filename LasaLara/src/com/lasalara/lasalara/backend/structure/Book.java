@@ -148,7 +148,7 @@ public class Book {
 	}
 	
 	/**
-	 * Load the chapters in this book.
+	 * Load the chapters in this book from the web.
 	 * @param context		The current activity's context (needed for network connection check).
 	 * @throws IOException
 	 * @throws JSONException
@@ -197,15 +197,12 @@ public class Book {
 		}
 	}
 	
-	/**
-	 * Reload the chapter list.
-	 * TODO: Currently never used but should be periodically used to update the content.
-	 * @param context		The current activity's context (needed for network connection check).
-	 * @throws IOException
-	 * @throws JSONException
-	 */
-	public void reloadChapters() throws IOException, JSONException {
-		loadChapters();
+	public void update() {
+		// TODO
+		// Update book data from the web.
+		// Check if chapters have been changed.
+		// If the version numbers have been changed, update the questions in the database.
+		// Send appropriate notification messages to the user.
 	}
 
 	/**

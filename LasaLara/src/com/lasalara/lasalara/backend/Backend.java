@@ -59,10 +59,6 @@ public class Backend {
 	 */
 	public void preloadData(DatabaseHelper databaseHelper) {
 		books = preloadBooks(databaseHelper);
-		Log.d(StringConstants.APP_NAME, "Preloaded books: " + books.toString());
-		// Chapters should be preloaded only when a book is opened - saves time.
-		// Questions should be preloaded at the same time the book is opened - the user
-		// needs to see chapters' progress. Maybe we could optimise it?
 	}
 	
 	/**
@@ -102,6 +98,14 @@ public class Backend {
 			// TODO: Throw error message: book already exists
 			books.set(index, newBook);// Update the book
 		}
+	}
+	
+	public void updateBook(int index) {
+		books.get(index).update();
+	}
+	
+	public void deleteBook(int index) {
+		// TODO
 	}
 	
 	/**
