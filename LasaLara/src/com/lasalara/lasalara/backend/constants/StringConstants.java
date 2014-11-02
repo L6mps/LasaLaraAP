@@ -36,5 +36,9 @@ public class StringConstants {
 	public static final String QUESTION_TABLE_NAME = "question";
 	public static final String QUESTION_COLUMN_QUESTION = "question";
 	public static final String QUESTION_COLUMN_ANSWER = "answer";
+	public static final String QUESTION_COLUMN_REVIEW_COUNT = "reviewCount";
+	public static final String QUESTION_COLUMN_KNOWN_COUNT = "knownCount";
+	public static final String QUESTION_COLUMN_REVIEW_TIME = "reviewTime";
+	public static final String QUESTION_COLUMN_KNOWN_TIME = "knownTime";
 	public static final String QUESTION_COLUMN_CHAPTER_KEY = "chapterKey";
 }

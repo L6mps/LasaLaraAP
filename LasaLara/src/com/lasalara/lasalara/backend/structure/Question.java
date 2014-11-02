@@ -1,5 +1,8 @@
 package com.lasalara.lasalara.backend.structure;
 
+import java.sql.Timestamp;
+import java.util.Calendar;
+
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
@@ -14,9 +17,10 @@ import com.lasalara.lasalara.backend.database.DatabaseHelper;
 public class Question {
 	private String question;				// Text of the question
 	private String answer;					// Text of the answer
-	// private int position;				// The position of the question in the book (the order is set by the book owner but students can change the order locally)
-	// private int knownCount;				// The number of times that the student has marked the question as “known”
-	// private Date knownDate;				// The question should be hidden from the student until this date is reached
+	private int reviewCount;				// The number of times the student has skipped the question.
+	private int knownCount;					// The number of times the student has set the question as known.
+	private Timestamp reviewTime;			// The last time the student skipped the question.
+	private Timestamp knownTime;			// The last time the student set the question as known.
 	private String chapterKey;				// The chapter the question is located in.
 	
 	/**
@@ -31,6 +35,11 @@ public class Question {
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		this.question = question;
 		this.answer = answer;
+		reviewCount = 0;
+		knownCount = 0;
+		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
+		reviewTime = currentTime;
+		knownTime = currentTime;
 		this.chapterKey = chapterKey;
 		databaseHelper.getQuestionHelper().insertQuestion(this); // TODO: Test
 	}
@@ -42,7 +51,31 @@ public class Question {
 	public Question(Cursor dbResults) {
 		question = dbResults.getString(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_QUESTION));
 		answer = dbResults.getString(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_ANSWER));
+		reviewCount = dbResults.getInt(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_REVIEW_COUNT));
+		knownCount = dbResults.getInt(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_KNOWN_COUNT));
+		reviewTime = Timestamp.valueOf(dbResults.getString(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_REVIEW_TIME)));
+		knownTime = Timestamp.valueOf(dbResults.getString(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_KNOWN_TIME)));
 		chapterKey = dbResults.getString(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_CHAPTER_KEY));
+	}
+	
+	/**
+	 * Set the question unknown. Used when the user skips the question.
+	 */
+	public void setUnknown() {
+		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
+		long secondsSinceReview = currentTime.getTime() - reviewTime.getTime();
+		reviewCount++;
+		// TODO
+	}
+	
+	/**
+	 * Set the question known. Used when the user says he/she knows the answer to the question.
+	 */
+	public void setKnown() {
+		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
+		long secondsSinceReview = currentTime.getTime() - knownTime.getTime();
+		knownCount++;
+		// TODO
 	}
 
 	/**
@@ -57,6 +90,34 @@ public class Question {
 	 */
 	public String getAnswer() {
 		return answer;
+	}
+
+	/**
+	 * @return the number of times the student has skipped the question.
+	 */
+	public int getReviewCount() {
+		return reviewCount;
+	}
+
+	/**
+	 * @return the number of times the student has set the question as known.
+	 */
+	public int getKnownCount() {
+		return knownCount;
+	}
+
+	/**
+	 * @return the last time the student skipped the question.
+	 */
+	public Timestamp getReviewTime() {
+		return reviewTime;
+	}
+
+	/**
+	 * @return the last time the student set the question as known.
+	 */
+	public Timestamp getKnownTime() {
+		return knownTime;
 	}
 
 	/**

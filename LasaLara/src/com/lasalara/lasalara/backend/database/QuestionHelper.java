@@ -25,6 +25,10 @@ public class QuestionHelper {
 			StringConstants.QUESTION_TABLE_NAME + " (" +
 			StringConstants.QUESTION_COLUMN_QUESTION + " TEXT, " +
 			StringConstants.QUESTION_COLUMN_ANSWER + " TEXT, " +
+			StringConstants.QUESTION_COLUMN_REVIEW_COUNT + " INT, " +
+			StringConstants.QUESTION_COLUMN_KNOWN_COUNT + " INT, " +
+			StringConstants.QUESTION_COLUMN_REVIEW_TIME + " TIMESTAMP, " +
+			StringConstants.QUESTION_COLUMN_KNOWN_TIME + " TIMESTAMP, " +
 			StringConstants.QUESTION_COLUMN_CHAPTER_KEY + " TEXT);";
 	private static final String TABLE_DROP = 
 			"DROP TABLE IF EXISTS " + StringConstants.QUESTION_TABLE_NAME;
@@ -69,6 +73,10 @@ public class QuestionHelper {
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.QUESTION_COLUMN_QUESTION, question.getQuestion());
 		contentValues.put(StringConstants.QUESTION_COLUMN_ANSWER, question.getAnswer());
+		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_COUNT, question.getReviewCount());
+		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_COUNT, question.getKnownCount());
+		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_TIME, question.getReviewTime());
+		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_TIME, question.getKnownTime());
 		contentValues.put(StringConstants.QUESTION_COLUMN_CHAPTER_KEY, question.getChapterKey());
 		database.insert(StringConstants.QUESTION_TABLE_NAME, null, contentValues);
 	}
