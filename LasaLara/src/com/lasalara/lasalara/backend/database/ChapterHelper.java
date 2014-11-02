@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
+import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 
 import android.content.ContentValues;
@@ -80,6 +81,14 @@ public class ChapterHelper {
 		contentValues.put(StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED, chapter.areProposalsAllowed() ? 1 : 0);
 		contentValues.put(StringConstants.CHAPTER_COLUMN_BOOK_KEY, chapter.getBookKey());
 		database.insert(StringConstants.CHAPTER_TABLE_NAME, null, contentValues);
+	}
+	
+	public void deleteChapter(Chapter chapter) {
+		// TODO
+	}
+	
+	public void deleteChapters(Book book) {
+		// TODO
 	}
 	
 	/**

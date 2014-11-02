@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
+import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Question;
 
 import android.content.ContentValues;
@@ -70,6 +71,14 @@ public class QuestionHelper {
 		contentValues.put(StringConstants.QUESTION_COLUMN_ANSWER, question.getAnswer());
 		contentValues.put(StringConstants.QUESTION_COLUMN_CHAPTER_KEY, question.getChapterKey());
 		database.insert(StringConstants.QUESTION_TABLE_NAME, null, contentValues);
+	}
+	
+	public void deleteQuestion(Question question) {
+		// TODO
+	}
+	
+	public void deleteQuestions(Chapter chapter) {
+		// TODO
 	}
 	
 	/**

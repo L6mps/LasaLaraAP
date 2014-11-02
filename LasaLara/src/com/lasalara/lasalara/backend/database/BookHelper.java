@@ -77,6 +77,10 @@ public class BookHelper {
 		database.insert(StringConstants.BOOK_TABLE_NAME, null, contentValues);
 	}
 	
+	public void deleteBook(Book book) {
+		// TODO
+	}
+	
 	/**
 	 * @return a list of books saved into the SQLite database.
 	 */
