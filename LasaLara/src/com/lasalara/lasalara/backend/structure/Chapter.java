@@ -30,7 +30,7 @@ public class Chapter {
 	private String authorName;				// Name aof the person who wrote the chapter (if blank, the e-mail is used)
 	private String authorInstitution;		// Institution of the person who wrote the chapter (if blank, the e-mail is used)
 	private boolean proposalsAllowed;		// Has the author allowed question proposals for the chapter?
-	//private int position;					// The position of the chapter in the book (the order is set by the book owner), TODO: How?
+	private int position;					// The position of the chapter in the book (the order is set by the book owner)
 	private String bookKey;					// The book the chapter is located in.
 	private List<Question> questions;		// The list of questions in this book.
 
@@ -47,7 +47,8 @@ public class Chapter {
 	 * @param bookKey			The book the chapter is located in.
 	 */
 	Chapter(Context context, String key, String title, int version, String authorEmail, 
-			String authorName, String authorInstitution, boolean proposalsAllowed, String bookKey) {
+			String authorName, String authorInstitution, boolean proposalsAllowed, int position,
+			String bookKey) {
 		Log.d(StringConstants.APP_NAME, "Chapter constructor: " + key + ", " + title + ".");
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		this.key = key;
@@ -57,6 +58,7 @@ public class Chapter {
 		this.authorName = authorName;
 		this.authorInstitution = authorInstitution;
 		this.proposalsAllowed = proposalsAllowed;
+		this.position = position;
 		this.bookKey = bookKey;
 		databaseHelper.getChapterHelper().insertChapter(this); // TODO: Test
 	}
@@ -81,6 +83,7 @@ public class Chapter {
 			authorInstitution = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_AUTHOR_INSTITUTION));
 		}
 		proposalsAllowed = (dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED)) == 1) ? true : false;
+		position = dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_POSITION));
 		bookKey = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_BOOK_KEY));
 	}
 
@@ -195,6 +198,13 @@ public class Chapter {
 	 */
 	public boolean areProposalsAllowed() {
 		return proposalsAllowed;
+	}
+	
+	/**
+	 * @return the chapter's position in the chapter list.
+	 */
+	public int getPosition() {
+		return position;
 	}
 
 	/**

@@ -30,6 +30,7 @@ public class ChapterHelper {
 			StringConstants.CHAPTER_COLUMN_AUTHOR_NAME + " TEXT, " +
 			StringConstants.CHAPTER_COLUMN_AUTHOR_INSTITUTION + " TEXT, " +
 			StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED + " INT, " +
+			StringConstants.CHAPTER_COLUMN_POSITION + " INT, " +
 			StringConstants.CHAPTER_COLUMN_BOOK_KEY + " TEXT);";
 	private static final String TABLE_DROP = 
 			"DROP TABLE IF EXISTS " + StringConstants.CHAPTER_TABLE_NAME;
@@ -79,6 +80,7 @@ public class ChapterHelper {
 		contentValues.put(StringConstants.CHAPTER_COLUMN_AUTHOR_NAME, chapter.getAuthorName());
 		contentValues.put(StringConstants.CHAPTER_COLUMN_AUTHOR_INSTITUTION, chapter.getAuthorInstitution());
 		contentValues.put(StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED, chapter.areProposalsAllowed() ? 1 : 0);
+		contentValues.put(StringConstants.CHAPTER_COLUMN_POSITION, chapter.getPosition());
 		contentValues.put(StringConstants.CHAPTER_COLUMN_BOOK_KEY, chapter.getBookKey());
 		database.insert(StringConstants.CHAPTER_TABLE_NAME, null, contentValues);
 	}
@@ -100,7 +102,8 @@ public class ChapterHelper {
 		String selectChaptersQuery =
 				"SELECT * FROM " + StringConstants.CHAPTER_TABLE_NAME +  
 				" WHERE " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + 
-				"=" + bookKey;
+				"=" + bookKey + 
+				" ORDER BY " + StringConstants.CHAPTER_COLUMN_POSITION + " ASC";
 		Cursor results =  database.rawQuery(selectChaptersQuery, null);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {

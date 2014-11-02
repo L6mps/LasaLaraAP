@@ -183,7 +183,7 @@ public class Book {
 				boolean chapterProposalsAllowed = result.getBoolean("allowProp");
 				chapters.add(new Chapter(context, chapterKey, chapterTitle, chapterVersion, 
 						chapterAuthorEmail, chapterAuthorName, chapterAuthorInstitution, 
-						chapterProposalsAllowed, key));
+						chapterProposalsAllowed, i, key));
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
