@@ -9,6 +9,8 @@ import android.util.Log;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
 import com.lasalara.lasalara.backend.structure.Book;
+import com.lasalara.lasalara.backend.structure.Chapter;
+import com.lasalara.lasalara.backend.structure.Progress;
 
 /**
  * The main class of the back end of the application.
@@ -106,6 +108,18 @@ public class Backend {
 	
 	public void deleteBook(int index) {
 		// TODO
+	}
+	
+	/**
+	 * Calculate the entire study progress based on the downloaded books' progresses.
+	 * @return the entire study Progress object.
+	 */
+	public Progress getProgress() {
+		List<Progress> progressList = new ArrayList<Progress>();
+		for (Book book: books) {
+			progressList.add(book.getProgress());
+		}
+		return new Progress(progressList);
 	}
 	
 	/**

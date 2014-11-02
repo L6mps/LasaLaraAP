@@ -198,6 +198,18 @@ public class Book {
 		// If the version numbers have been changed, update the questions in the database.
 		// Send appropriate notification messages to the user.
 	}
+	
+	/**
+	 * Calculate the book's progress based on it's chapters' progresses.
+	 * @return the book's Progress object.
+	 */
+	public Progress getProgress() {
+		List<Progress> progressList = new ArrayList<Progress>();
+		for (Chapter chapter: chapters) {
+			progressList.add(chapter.getProgress());
+		}
+		return new Progress(progressList);
+	}
 
 	/**
 	 * @return the book's UUID key.

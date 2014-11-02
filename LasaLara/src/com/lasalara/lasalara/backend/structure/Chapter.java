@@ -138,6 +138,14 @@ public class Chapter {
 	public void reloadQuestions(Context context) throws IOException, JSONException {
 		loadQuestions(context);
 	}
+	
+	/**
+	 * Calculate the chapter's progress based on the number of questions and the number of questions answered.
+	 * @return the chapter's Progress object.
+	 */
+	public Progress getProgress() {
+		return new Progress(getNumberOfAnsweredQuestions(), getNumberOfQuestions());
+	}
 
 	/**
 	 * @return the chapter's UUID key.
@@ -194,6 +202,21 @@ public class Chapter {
 	 */
 	public String getBookKey() {
 		return bookKey;
+	}
+	
+	/**
+	 * @return the number of questions in this chapter.
+	 */
+	public int getNumberOfQuestions() {
+		return questions.size();
+	}
+	
+	/**
+	 * @return the number of questions the user has answered in this chapter.
+	 */
+	public int getNumberOfAnsweredQuestions() {
+		// TODO
+		return 0;
 	}
 
 	/**
