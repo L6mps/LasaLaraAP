@@ -200,6 +200,15 @@ public class Book {
 	}
 	
 	/**
+	 * Reset the book's progress.
+	 */
+	public void resetProgress() {
+		for (Chapter chapter: chapters) {
+			chapter.resetProgress();
+		}
+	}
+	
+	/**
 	 * Calculate the book's progress based on it's chapters' progresses.
 	 * @return the book's Progress object.
 	 */

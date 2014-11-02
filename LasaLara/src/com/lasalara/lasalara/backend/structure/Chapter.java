@@ -132,14 +132,10 @@ public class Chapter {
 	}
 	
 	/**
-	 * Reload the question list.
-	 * TODO: Currently never used but should be used to update the content when the chapter version number is updated.
-	 * @param context			The current activity's context (needed for network connection check).
-	 * @throws IOException
-	 * @throws JSONException
+	 * Reset the chapter's progress.
 	 */
-	public void reloadQuestions(Context context) throws IOException, JSONException {
-		loadQuestions(context);
+	public void resetProgress() {
+		// TODO
 	}
 	
 	/**

@@ -111,6 +111,15 @@ public class Backend {
 	}
 	
 	/**
+	 * Reset the entire study progress.
+	 */
+	public void resetProgress() {
+		for (Book book: books) {
+			book.resetProgress();
+		}
+	}
+	
+	/**
 	 * Calculate the entire study progress based on the downloaded books' progresses.
 	 * @return the entire study Progress object.
 	 */
