@@ -21,7 +21,6 @@ public class StringConstants {
 	public static final String BOOK_COLUMN_OWNER_EMAIL = "ownerEmail";
 	public static final String BOOK_COLUMN_OWNER_NAME = "ownerName";
 	public static final String BOOK_COLUMN_OWNER_INSTITUTION = "ownerInstitution";
-	public static final String BOOK_COLUMN_LAST_CHAPTER = "lastChapter";
 	// Database chapter table constants
 	public static final String CHAPTER_TABLE_NAME = "chapter";
 	public static final String CHAPTER_COLUMN_KEY = "key";

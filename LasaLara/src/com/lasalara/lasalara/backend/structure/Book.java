@@ -32,7 +32,6 @@ public class Book {
 	private String ownerEmail;				// E-mail of the person who created the book
 	private String ownerName;				// Name of the person who created the book (if blank, the e-mail is used)
 	private String ownerInstitution;		// Institution of the person who created the book (if blank, the e-mail is used)
-	private String lastChapter;				// Last chapter (UUID) of this book opened by the student
 	private List<Chapter> chapters; 		// The list of chapters in this book.
 	
 	private Context context;
@@ -126,11 +125,6 @@ public class Book {
 			ownerInstitution = null;
 		} else {
 			ownerInstitution = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_OWNER_INSTITUTION));
-		}
-		if (dbResults.isNull(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_LAST_CHAPTER))) {
-			lastChapter = null;
-		} else {
-			lastChapter = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_LAST_CHAPTER));
 		}
 	}
 	
@@ -238,13 +232,6 @@ public class Book {
 	 */
 	public String getOwnerInstitution() {
 		return ownerInstitution;
-	}
-
-	/**
-	 * @return the last chapter UUID of this book opened by the student.
-	 */
-	public String getLastChapter() {
-		return lastChapter;
 	}
 	
 	/**

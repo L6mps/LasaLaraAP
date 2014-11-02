@@ -26,8 +26,7 @@ public class BookHelper {
 			StringConstants.BOOK_COLUMN_TITLE + " TEXT, " +
 			StringConstants.BOOK_COLUMN_OWNER_EMAIL + " TEXT, " +
 			StringConstants.BOOK_COLUMN_OWNER_NAME + " TEXT, " +
-			StringConstants.BOOK_COLUMN_OWNER_INSTITUTION + " TEXT, " +
-			StringConstants.BOOK_COLUMN_LAST_CHAPTER + " TEXT);";
+			StringConstants.BOOK_COLUMN_OWNER_INSTITUTION + " TEXT);";
 	private static final String TABLE_DROP = 
 			"DROP TABLE IF EXISTS " + StringConstants.CHAPTER_TABLE_NAME;
 
@@ -75,7 +74,6 @@ public class BookHelper {
 		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_EMAIL, book.getOwnerEmail());
 		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_NAME, book.getOwnerName());
 		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_INSTITUTION, book.getOwnerInstitution());
-		contentValues.put(StringConstants.BOOK_COLUMN_LAST_CHAPTER, book.getLastChapter());
 		database.insert(StringConstants.BOOK_TABLE_NAME, null, contentValues);
 	}
 	
