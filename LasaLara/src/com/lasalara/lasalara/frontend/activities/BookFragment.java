@@ -75,17 +75,7 @@ public class BookFragment extends ListFragment{
 	}
 
 	public List<Chapter> getBookChapters(int position) {
-		// TODO Auto-generated method stub
-		try {
-			return books.get(position).getChapters();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+		return books.get(position).getChapters();
 	}
 	
 	

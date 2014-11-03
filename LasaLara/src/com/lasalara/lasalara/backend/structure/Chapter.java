@@ -144,6 +144,10 @@ public class Chapter {
 		}
 	}
 	
+	public void update() {
+		// TODO
+	}
+	
 	/**
 	 * Delete a question with the specified index from the application.
 	 * @param index		The question's index in the question list.

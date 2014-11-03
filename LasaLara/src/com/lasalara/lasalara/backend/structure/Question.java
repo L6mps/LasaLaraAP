@@ -77,6 +77,10 @@ public class Question {
 		databaseHelper.getQuestionHelper().deleteQuestion(this);
 	}
 	
+	public void update() {
+		// TODO
+	}
+	
 	/**
 	 * Delete this question from the application.
 	 */
