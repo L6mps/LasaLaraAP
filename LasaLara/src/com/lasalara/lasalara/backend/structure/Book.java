@@ -213,17 +213,30 @@ public class Book {
 	}
 	
 	/**
-	 * Delete this book from the application.
+	 * Delete a chapter with the specified index from the application.
+	 * @param index		The chapter's index in the chapter list.
 	 */
-	public void delete() {
-		// TODO
+	public void deleteChapter(int index) {
+		chapters.get(index).delete();
+		chapters.remove(index);
 	}
 	
 	/**
 	 * Delete all of the chapters from this book.
 	 */
 	public void deleteChapters() {
-		// TODO
+		for (Chapter chapter: chapters) {
+			chapter.delete();
+		}
+		chapters.clear();
+	}
+	
+	/**
+	 * Delete this book from the application.
+	 */
+	public void delete() {
+		deleteChapters();
+		deleteFromDatabase();
 	}
 	
 	/**

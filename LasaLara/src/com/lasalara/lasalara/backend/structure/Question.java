@@ -81,7 +81,7 @@ public class Question {
 	 * Delete this question from the application.
 	 */
 	public void delete() {
-		// TODO
+		deleteFromDatabase();
 	}
 	
 	/**

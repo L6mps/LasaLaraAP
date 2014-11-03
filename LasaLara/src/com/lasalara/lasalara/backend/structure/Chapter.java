@@ -145,17 +145,30 @@ public class Chapter {
 	}
 	
 	/**
-	 * Delete this chapter from the application.
+	 * Delete a question with the specified index from the application.
+	 * @param index		The question's index in the question list.
 	 */
-	public void delete() {
-		// TODO
+	public void deleteQuestion(int index) {
+		questions.get(index).delete();
+		questions.remove(index);
 	}
 	
 	/**
 	 * Delete all of the questions from this chapter.
 	 */
-	public void deleteChapters() {
-		// TODO
+	public void deleteQuestions() {
+		for (Question question: questions) {
+			question.delete();
+		}
+		questions.clear();
+	}
+	
+	/**
+	 * Delete this chapter from the application.
+	 */
+	public void delete() {
+		deleteQuestions();
+		deleteFromDatabase();
 	}
 	
 	/**
