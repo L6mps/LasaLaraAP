@@ -3,6 +3,7 @@ package com.lasalara.lasalara.backend.database;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
@@ -87,8 +88,26 @@ public class BookHelper {
 		// TODO
 	}
 	
+	/**
+	 * Delete a book from the SQLite database.
+	 * Also deletes all of the chapters (and their corresponding questions) associated with the deleted book.
+	 * @param book		The book object's instance.
+	 */
 	public void deleteBook(Book book) {
-		// TODO
+		DatabaseHelper.getInstance().getChapterHelper().deleteChapters(book);
+		String whereClause = StringConstants.BOOK_COLUMN_KEY + "=" + book.getKey();
+		database.delete(StringConstants.BOOK_TABLE_NAME, whereClause, null);
+	}
+	
+	/**
+	 * Delete all of the books from the SQLite database.
+	 * Also deletes all of the chapters (and their corresponding questions) associated with the deleted books.
+	 */
+	public void deleteBooks() {
+		for (Book book: Backend.getInstance().getBooks()) {
+			DatabaseHelper.getInstance().getChapterHelper().deleteChapters(book);
+		}
+		database.delete(StringConstants.BOOK_TABLE_NAME, null, null);
 	}
 	
 	/**

@@ -92,7 +92,8 @@ public class Chapter {
 	}
 	
 	/**
-	 * Delete this chapter from the database. Also deletes all of the associated questions from the database.
+	 * Delete this chapter from the database.
+	 * Also deletes all of the associated questions from the database.
 	 */
 	public void deleteFromDatabase() {
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();

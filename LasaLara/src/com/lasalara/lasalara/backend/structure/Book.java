@@ -132,8 +132,13 @@ public class Book {
 		// TODO
 	}
 	
+	/**
+	 * Delete this book from the database.
+	 * Also deletes all of the associated chapters and their questions from the database.
+	 */
 	public void deleteFromDatabase() {
-		// TODO
+		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+		databaseHelper.getBookHelper().deleteBook(this);
 	}
 	
 	/**
