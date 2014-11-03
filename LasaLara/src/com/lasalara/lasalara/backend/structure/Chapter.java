@@ -143,7 +143,10 @@ public class Chapter {
 	 * Reset the chapter's progress.
 	 */
 	public void resetProgress() {
-		// TODO
+		for (Question question: questions) {
+			question.resetProgress();
+		}
+		// TODO: Do we have to also reset the number of answered questions stored? We probably should.
 	}
 	
 	/**
@@ -230,6 +233,9 @@ public class Chapter {
 	 */
 	public int getNumberOfAnsweredQuestions() {
 		// TODO
+		// Update when the questions are queried from the database.
+		// Update each time a question is reviewed.
+		// The questions have to be queried periodically
 		return 0;
 	}
 

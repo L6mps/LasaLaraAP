@@ -124,6 +124,18 @@ public class Question {
 		knownUntilTime = new Timestamp(currentTime.getTime() + secondsToAdd);
 		updateInDatabase();
 	}
+	
+	/**
+	 * Reset the question's progress.
+	 */
+	public void resetProgress() {
+		reviewCount = 0;
+		knownCount = 0;
+		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
+		reviewTime = currentTime;
+		knownUntilTime = currentTime;
+		updateInDatabase();
+	}
 
 	/**
 	 * @return the question string.
