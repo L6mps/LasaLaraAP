@@ -95,7 +95,7 @@ public class Chapter {
 	 * Delete this chapter from the database.
 	 * Also deletes all of the associated questions from the database.
 	 */
-	public void deleteFromDatabase() {
+	private void deleteFromDatabase() {
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		databaseHelper.getChapterHelper().deleteChapter(this);
 	}
@@ -142,6 +142,20 @@ public class Chapter {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Delete this chapter from the application.
+	 */
+	public void delete() {
+		// TODO
+	}
+	
+	/**
+	 * Delete all of the questions from this chapter.
+	 */
+	public void deleteChapters() {
+		// TODO
 	}
 	
 	/**

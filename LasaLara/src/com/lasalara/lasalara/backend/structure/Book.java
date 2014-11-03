@@ -136,7 +136,7 @@ public class Book {
 	 * Delete this book from the database.
 	 * Also deletes all of the associated chapters and their questions from the database.
 	 */
-	public void deleteFromDatabase() {
+	private void deleteFromDatabase() {
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		databaseHelper.getBookHelper().deleteBook(this);
 	}
@@ -210,6 +210,20 @@ public class Book {
 		// Check if chapters have been changed.
 		// If the version numbers have been changed, update the questions in the database.
 		// Send appropriate notification messages to the user.
+	}
+	
+	/**
+	 * Delete this book from the application.
+	 */
+	public void delete() {
+		// TODO
+	}
+	
+	/**
+	 * Delete all of the chapters from this book.
+	 */
+	public void deleteChapters() {
+		// TODO
 	}
 	
 	/**

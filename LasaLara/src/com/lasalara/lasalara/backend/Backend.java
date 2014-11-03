@@ -106,8 +106,21 @@ public class Backend {
 		books.get(index).update();
 	}
 	
+	/**
+	 * Delete a book with the specified index from the application.
+	 * @param index		The book's index in the book list.
+	 */
 	public void deleteBook(int index) {
-		// TODO
+		books.get(index).delete();
+		books.remove(index);
+	}
+	
+	/**
+	 * Delete all of the books from the application.
+	 */
+	public void deleteBooks() {
+		DatabaseHelper.getInstance().getBookHelper().deleteBooks();
+		books.clear(); // TODO: Garbage collection
 	}
 	
 	/**

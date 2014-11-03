@@ -72,9 +72,16 @@ public class Question {
 	/**
 	 * Delete this question from the database.
 	 */
-	public void deleteFromDatabase() {
+	private void deleteFromDatabase() {
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		databaseHelper.getQuestionHelper().deleteQuestion(this);
+	}
+	
+	/**
+	 * Delete this question from the application.
+	 */
+	public void delete() {
+		// TODO
 	}
 	
 	/**
