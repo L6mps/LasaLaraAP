@@ -8,6 +8,8 @@ import android.util.Log;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.backend.exceptions.InputExistsException;
+import com.lasalara.lasalara.backend.exceptions.InputExistsExceptionMessage;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
@@ -97,8 +99,8 @@ public class Backend {
 			books.add(newBook);
 		} else {
 			Log.d(StringConstants.APP_NAME, "Book already existed, updated it.");
-			// TODO: Throw error message: book already exists
-			books.set(index, newBook);// Update the book
+			books.set(index, newBook); // Update the book
+			// TODO: Send a message to the front end (or should we use the exception class?)
 		}
 	}
 	
