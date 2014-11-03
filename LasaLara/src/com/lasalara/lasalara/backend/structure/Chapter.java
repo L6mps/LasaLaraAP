@@ -27,7 +27,7 @@ public class Chapter {
 	private String title;					// Name of the chapter
 	private int version;					// If the author updates a chapter, its version number is incremented. Version numbers let the app know when to re-download chapter questions.
 	private String authorEmail;				// E-mail address of the person who wrote the chapter, TODO: Own class for e-mail?
-	private String authorName;				// Name aof the person who wrote the chapter (if blank, the e-mail is used)
+	private String authorName;				// Name of the person who wrote the chapter (if blank, the e-mail is used)
 	private String authorInstitution;		// Institution of the person who wrote the chapter (if blank, the e-mail is used)
 	private boolean proposalsAllowed;		// Has the author allowed question proposals for the chapter?
 	private int position;					// The position of the chapter in the book (the order is set by the book owner)
@@ -92,7 +92,7 @@ public class Chapter {
 	}
 	
 	/**
-	 * Delete this chapter from the database.
+	 * Delete this chapter from the database. Also deletes all of the associated questions from the database.
 	 */
 	public void deleteFromDatabase() {
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();

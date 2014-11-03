@@ -271,10 +271,8 @@ public class Book {
 	 * SQLite database.
 	 * @param context		The current activity's context (needed for network connection check).
 	 * @return the list of chapters in this book.
-	 * @throws JSONException 
-	 * @throws IOException 
 	 */
-	public List<Chapter> getChapters() throws IOException, JSONException {
+	public List<Chapter> getChapters() {
 		// TODO: If the user has internet connection, rewrite the chapters in the database.
 		// If not, use the chapters from the SQLite database.
 		loadChapters();
