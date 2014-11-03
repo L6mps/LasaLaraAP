@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.structure.Book;
+import com.lasalara.lasalara.backend.structure.Chapter;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -61,6 +62,11 @@ public class BookHelper {
 		onCreate();
 	}
 	
+	private ContentValues getContentValues(Book book) {
+		// TODO
+		throw new UnsupportedOperationException();
+	}
+	
 	/**
 	 * Insert a new book into the SQLite database.
 	 * @param book		The book object's instance.
@@ -75,6 +81,10 @@ public class BookHelper {
 		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_NAME, book.getOwnerName());
 		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_INSTITUTION, book.getOwnerInstitution());
 		database.insert(StringConstants.BOOK_TABLE_NAME, null, contentValues);
+	}
+	
+	public void updateBook(Book book) {
+		// TODO
 	}
 	
 	public void deleteBook(Book book) {

@@ -39,6 +39,6 @@ public class StringConstants {
 	public static final String QUESTION_COLUMN_REVIEW_COUNT = "reviewCount";
 	public static final String QUESTION_COLUMN_KNOWN_COUNT = "knownCount";
 	public static final String QUESTION_COLUMN_REVIEW_TIME = "reviewTime";
-	public static final String QUESTION_COLUMN_KNOWN_TIME = "knownTime";
+	public static final String QUESTION_COLUMN_KNOWN_UNTIL_TIME = "knownUntilTime";
 	public static final String QUESTION_COLUMN_CHAPTER_KEY = "chapterKey";
 }

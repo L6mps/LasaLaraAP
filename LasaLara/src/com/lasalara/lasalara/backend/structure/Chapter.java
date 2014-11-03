@@ -86,6 +86,14 @@ public class Chapter {
 		position = dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_POSITION));
 		bookKey = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_BOOK_KEY));
 	}
+	
+	private void updateInDatabase() {
+		// TODO
+	}
+	
+	public void deleteFromDatabase() {
+		// TODO
+	}
 
 	/**
 	 * Load the questions in this book.

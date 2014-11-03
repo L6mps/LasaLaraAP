@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.lasalara.lasalara.backend.constants.NumericalConstants;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
 
@@ -17,10 +18,11 @@ import com.lasalara.lasalara.backend.database.DatabaseHelper;
 public class Question {
 	private String question;				// Text of the question
 	private String answer;					// Text of the answer
-	private int reviewCount;				// The number of times the student has skipped the question.
+	private int reviewCount;				// The number of times the student has reviewed the question.
 	private int knownCount;					// The number of times the student has set the question as known.
-	private Timestamp reviewTime;			// The last time the student skipped the question.
-	private Timestamp knownTime;			// The last time the student set the question as known.
+	private Timestamp reviewTime;			// The last time the student reviewed the question.
+	private Timestamp knownUntilTime;		// The time until which the question remains until.
+	// TODO: Add knownDateSaved
 	private String chapterKey;				// The chapter the question is located in.
 	
 	/**
@@ -39,9 +41,10 @@ public class Question {
 		knownCount = 0;
 		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
 		reviewTime = currentTime;
-		knownTime = currentTime;
+		knownUntilTime = currentTime;
+		// TODO: If the chapter is updated, is all of it's question progress purged or not?
 		this.chapterKey = chapterKey;
-		databaseHelper.getQuestionHelper().insertQuestion(this); // TODO: Test
+		databaseHelper.getQuestionHelper().insertQuestion(this);
 	}
 	
 	/**
@@ -54,8 +57,20 @@ public class Question {
 		reviewCount = dbResults.getInt(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_REVIEW_COUNT));
 		knownCount = dbResults.getInt(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_KNOWN_COUNT));
 		reviewTime = Timestamp.valueOf(dbResults.getString(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_REVIEW_TIME)));
-		knownTime = Timestamp.valueOf(dbResults.getString(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_KNOWN_TIME)));
+		knownUntilTime = Timestamp.valueOf(dbResults.getString(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME)));
 		chapterKey = dbResults.getString(dbResults.getColumnIndex(StringConstants.QUESTION_COLUMN_CHAPTER_KEY));
+	}
+	
+	/**
+	 * Update this question's database row.
+	 */
+	private void updateInDatabase() {
+		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+		databaseHelper.getQuestionHelper().updateQuestion(this);
+	}
+	
+	public void deleteFromDatabase() {
+		// TODO
 	}
 	
 	/**
@@ -63,9 +78,14 @@ public class Question {
 	 */
 	public void setUnknown() {
 		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
-		long secondsSinceReview = currentTime.getTime() - reviewTime.getTime();
+		long secondsToAdd = NumericalConstants.TWENTYFIVESECONDS;
+		if (reviewCount > 0) {
+			secondsToAdd += (knownUntilTime.getTime() - reviewTime.getTime()) * knownCount / reviewCount; // TODO: We should revise the formula because of integer division
+		}
 		reviewCount++;
-		// TODO
+		reviewTime = currentTime;
+		knownUntilTime = new Timestamp(currentTime.getTime() + secondsToAdd);
+		updateInDatabase();
 	}
 	
 	/**
@@ -73,9 +93,36 @@ public class Question {
 	 */
 	public void setKnown() {
 		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
-		long secondsSinceReview = currentTime.getTime() - knownTime.getTime();
+		long secondsSinceReview = currentTime.getTime() - reviewTime.getTime();
+		long secondsToAdd = NumericalConstants.TWENTYFIVESECONDS;
+		if (reviewCount == 0) {
+			secondsToAdd = NumericalConstants.ONEDAY;
+		} else if (secondsSinceReview > NumericalConstants.TWOYEARS) {
+			secondsToAdd = NumericalConstants.TENYEARS;
+		} else if (secondsSinceReview > NumericalConstants.HUNDREDTWENTYFIVEDAYS) {
+			secondsToAdd = NumericalConstants.TWOYEARS;
+		} else if (secondsSinceReview > NumericalConstants.TWENTYFIVEDAYS) {
+			secondsToAdd = NumericalConstants.HUNDREDTWENTYFIVEDAYS;
+		} else if (secondsSinceReview > NumericalConstants.FIVEDAYS) {
+			secondsToAdd = NumericalConstants.TWENTYFIVEDAYS;
+		} else if (secondsSinceReview > NumericalConstants.ONEDAY) {
+			secondsToAdd = NumericalConstants.FIVEDAYS;
+		} else if (secondsSinceReview > NumericalConstants.FIVEHOURS) {
+			secondsToAdd = NumericalConstants.ONEDAY;
+		} else if (secondsSinceReview > NumericalConstants.ONEHOUR) {
+			secondsToAdd = NumericalConstants.FIVEHOURS;
+		} else if (secondsSinceReview > NumericalConstants.TENMINUTES) {
+			secondsToAdd = NumericalConstants.ONEHOUR;
+		} else if (secondsSinceReview > NumericalConstants.TWOMINUTES) {
+			secondsToAdd = NumericalConstants.TENMINUTES;
+		} else {
+			secondsToAdd = NumericalConstants.TWOMINUTES;
+		}
+		reviewCount++;
+		reviewTime = currentTime;
 		knownCount++;
-		// TODO
+		knownUntilTime = new Timestamp(currentTime.getTime() + secondsToAdd);
+		updateInDatabase();
 	}
 
 	/**
@@ -93,7 +140,7 @@ public class Question {
 	}
 
 	/**
-	 * @return the number of times the student has skipped the question.
+	 * @return the number of times the student has reviewed the question.
 	 */
 	public int getReviewCount() {
 		return reviewCount;
@@ -107,17 +154,17 @@ public class Question {
 	}
 
 	/**
-	 * @return the last time the student skipped the question.
+	 * @return the last time the student reviewed the question.
 	 */
 	public Timestamp getReviewTime() {
 		return reviewTime;
 	}
 
 	/**
-	 * @return the last time the student set the question as known.
+	 * @return the time until which the question remains hidden.
 	 */
-	public Timestamp getKnownTime() {
-		return knownTime;
+	public Timestamp getKnownUntilTime() {
+		return knownUntilTime;
 	}
 
 	/**

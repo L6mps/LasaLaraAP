@@ -66,6 +66,11 @@ public class ChapterHelper {
 		onCreate();
 	}
 	
+	private ContentValues getContentValues(Chapter chapter) {
+		// TODO
+		throw new UnsupportedOperationException();
+	}
+	
 	/**
 	 * Insert a new chapter into the SQLite database.
 	 * @param chapter	The chapter object's instance.
@@ -83,6 +88,10 @@ public class ChapterHelper {
 		contentValues.put(StringConstants.CHAPTER_COLUMN_POSITION, chapter.getPosition());
 		contentValues.put(StringConstants.CHAPTER_COLUMN_BOOK_KEY, chapter.getBookKey());
 		database.insert(StringConstants.CHAPTER_TABLE_NAME, null, contentValues);
+	}
+	
+	public void updateChapter(Chapter chapter) {
+		// TODO
 	}
 	
 	public void deleteChapter(Chapter chapter) {

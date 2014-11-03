@@ -128,6 +128,14 @@ public class Book {
 		}
 	}
 	
+	private void updateInDatabase() {
+		// TODO
+	}
+	
+	public void deleteFromDatabase() {
+		// TODO
+	}
+	
 	/**
 	 * Validate the e-mail.
 	 * @param email	The e-mail string.

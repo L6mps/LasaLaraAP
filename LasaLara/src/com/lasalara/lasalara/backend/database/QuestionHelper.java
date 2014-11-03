@@ -28,7 +28,7 @@ public class QuestionHelper {
 			StringConstants.QUESTION_COLUMN_REVIEW_COUNT + " INT, " +
 			StringConstants.QUESTION_COLUMN_KNOWN_COUNT + " INT, " +
 			StringConstants.QUESTION_COLUMN_REVIEW_TIME + " TIMESTAMP, " +
-			StringConstants.QUESTION_COLUMN_KNOWN_TIME + " TIMESTAMP, " +
+			StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " TIMESTAMP, " +
 			StringConstants.QUESTION_COLUMN_CHAPTER_KEY + " TEXT);";
 	private static final String TABLE_DROP = 
 			"DROP TABLE IF EXISTS " + StringConstants.QUESTION_TABLE_NAME;
@@ -75,10 +75,24 @@ public class QuestionHelper {
 		contentValues.put(StringConstants.QUESTION_COLUMN_ANSWER, question.getAnswer());
 		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_COUNT, question.getReviewCount());
 		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_COUNT, question.getKnownCount());
-		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_TIME, question.getReviewTime());
-		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_TIME, question.getKnownTime());
+		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_TIME, question.getReviewTime().toString()); // TODO: Test if string conversion is the correct way to handle this
+		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME, question.getKnownUntilTime().toString()); // TODO: Test if string conversion is the correct way to handle this
 		contentValues.put(StringConstants.QUESTION_COLUMN_CHAPTER_KEY, question.getChapterKey());
 		database.insert(StringConstants.QUESTION_TABLE_NAME, null, contentValues);
+	}
+	
+	/**
+	 * Update a question in the SQLite database.
+	 * @param question	The question object's instance.
+	 */
+	public void updateQuestion(Question question) {
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_COUNT, question.getReviewCount());
+		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_COUNT, question.getKnownCount());
+		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_TIME, question.getReviewTime().toString()); // TODO: Test if string conversion is the correct way to handle this
+		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME, question.getKnownUntilTime().toString()); // TODO: Test if string conversion is the correct way to handle this
+		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "=" + question.getQuestion() + " AND " + StringConstants.QUESTION_COLUMN_ANSWER + "=" + question.getAnswer() + " AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=" + question.getChapterKey();
+		database.update(StringConstants.QUESTION_TABLE_NAME, contentValues, whereClause, null);
 	}
 	
 	public void deleteQuestion(Question question) {
