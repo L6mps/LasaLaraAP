@@ -128,8 +128,11 @@ public class Book {
 		}
 	}
 	
+	/**
+	 * Update this book's database row.
+	 */
 	private void updateInDatabase() {
-		// TODO
+		DatabaseHelper.getInstance().getBookHelper().updateBook(this);
 	}
 	
 	/**

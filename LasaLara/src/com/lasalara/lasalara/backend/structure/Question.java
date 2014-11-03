@@ -65,20 +65,18 @@ public class Question {
 	 * Update this question's database row.
 	 */
 	private void updateInDatabase() {
-		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
-		databaseHelper.getQuestionHelper().updateQuestion(this);
+		DatabaseHelper.getInstance().getQuestionHelper().updateQuestion(this);
 	}
 	
 	/**
 	 * Delete this question from the database.
 	 */
 	private void deleteFromDatabase() {
-		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
-		databaseHelper.getQuestionHelper().deleteQuestion(this);
+		DatabaseHelper.getInstance().getQuestionHelper().deleteQuestion(this);
 	}
 	
 	public void update() {
-		// TODO
+		// TODO: Do we even need this?
 	}
 	
 	/**

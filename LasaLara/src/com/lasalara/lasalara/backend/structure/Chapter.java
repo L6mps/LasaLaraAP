@@ -87,8 +87,11 @@ public class Chapter {
 		bookKey = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_BOOK_KEY));
 	}
 	
+	/**
+	 * Update this chapter's database row.
+	 */
 	private void updateInDatabase() {
-		// TODO
+		DatabaseHelper.getInstance().getChapterHelper().updateChapter(this);
 	}
 	
 	/**
