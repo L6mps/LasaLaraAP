@@ -94,12 +94,23 @@ public class ChapterHelper {
 		// TODO
 	}
 	
+	/**
+	 * Delete a chapter from the SQLite database.
+	 * @param chapter	The chapter object's instance.
+	 */
 	public void deleteChapter(Chapter chapter) {
-		// TODO
+		String whereClause = StringConstants.CHAPTER_COLUMN_KEY + "=" + chapter.getKey() +
+				StringConstants.CHAPTER_COLUMN_BOOK_KEY + "=" + chapter.getBookKey();
+		database.delete(StringConstants.CHAPTER_TABLE_NAME, whereClause, null);
 	}
 	
+	/**
+	 * Delete all of the chapters associated with a certain book from the SQLite database.
+	 * @param book		The book object's instance.
+	 */
 	public void deleteChapters(Book book) {
-		// TODO
+		String whereClause = StringConstants.CHAPTER_COLUMN_BOOK_KEY + "=" + book.getKey();
+		database.delete(StringConstants.CHAPTER_TABLE_NAME, whereClause, null);
 	}
 	
 	/**
@@ -110,8 +121,7 @@ public class ChapterHelper {
 		List<Chapter> chapterList = new ArrayList<Chapter>();
 		String selectChaptersQuery =
 				"SELECT * FROM " + StringConstants.CHAPTER_TABLE_NAME +  
-				" WHERE " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + 
-				"=" + bookKey + 
+				" WHERE " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + "=" + bookKey + 
 				" ORDER BY " + StringConstants.CHAPTER_COLUMN_POSITION + " ASC";
 		Cursor results =  database.rawQuery(selectChaptersQuery, null);
 		boolean moveSucceeded = results.moveToFirst();

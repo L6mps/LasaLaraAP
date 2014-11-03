@@ -91,8 +91,12 @@ public class Chapter {
 		// TODO
 	}
 	
+	/**
+	 * Delete this chapter from the database.
+	 */
 	public void deleteFromDatabase() {
-		// TODO
+		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+		databaseHelper.getChapterHelper().deleteChapter(this);
 	}
 
 	/**
