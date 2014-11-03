@@ -1,6 +1,8 @@
 package com.lasalara.lasalara.backend.database;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
@@ -27,8 +29,8 @@ public class QuestionHelper {
 			StringConstants.QUESTION_COLUMN_ANSWER + " TEXT, " +
 			StringConstants.QUESTION_COLUMN_REVIEW_COUNT + " INT, " +
 			StringConstants.QUESTION_COLUMN_KNOWN_COUNT + " INT, " +
-			StringConstants.QUESTION_COLUMN_REVIEW_TIME + " TIMESTAMP, " +
-			StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " TIMESTAMP, " +
+			StringConstants.QUESTION_COLUMN_REVIEW_TIME + " TEXT, " +
+			StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " TEXT, " +
 			StringConstants.QUESTION_COLUMN_CHAPTER_KEY + " TEXT);";
 	private static final String TABLE_DROP = 
 			"DROP TABLE IF EXISTS " + StringConstants.QUESTION_TABLE_NAME;
@@ -109,10 +111,12 @@ public class QuestionHelper {
 	 */
 	public List<Question> getQuestions(String chapterKey) {
 		List<Question> questionList = new ArrayList<Question>();
+		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
 		String selectQuestionsQuery =
 				"SELECT * FROM " + StringConstants.QUESTION_TABLE_NAME +  
-				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + 
-				"=" + chapterKey;
+				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=" + chapterKey +
+				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + "<=" + currentTime.toString(); // TODO: Test timestamp comparison
+		Log.d(StringConstants.APP_NAME, selectQuestionsQuery);
 		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {
