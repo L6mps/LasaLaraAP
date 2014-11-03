@@ -93,16 +93,30 @@ public class QuestionHelper {
 		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_COUNT, question.getKnownCount());
 		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_TIME, question.getReviewTime().toString()); // TODO: Test if string conversion is the correct way to handle this
 		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME, question.getKnownUntilTime().toString()); // TODO: Test if string conversion is the correct way to handle this
-		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "=" + question.getQuestion() + " AND " + StringConstants.QUESTION_COLUMN_ANSWER + "=" + question.getAnswer() + " AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=" + question.getChapterKey();
+		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "=" + question.getQuestion() + 
+				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "=" + question.getAnswer() + 
+				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=" + question.getChapterKey();
 		database.update(StringConstants.QUESTION_TABLE_NAME, contentValues, whereClause, null);
 	}
 	
+	/**
+	 * Delete a question from the SQLite database.
+	 * @param question	The question object's instance.
+	 */
 	public void deleteQuestion(Question question) {
-		// TODO
+		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "=" + question.getQuestion() + 
+				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "=" + question.getAnswer() + 
+				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=" + question.getChapterKey();
+		database.delete(StringConstants.QUESTION_TABLE_NAME, whereClause, null);
 	}
 	
+	/**
+	 * Delete all of the questions associated with a certain chapter from the SQLite database.
+	 * @param chapter	The chapter object's instance.
+	 */
 	public void deleteQuestions(Chapter chapter) {
-		// TODO
+		String whereClause = StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=" + chapter.getKey();
+		database.delete(StringConstants.QUESTION_TABLE_NAME, whereClause, null);
 	}
 	
 	/**

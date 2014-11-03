@@ -69,8 +69,12 @@ public class Question {
 		databaseHelper.getQuestionHelper().updateQuestion(this);
 	}
 	
+	/**
+	 * Delete this question from the database.
+	 */
 	public void deleteFromDatabase() {
-		// TODO
+		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
+		databaseHelper.getQuestionHelper().deleteQuestion(this);
 	}
 	
 	/**
