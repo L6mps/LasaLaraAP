@@ -2,16 +2,15 @@ package com.lasalara.lasalara.backend;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Queue;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
-import com.lasalara.lasalara.backend.exceptions.InputExistsException;
-import com.lasalara.lasalara.backend.exceptions.InputExistsExceptionMessage;
 import com.lasalara.lasalara.backend.structure.Book;
-import com.lasalara.lasalara.backend.structure.Chapter;
+import com.lasalara.lasalara.backend.structure.Message;
 import com.lasalara.lasalara.backend.structure.Progress;
 
 /**
@@ -20,8 +19,10 @@ import com.lasalara.lasalara.backend.structure.Progress;
  * @author Ants-Oskar Mäesalu
  */
 public class Backend {
-	private static Backend instance;
-	private List<Book> books;
+	private static Backend instance;	// The back end instance
+	private Queue<Message> messages;	// The application message queue
+	private List<Book> books;			// The downloaded books' list
+	
 	/**
 	 * Constructor.
 	 * Private because this is a singleton.
@@ -46,6 +47,30 @@ public class Backend {
 	 */
 	public static Backend getInstance() {
 		return instance;
+	}
+	
+	/**
+	 * Add a new message to the message queue.
+	 * @param message	The Message object.
+	 */
+	public void addMessage(Message message) {
+		messages.add(message);
+	}
+	
+	/**
+	 * Add a new message to the message queue.
+	 * @param message	The message string.
+	 */
+	public void addMessage(String message) {
+		messages.add(new Message(message));
+	}
+	
+	/**
+	 * Retrieve and remove the next message in the message queue.
+	 * @return the next message in the message queue.
+	 */
+	public Message nextMessage() {
+		return messages.poll();
 	}
 	
 	/**
