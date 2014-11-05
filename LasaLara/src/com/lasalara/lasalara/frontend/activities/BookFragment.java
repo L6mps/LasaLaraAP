@@ -1,14 +1,8 @@
 package com.lasalara.lasalara.frontend.activities;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.json.JSONException;
-
 import android.app.Activity;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
@@ -21,8 +15,6 @@ import com.lasalara.lasalara.backend.structure.Chapter;
 public class BookFragment extends ListFragment{
 	OnBookSelectedListener mCallback;
 	private List<Book> books;
-	private int layout;
-	private Context context;
 	
 	public interface OnBookSelectedListener {
 		public void onBookSelected(int position);
@@ -34,8 +26,6 @@ public class BookFragment extends ListFragment{
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
-                android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
 		refresh();
 	}
 	
@@ -45,12 +35,7 @@ public class BookFragment extends ListFragment{
 	}
 	
 	public void refresh() {
-		List<String[]> info = new ArrayList<String[]>();
-		for(Book i: books) {
-			String[] s = {i.getTitle(),i.getOwnerEmail(),"0%","0/?"};
-			info.add(s);
-		}
-		setListAdapter(new CustomListAdapter(getActivity(), info, layout));
+		setListAdapter(new CustomListAdapter(getActivity(), books));
 	}
 	
 	public void onStart() {
@@ -76,10 +61,5 @@ public class BookFragment extends ListFragment{
 
 	public List<Chapter> getBookChapters(int position) {
 		return books.get(position).getChapters();
-	}
-	
-	
-	public void bookAddedNotification() {
-		refresh();
 	}
 }

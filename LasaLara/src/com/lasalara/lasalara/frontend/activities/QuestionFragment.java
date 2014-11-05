@@ -2,14 +2,14 @@ package com.lasalara.lasalara.frontend.activities;
 
 import java.util.LinkedList;
 import java.util.List;
-
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
+import android.widget.ViewSwitcher.ViewFactory;
 
 import com.lasalara.lasalara.R;
 import com.lasalara.lasalara.backend.structure.Question;
@@ -21,24 +21,14 @@ public class QuestionFragment extends Fragment {
 	private List<Question> qa;
 	private int questionPointer;
 	private int questionTotal;
+	private boolean answered = false;
+	private TextSwitcher q;
+	private TextSwitcher a;
 	
 	public QuestionFragment() {
 		questionPointer = 0;
 		questionTotal = 0;
 		qa = new LinkedList<Question>();
-	}
-	
-	public void onCreate(Bundle savedInstance) {
-		super.onCreate(savedInstance);
-		
-	}
-	
-	public void onStart() {
-		super.onStart();
-	}
-	
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
 	}
 	
 	public void onResume() {
@@ -48,21 +38,53 @@ public class QuestionFragment extends Fragment {
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	        View v = inflater.inflate(R.layout.questionlayout, container, false);
-	        TextView q = (TextView) v.findViewById(R.id.questionView);
-			TextView a = (TextView) v.findViewById(R.id.answerView);
+	        
+	        q = (TextSwitcher) v.findViewById(R.id.questionView);
+			a = (TextSwitcher) v.findViewById(R.id.answerView);
+			q.setFactory(new ViewFactory() {
+
+				@Override
+				public View makeView() {
+					return new TextView(getActivity());
+				}
+				
+			});
+			a.setFactory(new ViewFactory() {
+
+				@Override
+				public View makeView() {
+					return new TextView(getActivity());
+				}
+				
+			});
+			q.setInAnimation(getActivity(), R.anim.enter);
+			q.setOutAnimation(getActivity(), R.anim.exit);
+			a.setInAnimation(getActivity(), R.anim.enter);
+			a.setOutAnimation(getActivity(), R.anim.exit);
 			q.setText(getCurrentQuestion());
-			a.setText(getCurrentAnswer());
-			a.setVisibility(View.INVISIBLE);
+			a.setText("");
+			answered = false;
 	        return v;
 	    }
 	
 	private void changeQuestion() {
-		View v = this.getView();
-		TextView q = (TextView) v.findViewById(R.id.questionView);
-		TextView a = (TextView) v.findViewById(R.id.answerView);
 		q.setText(getCurrentQuestion());
-		a.setText(getCurrentAnswer());
-		hideAnswer();
+		answered = false;
+		a.setText("");
+	}
+	
+	private void changeToPreviousQuestion() {
+		q.setInAnimation(getActivity(), R.anim.enter_right);
+		q.setOutAnimation(getActivity(), R.anim.exit_right);
+		a.setInAnimation(getActivity(), R.anim.enter_right);
+		a.setOutAnimation(getActivity(), R.anim.exit_right);
+		q.setText(getCurrentQuestion());
+		answered = false;
+		a.setText("");
+		q.setInAnimation(getActivity(), R.anim.enter);
+		q.setOutAnimation(getActivity(), R.anim.exit);
+		a.setInAnimation(getActivity(), R.anim.enter);
+		a.setOutAnimation(getActivity(), R.anim.exit);
 	}
 	
 	private CharSequence getCurrentAnswer() {
@@ -73,14 +95,11 @@ public class QuestionFragment extends Fragment {
 		return this.qa.get(questionPointer).getQuestion();
 	}
 	
-	private void hideAnswer() {
-		this.getView().findViewById(R.id.answerView).setVisibility(View.INVISIBLE);
-	}
-	
 	private void showAnswer() {
-		View answer = this.getView().findViewById(R.id.answerView);
-		if(answer.getVisibility()!=View.VISIBLE)
-			answer.setVisibility(View.VISIBLE);
+		if(!answered) {
+			answered = true;
+			a.setText(getCurrentAnswer());
+		}
 	}
 	
 	public void screenTapped() {
@@ -98,7 +117,7 @@ public class QuestionFragment extends Fragment {
 		questionPointer--;
 		if(questionPointer < 0)
 			questionPointer = questionTotal - 1;
-		changeQuestion();		
+		changeToPreviousQuestion();		
 	}
 
 	private void nextQuestion() {

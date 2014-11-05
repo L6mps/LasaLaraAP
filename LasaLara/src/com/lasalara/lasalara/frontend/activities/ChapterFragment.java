@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
@@ -17,17 +15,14 @@ import com.lasalara.lasalara.backend.structure.Chapter;
 public class ChapterFragment extends ListFragment{
 OnChapterSelectedListener mCallback;
 	
-	private int layout;
-	private List<String[]> info;
 	private List<Chapter> chapters;
-	private Context context;
 	
 	public interface OnChapterSelectedListener {
 		public void onChapterSelected(int position);
 	}
 	
 	public ChapterFragment() {
-		this.info = new ArrayList<String[]>();
+		this.chapters = new ArrayList<Chapter>();
 	}
 	
 	public void onResume() {
@@ -37,9 +32,7 @@ OnChapterSelectedListener mCallback;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		layout = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ?
-                android.R.layout.simple_list_item_activated_1 : android.R.layout.simple_list_item_1;
-		setListAdapter(new CustomListAdapter(getActivity(), info, layout));
+		setListAdapter(new CustomListAdapter(getActivity(), chapters, true));
 	}
 	
 	public void onStart() {
@@ -50,7 +43,6 @@ OnChapterSelectedListener mCallback;
 	
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		context = activity;
 		try {
 			mCallback = (OnChapterSelectedListener) activity;
 		}
@@ -64,16 +56,10 @@ OnChapterSelectedListener mCallback;
 		getListView().setItemChecked(position,  true);
 	}
 
-	public void changeData(List<Chapter> list) {
-		this.chapters = list;
-		List<String[]> info = new ArrayList<String[]>();
-		for(Chapter i:list) {
-			String[] tmp = {i.getTitle(),i.getAuthorName(),"0%","0/?"};
-			info.add(tmp);
-		}
-		this.info = info;
+	public void changeData(List<Chapter> chapters) {
+		this.chapters = chapters;
 		if(this.getListAdapter()!=null)
-			setListAdapter(new CustomListAdapter(context, this.info, layout));
+			setListAdapter(new CustomListAdapter(getActivity(), chapters, true));
 	}
 	
 	public Chapter getChapter(int position) {

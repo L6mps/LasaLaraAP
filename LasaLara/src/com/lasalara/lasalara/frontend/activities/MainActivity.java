@@ -154,23 +154,17 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    if(item.getItemId() == R.id.add_book) {
-	        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, abFragment).commit();
-	        return true;
+	        changeFragment(abFragment);
+	    	return true;
 	    }
 	    else if(item.getItemId() == R.id.done) {
-	    	Backend.getInstance().downloadBook(this, ((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString().toLowerCase(Locale.ENGLISH),((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString().toLowerCase(Locale.ENGLISH));
-	    	changeFragment(bFragment);
-	    	//bFragment.bookAddedNotification();
-			((EditText) abFragment.getView().findViewById(R.id.author)).setText("");
-			((EditText) abFragment.getView().findViewById(R.id.book)).setText("");
+	    	Backend.getInstance().downloadBook(this, 
+	    									 ((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString().toLowerCase(Locale.ENGLISH),
+	    									 ((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString().toLowerCase(Locale.ENGLISH));
+	    	getSupportFragmentManager().popBackStack(); //takes back the transaction from bFragment to abFragment, animating back
+	    	bFragment.refresh();
+	    	return true;
 	    }
 	    return super.onOptionsItemSelected(item);
 	}
-	
-	//cancel removed from addBook fragment, TODO: set texts to blank elsewhere
-	/*public void cancelListener(View v){
-		changeFragment(bFragment);
-		((EditText) abFragment.getView().findViewById(R.id.author)).setText("");
-		((EditText) abFragment.getView().findViewById(R.id.book)).setText("");
-	}	*/
 }
