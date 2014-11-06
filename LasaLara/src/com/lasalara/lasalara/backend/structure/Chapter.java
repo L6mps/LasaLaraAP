@@ -34,6 +34,7 @@ public class Chapter {
 	private String bookKey;					// The book the chapter is located in.
 	private List<Question> questions;		// The list of questions in this book.
 
+	private Context context;
 	/**
 	 * Constructor, used when downloading a chapter from the web.
 	 * @param context			The current activity's context (needed for network connection check and SQLite database).
@@ -49,7 +50,7 @@ public class Chapter {
 	Chapter(Context context, String key, String title, int version, String authorEmail, 
 			String authorName, String authorInstitution, boolean proposalsAllowed, int position,
 			String bookKey) {
-		Log.d(StringConstants.APP_NAME, "Chapter constructor: " + key + ", " + title + ".");
+		//Log.d(StringConstants.APP_NAME, "Chapter constructor: " + key + ", " + title + ".");
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		this.key = key;
 		this.title = title;
@@ -61,6 +62,8 @@ public class Chapter {
 		this.position = position;
 		this.bookKey = bookKey;
 		databaseHelper.getChapterHelper().insertChapter(this); // TODO: Test
+		
+		this.context = context;
 	}
 	
 	/**
@@ -109,7 +112,7 @@ public class Chapter {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	public void loadQuestions(Context context) throws IOException, JSONException {
+	public void loadQuestions() {
 		questions = new ArrayList<Question>();
 		String url = StringConstants.URL_GET_QUESTIONS;
 		UrlParameters urlParameters = new UrlParameters();
@@ -289,10 +292,10 @@ public class Chapter {
 	 * @throws JSONException 
 	 * @throws IOException 
 	 */
-	public List<Question> getQuestions(Context context) throws IOException, JSONException {
+	public List<Question> getQuestions() {
 		// TODO: If the user has internet connection, rewrite the questions in the database.
 		// If not, use the questions from the SQLite database.
-		loadQuestions(context);
+		loadQuestions();
 		return questions;
 	}
 }

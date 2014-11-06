@@ -1,8 +1,12 @@
 package com.lasalara.lasalara.frontend.activities;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONException;
+
+import android.content.Context;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,26 +35,32 @@ public class CustomListAdapter extends BaseAdapter {
 		}
 	}
 	
-	private LayoutInflater inflater;
+	private Context context;
 	private ArrayList<Info> info;
 	
 	public CustomListAdapter(FragmentActivity activity, List<Chapter> chapters, boolean isChapter) {
 		this.info = new ArrayList<Info>();
-		inflater = LayoutInflater.from(activity);
+		context = activity;
 		for(Chapter i:chapters) {
-			Progress prg = new Progress (5, 10);//i.getProgress();
+			Progress prg = new Progress (0, 10);//i.getProgress();
 			int currentPercentage = (int) prg.getPercentage();
-			this.info.add(new Info(i.getTitle(),i.getAuthorName(),currentPercentage+"%",prg.getCurrent()+"/"+prg.getMaximum()));
+			
+			//TODO: Delete this and use the commented out one when progress works
+			this.info.add(new Info(i.getTitle(),i.getAuthorName(),0+"%",prg.getCurrent()+"/"+i.getQuestions().size()));
+			//this.info.add(new Info(i.getTitle(),i.getAuthorName(),currentPercentage+"%",prg.getCurrent()+"/"+prg.getMaximum()));
 		}
 	}
 	
 	public CustomListAdapter(FragmentActivity activity, List<Book> books) {
-		inflater = LayoutInflater.from(activity);
+		context = activity;
 		this.info = new ArrayList<Info>();
 		for(Book i:books) {
-			Progress prg = new Progress(5, 10);//Should be i.getProgress();
+			Progress prg = new Progress(0, 10);//Should be i.getProgress();
 			int currentPercentage = (int) prg.getPercentage();
-			this.info.add(new Info(i.getTitle(),i.getOwnerEmail(),currentPercentage+"%",prg.getCurrent()+"/"+prg.getMaximum()));
+			
+			//TODO: Delete this and use the commented out one when progress works
+			this.info.add(new Info(i.getTitle(),i.getOwnerEmail(),0+"%",prg.getCurrent()+"/"+i.getChapters().size()));
+			//this.info.add(new Info(i.getTitle(),i.getOwnerEmail(),currentPercentage+"%",prg.getCurrent()+"/"+prg.getMaximum()));
 		}
 	}
 	
@@ -74,11 +84,10 @@ public class CustomListAdapter extends BaseAdapter {
 		return arg0;
 	}
 
-	//@SuppressLint("InflateParams") @Override  //warning about inflating with null ViewGroup
 	public View getView(int position, View arg1, ViewGroup arg2) {
 	    View v = arg1;
 	    if(v == null) {
-	    	LayoutInflater vi = inflater;
+	    	LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 	    	v = vi.inflate(R.layout.listelement, arg2, false);
 	    }
 	    

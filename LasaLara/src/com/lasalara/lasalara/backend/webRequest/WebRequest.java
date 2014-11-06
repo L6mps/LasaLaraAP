@@ -80,7 +80,7 @@ public class WebRequest {
 		HttpPost post = new HttpPost(url);
 		List<NameValuePair> pairs = new ArrayList<NameValuePair>();
 		for (int i = 0; i < parameterList.getSize(); i++) {
-			Log.d(StringConstants.APP_NAME, "Web request parameter: " + parameterList.getKey(i) + ", " + parameterList.getValue(i) + ".");
+			//Log.d(StringConstants.APP_NAME, "Web request parameter: " + parameterList.getKey(i) + ", " + parameterList.getValue(i) + ".");
 			pairs.add(new BasicNameValuePair(parameterList.getKey(i), parameterList.getValue(i)));
 		}
 		try {
@@ -112,7 +112,7 @@ public class WebRequest {
 			Log.d(StringConstants.APP_NAME, "Getting response.");
 			result = EntityUtils.toString(response.getEntity());
 			Log.d(StringConstants.APP_NAME, "Got response.");
-			Log.d(StringConstants.APP_NAME, result);
+			//Log.d(StringConstants.APP_NAME, result);
 		} catch (ParseException e) {
 			Log.d(StringConstants.APP_NAME, "ParseException: " + e.getStackTrace());
 		} catch (IOException e) {

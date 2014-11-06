@@ -10,19 +10,23 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.lasalara.lasalara.R;
+import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
+import com.lasalara.lasalara.backend.structure.Progress;
 
 public class ChapterFragment extends ListFragment{
 OnChapterSelectedListener mCallback;
 	
 	private List<Chapter> chapters;
+	private Book parentBook;
 	
 	public interface OnChapterSelectedListener {
-		public void onChapterSelected(int position);
+		public void onChapterSelected(int position, Chapter cp);
 	}
 	
 	public ChapterFragment() {
 		this.chapters = new ArrayList<Chapter>();
+		this.parentBook = null;
 	}
 	
 	public void onResume() {
@@ -52,17 +56,26 @@ OnChapterSelectedListener mCallback;
 	}
 	
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		mCallback.onChapterSelected(position);
+		mCallback.onChapterSelected(position, chapters.get(position));
 		getListView().setItemChecked(position,  true);
 	}
 
-	public void changeData(List<Chapter> chapters) {
+	public void changeData(List<Chapter> chapters, Book bk) {
 		this.chapters = chapters;
+		this.parentBook = bk;
 		if(this.getListAdapter()!=null)
 			setListAdapter(new CustomListAdapter(getActivity(), chapters, true));
 	}
 	
 	public Chapter getChapter(int position) {
 		return chapters.get(position);
+	}
+
+	public int getProgress() {
+		
+		//Progress cProgress = parentBook.getProgress();
+		//return (int) cProgress.getPercentage();
+		
+		return 50;
 	}
 }

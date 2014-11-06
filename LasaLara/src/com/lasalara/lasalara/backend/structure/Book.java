@@ -44,7 +44,7 @@ public class Book {
 	 */
 	public Book(Context context, String ownerEmail, String title) {
 		this.context = context;
-		Log.d(StringConstants.APP_NAME, "Book constructor.");
+		//Log.d(StringConstants.APP_NAME, "Book constructor.");
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		String url = StringConstants.URL_GET_BOOK;
 		UrlParameters urlParameters = new UrlParameters();

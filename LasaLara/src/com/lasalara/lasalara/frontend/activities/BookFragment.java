@@ -9,15 +9,17 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.lasalara.lasalara.R;
+import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
+import com.lasalara.lasalara.backend.structure.Progress;
 
 public class BookFragment extends ListFragment{
 	OnBookSelectedListener mCallback;
 	private List<Book> books;
 	
 	public interface OnBookSelectedListener {
-		public void onBookSelected(int position);
+		public void onBookSelected(int position, Book bk);
 	}
 	
 	public BookFragment(List<Book> books) {
@@ -56,10 +58,18 @@ public class BookFragment extends ListFragment{
 	}
 	
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		mCallback.onBookSelected(position);
+		mCallback.onBookSelected(position, books.get(position));
 	}
 
 	public List<Chapter> getBookChapters(int position) {
 		return books.get(position).getChapters();
+	}
+
+	public int getProgress() {
+		
+		//Progress bProgress = Backend.getInstance().getProgress();
+		//return (int) bProgress.getPercentage();
+		 
+		return 25;
 	}
 }

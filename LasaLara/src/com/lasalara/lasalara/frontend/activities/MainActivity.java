@@ -1,14 +1,14 @@
 package com.lasalara.lasalara.frontend.activities;
 
-import java.io.IOException;
 import java.util.Locale;
-
-import org.json.JSONException;
 
 import com.lasalara.lasalara.R;
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.backend.structure.Book;
+import com.lasalara.lasalara.backend.structure.Chapter;
+import com.lasalara.lasalara.backend.structure.Progress;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,10 +21,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 public class MainActivity extends FragmentActivity implements BookFragment.OnBookSelectedListener,
-															  ChapterFragment.OnChapterSelectedListener, 
+															  ChapterFragment.OnChapterSelectedListener,
+															  QuestionFragment.ProgressBarRefreshListener,
 															  OnGestureListener {
 	
 	private BookFragment bFragment;
@@ -32,6 +35,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	private QuestionFragment qFragment;
 	private AddBookFragment abFragment;
 	private GestureDetector gd;
+	private ProgressBar progressBar;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,27 +59,28 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 			
 			qFragment = new QuestionFragment();
 			qFragment.setArguments(getIntent().getExtras());
+			
 			abFragment = new AddBookFragment();
 			abFragment.setArguments(getIntent().getExtras());
+			
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, bFragment).commit();
+			
+			Progress bProgress = new Progress(25, 50);//Backend.getInstance().getProgress(); //When progress works, use this
+			progressBar = (ProgressBar) findViewById(R.id.listProgressBar);
+			progressBar.setProgress((int)bProgress.getPercentage());
 		}
+		
 	}
 
 	@Override
-	public void onBookSelected(int position) {
-		cFragment.changeData(bFragment.getBookChapters(position));
+	public void onBookSelected(int position, Book bk) {
+		cFragment.changeData(bFragment.getBookChapters(position), bk);
 		changeFragment(cFragment);
 	}
 
 	@Override
-	public void onChapterSelected(int position)  {
-		try {
-			qFragment.changeData(cFragment.getChapter(position).getQuestions(this));
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+	public void onChapterSelected(int position, Chapter cp)  {
+		qFragment.changeData(cFragment.getChapter(position).getQuestions(), cp);
 		changeFragment(qFragment);
 	}
 	
@@ -100,8 +105,26 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
         	inflater.inflate(R.menu.addbook_fragment_settings, menu);
         else
         	inflater.inflate(R.menu.question_fragment_settings, menu);
+        updateProgressBar();
         return super.onCreateOptionsMenu(menu);
     }
+	
+	public void updateProgressBar() {
+		progressBar.setVisibility(View.VISIBLE);
+		if(qFragment.isVisible()) {
+        	progressBar.setProgress(qFragment.getProgress());
+        }
+        else if(cFragment.isVisible()) {
+        	progressBar.setProgress(cFragment.getProgress());
+        }
+        else if(bFragment.isVisible()) {
+        	progressBar.setProgress(bFragment.getProgress());
+        }
+        else if(abFragment.isVisible()) {
+        	progressBar.setEnabled(false);
+        	progressBar.setVisibility(View.GONE);        	
+        }
+	}
 
 	
 
@@ -166,5 +189,10 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    	return true;
 	    }
 	    return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onProgressRefresh() {
+		updateProgressBar();
 	}
 }

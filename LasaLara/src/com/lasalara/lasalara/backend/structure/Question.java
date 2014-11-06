@@ -33,7 +33,7 @@ public class Question {
 	 * @param bookKey	The book the chapter is located in.
 	 */
 	Question(Context context, String question, String answer, String chapterKey) {
-		Log.d(StringConstants.APP_NAME, "Question constructor: " + chapterKey + ", " + question + ", " + answer + ".");
+		//Log.d(StringConstants.APP_NAME, "Question constructor: " + chapterKey + ", " + question + ", " + answer + ".");
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		this.question = question;
 		this.answer = answer;
