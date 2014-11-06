@@ -71,11 +71,10 @@ OnChapterSelectedListener mCallback;
 		return chapters.get(position);
 	}
 
-	public int getProgress() {
+	public Progress getProgress() {
 		
-		//Progress cProgress = parentBook.getProgress();
-		//return (int) cProgress.getPercentage();
+		//return parentBook.getProgress();
 		
-		return 50;
+		return new Progress(0, chapters.size());
 	}
 }

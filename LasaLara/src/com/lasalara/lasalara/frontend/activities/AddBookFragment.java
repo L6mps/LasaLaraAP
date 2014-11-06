@@ -21,5 +21,5 @@ public class AddBookFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	        View v = inflater.inflate(R.layout.addbook, container, false);
 	        return v;
-	    }	
+	    }
 }

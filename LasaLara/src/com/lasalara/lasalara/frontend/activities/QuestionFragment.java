@@ -163,12 +163,11 @@ public class QuestionFragment extends Fragment {
 		this.answered = false;
 	}
 
-	public int getProgress() {
+	public Progress getProgress() {
 		
-		//Progress qProgress = parentChapter.getProgress();
-		//return (int) qProgress.getPercentage();
+		//return parentChapter.getProgress();
 		
-		return (int) (100 * questionPointer) / questionTotal;
+		return new Progress(questionPointer+1, questionTotal);
 	}
 	
 }

@@ -19,7 +19,7 @@
     <!-- Propose Question -->
     <item android:id="@+id/propose_question"
           android:title="@string/propose_question"
-          android:showAsAction="never"/>
+          android:showAsAction="never" />
      
     <!-- Scramble Question Order -->
     <item android:id="@+id/scramble_question_order"

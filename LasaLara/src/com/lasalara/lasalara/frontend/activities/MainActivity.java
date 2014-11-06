@@ -85,6 +85,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	}
 	
 	private void changeFragment(Fragment f) {
+
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
 		ft.replace(R.id.fragment_container, f).addToBackStack(f.getTag());
@@ -95,12 +96,15 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
+		getActionBar().setDisplayHomeAsUpEnabled(true);
         if(qFragment.isVisible())
         	inflater.inflate(R.menu.question_fragment_settings, menu);
         else if(cFragment.isVisible())
         	inflater.inflate(R.menu.chapter_fragment_settings, menu);
-        else if(bFragment.isVisible())
+        else if(bFragment.isVisible()) {
         	inflater.inflate(R.menu.book_fragment_settings, menu);
+        	getActionBar().setDisplayHomeAsUpEnabled(false);
+        }
         else if(abFragment.isVisible())
         	inflater.inflate(R.menu.addbook_fragment_settings, menu);
         else
@@ -112,16 +116,23 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	public void updateProgressBar() {
 		progressBar.setVisibility(View.VISIBLE);
 		if(qFragment.isVisible()) {
-        	progressBar.setProgress(qFragment.getProgress());
+			Progress qProgress = qFragment.getProgress();
+        	progressBar.setProgress(qProgress.getPercentage());
+        	setTitle(qProgress.getCurrent() + "/" + qProgress.getMaximum());
         }
         else if(cFragment.isVisible()) {
-        	progressBar.setProgress(cFragment.getProgress());
+        	Progress cProgress = cFragment.getProgress();
+        	progressBar.setProgress(cProgress.getPercentage());
+        	setTitle(cProgress.getCurrent() + "/" + cProgress.getMaximum());
         }
         else if(bFragment.isVisible()) {
-        	progressBar.setProgress(bFragment.getProgress());
+        	Progress bProgress = bFragment.getProgress();
+        	progressBar.setProgress(bProgress.getPercentage());
+        	setTitle(bProgress.getCurrent() + "/" + bProgress.getMaximum());
         }
         else if(abFragment.isVisible()) {
         	progressBar.setEnabled(false);
+        	setTitle("");
         	progressBar.setVisibility(View.GONE);        	
         }
 	}
@@ -187,6 +198,9 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    	getSupportFragmentManager().popBackStack(); //takes back the transaction from bFragment to abFragment, animating back
 	    	bFragment.refresh();
 	    	return true;
+	    }
+	    else if(item.getItemId() == android.R.id.home) {
+	    	getSupportFragmentManager().popBackStack();
 	    }
 	    return super.onOptionsItemSelected(item);
 	}
