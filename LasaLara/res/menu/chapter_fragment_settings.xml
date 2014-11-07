@@ -3,6 +3,6 @@
     <!-- refresh chapter -->
     <item android:id="@+id/refreshChapters"
         android:title=""
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_action_refresh"
         android:showAsAction="always"/>
 </menu>

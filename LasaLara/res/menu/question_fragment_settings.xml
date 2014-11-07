@@ -6,7 +6,7 @@
           android:title="@string/reset_progress"
           android:showAsAction="never"/>
      
-    <!-- Turn Page View ON -->
+    <!-- Turn Page View On -->
     <item android:id="@+id/turn_page_view_on"
           android:title="@string/turn_page_view_on"
           android:showAsAction="never" />
@@ -19,7 +19,7 @@
     <!-- Propose Question -->
     <item android:id="@+id/propose_question"
           android:title="@string/propose_question"
-          android:showAsAction="never"/>
+          android:showAsAction="never" />
      
     <!-- Scramble Question Order -->
     <item android:id="@+id/scramble_question_order"

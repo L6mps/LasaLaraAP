@@ -2,4 +2,10 @@
     android:id="@+id/fragment_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
+    
+    <ProgressBar
+         android:id="@+id/listProgressBar"
+         android:layout_width="match_parent"
+         android:layout_height="2dip"
+         style="@android:style/Widget.ProgressBar.Horizontal" />
 </FrameLayout>

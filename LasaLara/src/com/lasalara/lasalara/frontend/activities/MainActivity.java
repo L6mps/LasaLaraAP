@@ -1,14 +1,14 @@
 package com.lasalara.lasalara.frontend.activities;
 
-import java.io.IOException;
 import java.util.Locale;
-
-import org.json.JSONException;
 
 import com.lasalara.lasalara.R;
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.backend.structure.Book;
+import com.lasalara.lasalara.backend.structure.Chapter;
+import com.lasalara.lasalara.backend.structure.Progress;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -21,10 +21,13 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 
 public class MainActivity extends FragmentActivity implements BookFragment.OnBookSelectedListener,
-															  ChapterFragment.OnChapterSelectedListener, 
+															  ChapterFragment.OnChapterSelectedListener,
+															  QuestionFragment.ProgressBarRefreshListener,
 															  OnGestureListener {
 	
 	private BookFragment bFragment;
@@ -32,6 +35,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	private QuestionFragment qFragment;
 	private AddBookFragment abFragment;
 	private GestureDetector gd;
+	private ProgressBar progressBar;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -55,31 +59,33 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 			
 			qFragment = new QuestionFragment();
 			qFragment.setArguments(getIntent().getExtras());
+			
 			abFragment = new AddBookFragment();
 			abFragment.setArguments(getIntent().getExtras());
+			
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, bFragment).commit();
+			
+			Progress bProgress = new Progress(25, 50);//Backend.getInstance().getProgress(); //When progress works, use this
+			progressBar = (ProgressBar) findViewById(R.id.listProgressBar);
+			progressBar.setProgress((int)bProgress.getPercentage());
 		}
+		
 	}
 
 	@Override
-	public void onBookSelected(int position) {
-		cFragment.changeData(bFragment.getBookChapters(position));
+	public void onBookSelected(int position, Book bk) {
+		cFragment.changeData(bFragment.getBookChapters(position), bk);
 		changeFragment(cFragment);
 	}
 
 	@Override
-	public void onChapterSelected(int position)  {
-		try {
-			qFragment.changeData(cFragment.getChapter(position).getQuestions(this));
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (JSONException e) {
-			e.printStackTrace();
-		}
+	public void onChapterSelected(int position, Chapter cp)  {
+		qFragment.changeData(cFragment.getChapter(position).getQuestions(), cp);
 		changeFragment(qFragment);
 	}
 	
 	private void changeFragment(Fragment f) {
+
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		ft.setCustomAnimations(R.anim.enter, R.anim.exit, R.anim.pop_enter, R.anim.pop_exit);
 		ft.replace(R.id.fragment_container, f).addToBackStack(f.getTag());
@@ -90,18 +96,46 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
+		getActionBar().setDisplayHomeAsUpEnabled(true);
         if(qFragment.isVisible())
         	inflater.inflate(R.menu.question_fragment_settings, menu);
         else if(cFragment.isVisible())
         	inflater.inflate(R.menu.chapter_fragment_settings, menu);
-        else if(bFragment.isVisible())
+        else if(bFragment.isVisible()) {
         	inflater.inflate(R.menu.book_fragment_settings, menu);
+        	getActionBar().setDisplayHomeAsUpEnabled(false);
+        }
         else if(abFragment.isVisible())
         	inflater.inflate(R.menu.addbook_fragment_settings, menu);
         else
         	inflater.inflate(R.menu.question_fragment_settings, menu);
+        updateProgressBar();
         return super.onCreateOptionsMenu(menu);
     }
+	
+	public void updateProgressBar() {
+		progressBar.setVisibility(View.VISIBLE);
+		if(qFragment.isVisible()) {
+			Progress qProgress = qFragment.getProgress();
+        	progressBar.setProgress(qProgress.getPercentage());
+        	setTitle(qProgress.getCurrent() + "/" + qProgress.getMaximum());
+        }
+        else if(cFragment.isVisible()) {
+        	Progress cProgress = cFragment.getProgress();
+        	progressBar.setProgress(cProgress.getPercentage());
+        	setTitle(cProgress.getCurrent() + "/" + cProgress.getMaximum());
+        }
+        else if(bFragment.isVisible()) {
+        	Progress bProgress = bFragment.getProgress();
+        	progressBar.setProgress(bProgress.getPercentage());
+        	setTitle(bProgress.getCurrent() + "/" + bProgress.getMaximum());
+        }
+        else if(abFragment.isVisible()) {
+        	progressBar.setEnabled(false);
+        	setTitle("");
+        	progressBar.setVisibility(View.GONE);        	
+        }
+	}
 
 	
 
@@ -154,23 +188,25 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    if(item.getItemId() == R.id.add_book) {
-	        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, abFragment).commit();
-	        return true;
+	        changeFragment(abFragment);
+	    	return true;
 	    }
 	    else if(item.getItemId() == R.id.done) {
-	    	Backend.getInstance().downloadBook(this, ((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString().toLowerCase(Locale.ENGLISH),((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString().toLowerCase(Locale.ENGLISH));
-	    	changeFragment(bFragment);
-	    	//bFragment.bookAddedNotification();
-			((EditText) abFragment.getView().findViewById(R.id.author)).setText("");
-			((EditText) abFragment.getView().findViewById(R.id.book)).setText("");
+	    	Backend.getInstance().downloadBook(this, 
+	    									 ((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString().toLowerCase(Locale.ENGLISH),
+	    									 ((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString().toLowerCase(Locale.ENGLISH));
+	    	getSupportFragmentManager().popBackStack(); //takes back the transaction from bFragment to abFragment, animating back
+	    	bFragment.refresh();
+	    	return true;
+	    }
+	    else if(item.getItemId() == android.R.id.home) {
+	    	getSupportFragmentManager().popBackStack();
 	    }
 	    return super.onOptionsItemSelected(item);
 	}
-	
-	//cancel removed from addBook fragment, TODO: set texts to blank elsewhere
-	/*public void cancelListener(View v){
-		changeFragment(bFragment);
-		((EditText) abFragment.getView().findViewById(R.id.author)).setText("");
-		((EditText) abFragment.getView().findViewById(R.id.book)).setText("");
-	}	*/
+
+	@Override
+	public void onProgressRefresh() {
+		updateProgressBar();
+	}
 }

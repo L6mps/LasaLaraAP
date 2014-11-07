@@ -10,7 +10,7 @@
     <string name="Switch_QA">Switch Question/Answer</string>
     <string name="propose_question">Propose Question</string>
     <string name="scramble_question_order">Scramble Question Order</string>
-    <string name="add_book">Add Book</string>
+    <string name="add_book">+</string>
     
     <!--  Add Book screen items -->
     

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:padding="12dip">
 
-    <TextView
+    <TextSwitcher
         android:id="@+id/questionView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,7 +21,7 @@
 	    android:layout_below="@id/questionView"
 	    android:background="@android:color/darker_gray"/>
 	
-    <TextView
+    <TextSwitcher
         android:id="@+id/answerView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
