@@ -202,6 +202,25 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    else if(item.getItemId() == android.R.id.home) {
 	    	getSupportFragmentManager().popBackStack();
 	    }
+	    else if(item.getItemId() == R.id.reset_progress) {
+	    	qFragment.resetProgress();
+	    	//changeFragment(qFragment);
+	    	Progress qProgress = qFragment.getProgress();
+        	progressBar.setProgress(qProgress.getPercentage());
+        	setTitle(qProgress.getCurrent() + "/" + qProgress.getMaximum());
+	    }
+	    else if(item.getItemId() == R.id.turn_page_view_on) {
+	    	//TODO
+	    }
+	    else if(item.getItemId() == R.id.Switch_QA) {
+	    	//TODO
+	    }
+	    else if(item.getItemId() == R.id.propose_question) {
+	    	//TODO
+	    }
+	    else if(item.getItemId() == R.id.scramble_question_order) {
+	    	//TODO;
+	    }
 	    return super.onOptionsItemSelected(item);
 	}
 

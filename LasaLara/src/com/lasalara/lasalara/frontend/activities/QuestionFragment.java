@@ -169,5 +169,10 @@ public class QuestionFragment extends Fragment {
 		
 		return new Progress(questionPointer+1, questionTotal);
 	}
+
+	public void resetProgress() {
+		//TODO
+		
+	}
 	
 }
