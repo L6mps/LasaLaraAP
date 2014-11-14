@@ -62,6 +62,7 @@ public class Chapter {
 		this.position = position;
 		this.bookKey = bookKey;
 		databaseHelper.getChapterHelper().insertChapter(this); // TODO: Test
+		loadQuestions();
 		
 		this.context = context;
 	}
@@ -88,6 +89,14 @@ public class Chapter {
 		proposalsAllowed = (dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED)) == 1) ? true : false;
 		position = dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_POSITION));
 		bookKey = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_BOOK_KEY));
+		preloadQuestions();
+	}
+
+	/**
+	 * Preload all of the question data for this chapter from the SQLite database.
+	 */
+	void preloadQuestions() {
+		questions = DatabaseHelper.getInstance().getQuestionHelper().getQuestions(key);
 	}
 	
 	/**
@@ -293,9 +302,6 @@ public class Chapter {
 	 * @throws IOException 
 	 */
 	public List<Question> getQuestions() {
-		// TODO: If the user has internet connection, rewrite the questions in the database.
-		// If not, use the questions from the SQLite database.
-		loadQuestions();
 		return questions;
 	}
 }

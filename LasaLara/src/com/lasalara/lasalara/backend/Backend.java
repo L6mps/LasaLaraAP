@@ -75,19 +75,16 @@ public class Backend {
 	
 	/**
 	 * Preload all of the book data from the SQLite database.
-	 * @param context	The current activity's context (needed for network connection check and SQLite database).
-	 * @return list of books in the SQLite database.
 	 */
-	private List<Book> preloadBooks(DatabaseHelper databaseHelper) {
-		return databaseHelper.getBookHelper().getBooks();
+	void preloadBooks() {
+		books = DatabaseHelper.getInstance().getBookHelper().getBooks();
 	}
 	
 	/**
 	 * Preload all of the data from the SQLite database.
-	 * @param context	The current activity's context (needed for network connection check and SQLite database).
 	 */
-	public void preloadData(DatabaseHelper databaseHelper) {
-		books = preloadBooks(databaseHelper);
+	public void preloadData() {
+		preloadBooks();
 	}
 	
 	/**

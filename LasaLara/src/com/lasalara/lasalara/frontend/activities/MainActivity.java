@@ -43,7 +43,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 		Log.d(StringConstants.APP_NAME, "Initialising database helper.");
 		DatabaseHelper.initialiseInstance(this);
 		Log.d(StringConstants.APP_NAME, "Getting books.");
-		Backend.getInstance().preloadData(DatabaseHelper.getInstance());
+		Backend.getInstance().preloadData();
 		
 		this.gd = new GestureDetector(this,this);
 		setContentView(R.layout.contentlists);

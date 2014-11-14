@@ -68,9 +68,9 @@ public class Book {
 			e1.printStackTrace();
 		}
 		try {
-			Log.d(StringConstants.APP_NAME, "Book: Getting JSONObject.");
+			//Log.d(StringConstants.APP_NAME, "Book: Getting JSONObject.");
 			JSONObject result = request.getJSONObject();
-			Log.d(StringConstants.APP_NAME, "Book: Got JSONObject.");
+			//Log.d(StringConstants.APP_NAME, "Book: Got JSONObject.");
 			try {
 				if (validateEmail(ownerEmail)) {
 					this.ownerEmail = ownerEmail;
@@ -106,6 +106,7 @@ public class Book {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		loadChapters();
 	}
 	
 	/**
@@ -126,6 +127,14 @@ public class Book {
 		} else {
 			ownerInstitution = dbResults.getString(dbResults.getColumnIndex(StringConstants.BOOK_COLUMN_OWNER_INSTITUTION));
 		}
+		preloadChapters();
+	}
+	
+	/**
+	 * Preload all of the chapter data for this book from the SQLite database.
+	 */
+	void preloadChapters() {
+		chapters = DatabaseHelper.getInstance().getChapterHelper().getChapters(key);
 	}
 	
 	/**
@@ -300,17 +309,11 @@ public class Book {
 	
 	/**
 	 * Return a list of chapters in this book. Used when the user has opened a book.
-	 * If the user has internet connection, the chapters are queried from the web
-	 * and the data in the SQLite database is overwritten.
-	 * If the user doesn't have internet connection, the chapters are read from the
-	 * SQLite database.
+	 * The chapters are read from the SQLite database.
 	 * @param context		The current activity's context (needed for network connection check).
 	 * @return the list of chapters in this book.
 	 */
 	public List<Chapter> getChapters() {
-		// TODO: If the user has internet connection, rewrite the chapters in the database.
-		// If not, use the chapters from the SQLite database.
-		loadChapters();
 		return chapters;
 	}
 }
