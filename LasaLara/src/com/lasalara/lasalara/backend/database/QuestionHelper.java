@@ -93,10 +93,11 @@ public class QuestionHelper {
 		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_COUNT, question.getKnownCount());
 		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_TIME, question.getReviewTime().toString()); // TODO: Test if string conversion is the correct way to handle this
 		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME, question.getKnownUntilTime().toString()); // TODO: Test if string conversion is the correct way to handle this
-		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "='" + question.getQuestion() + "'" +
-				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "='" + question.getAnswer() + "'" +
-				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + question.getChapterKey() +"'";
-		database.update(StringConstants.QUESTION_TABLE_NAME, contentValues, whereClause, null);
+		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "=?" +
+				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "=?" +
+				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=?";
+		String[] whereArguments = {question.getQuestion(), question.getAnswer(), question.getChapterKey()};
+		database.update(StringConstants.QUESTION_TABLE_NAME, contentValues, whereClause, whereArguments);
 	}
 	
 	/**
