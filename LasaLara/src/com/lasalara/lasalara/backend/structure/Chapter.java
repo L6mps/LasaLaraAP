@@ -64,7 +64,7 @@ public class Chapter {
 		this.position = position;
 		this.bookKey = bookKey;
 		databaseHelper.getChapterHelper().insertChapter(this); // TODO: Test
-		loadQuestions();
+		loadQuestions(); // TODO: Kestarafor nerta
 		
 		this.context = context;
 	}
@@ -91,9 +91,10 @@ public class Chapter {
 		proposalsAllowed = (dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED)) == 1) ? true : false;
 		position = dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_POSITION));
 		bookKey = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_BOOK_KEY));
-		preloadQuestions();
+		preloadQuestions(); // TODO: Kestarafor nerta
 	}
 
+	// TODO: Kestarafor nerta
 	/**
 	 * Preload all of the question data for this chapter from the SQLite database.
 	 */
@@ -117,6 +118,7 @@ public class Chapter {
 		databaseHelper.getChapterHelper().deleteChapter(this);
 	}
 
+	// TODO: Kestarafor nerta
 	/**
 	 * Load the questions in this book.
 	 * @param context			The current activity's context (needed for network connection check).
@@ -300,16 +302,8 @@ public class Chapter {
 		// The questions have to be queried periodically
 		return 0;
 	}
-	
-	/**
-	 * 
-	 * @return the next question in the list for this chapter.
-	 */
-	public Question getNextQuestion() {
-		// TODO
-		return null;
-	}
 
+	// TODO: Kestarafor nerta
 	/**
 	 * Return a list of questions in this chapter. Used when the user loads the chapters in a book.
 	 * The chapters are read from the SQLite database.
@@ -318,6 +312,15 @@ public class Chapter {
 	 * @throws IOException 
 	 */
 	public List<Question> getQuestions() {
-		return questions; // TODO: Eliminate
+		return questions;
+	}
+	
+	/**
+	 * Return the next question in the list for this chapter.
+	 * The chapters are read from the SQLite database and only the first one is returned.
+	 * @return the next question in the list for this chapter.
+	 */
+	public Question getNextQuestion() {
+		return DatabaseHelper.getInstance().getQuestionHelper().getNextQuestion(key);
 	}
 }

@@ -119,6 +119,7 @@ public class QuestionHelper {
 		database.delete(StringConstants.QUESTION_TABLE_NAME, whereClause, null);
 	}
 	
+	// TODO: Kestarafor nerta
 	/**
 	 * @param chapterKey	The UUID of a chapter.
 	 * @return a list of questions in a certain chapter saved into the SQLite database.
@@ -138,5 +139,46 @@ public class QuestionHelper {
 			moveSucceeded = results.moveToNext();
 		}
 		return questionList;
+	}
+	
+	/**
+	 * @param chapterKey	The current chapter's UUID.
+	 * @return the next question in the list for this chapter.
+	 */
+	public Question getNextQuestion(String chapterKey) {
+		Question nextQuestion = null;
+		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
+		String selectQuestionsQuery =
+				"SELECT * FROM " + StringConstants.QUESTION_TABLE_NAME +  
+				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + chapterKey + "'" +
+				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + "<='" + currentTime.toString() + "'" + // TODO: Test timestamp comparison
+				" ORDER BY " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " ASC" +
+				" LIMIT 1";
+		Log.d(StringConstants.APP_NAME, selectQuestionsQuery);
+		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
+		boolean moveSucceeded = results.moveToFirst();
+		while (moveSucceeded) {
+			nextQuestion = new Question(results);
+			moveSucceeded = results.moveToNext();
+		}
+		return nextQuestion;
+	}
+	
+	/**
+	 * @param chapterKey	The current chapter's UUID.
+	 * @return the total number of questions in this chapter.
+	 */
+	public int getNumberOfQuestions(String chapterKey) {
+		// TODO
+		return 0;
+	}
+	
+	/**
+	 * @param chapterKey	The current chapter's UUID.
+	 * @return the number of answered questions in this chapter.
+	 */
+	public int getNumberOfAnsweredQuestions(String chapterKey) {
+		// TODO
+		return 0;
 	}
 }
