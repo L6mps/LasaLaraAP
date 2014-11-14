@@ -58,7 +58,11 @@ public class Progress {
 	 * @return the percentage of the progress based on the current and the maximum progress.
 	 */
 	public int getPercentage() {
-		return 100 * current / maximum;
+		if (maximum != 0) {
+			return 100 * current / maximum;
+		} else {
+			return 0;
+		}
 	}
 	
 	/**
