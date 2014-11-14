@@ -164,10 +164,8 @@ public class QuestionFragment extends Fragment {
 	}
 
 	public Progress getProgress() {
-		
-		//return parentChapter.getProgress();
-		
-		return new Progress(questionPointer+1, questionTotal);
+		return parentChapter.getProgress();
+		//return new Progress(questionPointer+1, questionTotal);
 	}
 
 	public void resetProgress() {
