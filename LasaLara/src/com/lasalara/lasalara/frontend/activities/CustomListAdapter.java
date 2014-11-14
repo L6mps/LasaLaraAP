@@ -42,12 +42,9 @@ public class CustomListAdapter extends BaseAdapter {
 		this.info = new ArrayList<Info>();
 		context = activity;
 		for(Chapter i:chapters) {
-			Progress prg = new Progress (0, 10);//i.getProgress();
+			Progress prg = i.getProgress();
 			int currentPercentage = (int) prg.getPercentage();
-			
-			//TODO: Delete this and use the commented out one when progress works
-			this.info.add(new Info(i.getTitle(),i.getAuthorName(),0+"%",prg.getCurrent()+"/"+i.getQuestions().size()));
-			//this.info.add(new Info(i.getTitle(),i.getAuthorName(),currentPercentage+"%",prg.getCurrent()+"/"+prg.getMaximum()));
+			this.info.add(new Info(i.getTitle(),i.getAuthorName(),currentPercentage+"%",prg.getCurrent()+"/"+prg.getMaximum()));
 		}
 	}
 	
@@ -55,12 +52,9 @@ public class CustomListAdapter extends BaseAdapter {
 		context = activity;
 		this.info = new ArrayList<Info>();
 		for(Book i:books) {
-			Progress prg = new Progress(0, 10);//Should be i.getProgress();
+			Progress prg = i.getProgress();
 			int currentPercentage = (int) prg.getPercentage();
-			
-			//TODO: Delete this and use the commented out one when progress works
-			this.info.add(new Info(i.getTitle(),i.getOwnerEmail(),0+"%",prg.getCurrent()+"/"+i.getChapters().size()));
-			//this.info.add(new Info(i.getTitle(),i.getOwnerEmail(),currentPercentage+"%",prg.getCurrent()+"/"+prg.getMaximum()));
+			this.info.add(new Info(i.getTitle(),i.getOwnerEmail(),currentPercentage+"%",prg.getCurrent()+"/"+prg.getMaximum()));
 		}
 	}
 	

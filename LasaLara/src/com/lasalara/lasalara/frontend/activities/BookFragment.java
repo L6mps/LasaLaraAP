@@ -67,6 +67,5 @@ public class BookFragment extends ListFragment{
 
 	public Progress getProgress() {
 		return Backend.getInstance().getProgress();
-		//return new Progress(0, books.size());
 	}
 }

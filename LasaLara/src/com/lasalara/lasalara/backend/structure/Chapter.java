@@ -9,8 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.backend.exceptions.NumericException;
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
 import com.lasalara.lasalara.backend.webRequest.WebRequest;
 
@@ -205,7 +207,16 @@ public class Chapter {
 	 * @return the chapter's Progress object.
 	 */
 	public Progress getProgress() {
-		return new Progress(getNumberOfAnsweredQuestions(), getNumberOfQuestions());
+		try {
+			return new Progress(getNumberOfAnsweredQuestions(), getNumberOfQuestions());
+		} catch (NumericException e) {
+			Backend.getInstance().addMessage("Chapter " + getKey() + ": " + e.getMessage());
+			try {
+				return new Progress(0, 0);
+			} catch (NumericException e1) {
+				return null;
+			}
+		}
 	}
 
 	/**

@@ -2,6 +2,9 @@ package com.lasalara.lasalara.backend.structure;
 
 import java.util.List;
 
+import com.lasalara.lasalara.backend.exceptions.NumericException;
+import com.lasalara.lasalara.backend.exceptions.NumericExceptionMessage;
+
 /**
  * Class responsible for holding book or chapter progress data.
  * @author Ants-Oskar Mäesalu
@@ -22,8 +25,9 @@ public class Progress {
 	 * Constructor. Used when the current and maximum progresses are known.
 	 * @param current		The current progress.
 	 * @param maximum		The maximum progress possible.
+	 * @throws NumericException 
 	 */
-	public Progress(int current, int maximum) {
+	public Progress(int current, int maximum) throws NumericException {
 		this();
 		if (current >= 0) {
 			if (maximum >= 0) {
@@ -31,13 +35,13 @@ public class Progress {
 					this.current = current;
 					this.maximum = maximum;
 				} else {
-					// TODO: Throw exception - current progress can't be larger than the maximum progress.
+					throw new NumericException(NumericExceptionMessage.PROGRESS_CURRENT_TOO_BIG);
 				}
 			} else {
-				// TODO: Throw exception - maximum progress can't be negative.
+				throw new NumericException(NumericExceptionMessage.PROGRESS_MAXIMUM_NEGATIVE);
 			}
 		} else {
-			// TODO: Throw exception - current progress can't be negative.
+			throw new NumericException(NumericExceptionMessage.PROGRESS_CURRENT_NEGATIVE);
 		}
 	}
 	

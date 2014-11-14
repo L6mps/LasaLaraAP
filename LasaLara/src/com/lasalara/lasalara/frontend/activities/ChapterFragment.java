@@ -73,6 +73,5 @@ OnChapterSelectedListener mCallback;
 
 	public Progress getProgress() {
 		return parentBook.getProgress();
-		//return new Progress(0, chapters.size());
 	}
 }

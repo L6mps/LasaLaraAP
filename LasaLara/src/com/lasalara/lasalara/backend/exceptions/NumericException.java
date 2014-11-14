@@ -1,16 +1,16 @@
 package com.lasalara.lasalara.backend.exceptions;
 
 /**
- * Exception class for situations when user input shouldn't exist in the database but does.
+ * Exception class for situations when user input causes numeric errors.
  * @author Ants-Oskar Mäesalu
  */
-public class InputExistsException extends Exception {
+public class NumericException extends Exception {
 	
 	/**
 	 * Constructor without a message, using a default message.
 	 */
-	public InputExistsException() {
-		super(InputExistsExceptionMessage.DEFAULT.getMessage());
+	public NumericException() {
+		super(NumericExceptionMessage.DEFAULT.getMessage());
 		// TODO: Log the exception
 	}
 
@@ -18,7 +18,7 @@ public class InputExistsException extends Exception {
 	 * Constructor with a string message.
 	 * @param message		The exception message as a string.
 	 */
-	public InputExistsException(String message) {
+	public NumericException(String message) {
 		super(message);
 	}
 	
@@ -26,7 +26,7 @@ public class InputExistsException extends Exception {
 	 * Constructor with an exception message enumerator.
 	 * @param exception		The exception message enumerator.
 	 */
-	public InputExistsException(InputExistsExceptionMessage exception) {
+	public NumericException(NumericExceptionMessage exception) {
 		super(exception.getMessage());
 	}
 }

@@ -65,7 +65,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 			
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, bFragment).commit();
 			
-			Progress bProgress = new Progress(25, 50);//Backend.getInstance().getProgress(); //When progress works, use this
+			Progress bProgress = Backend.getInstance().getProgress();
 			progressBar = (ProgressBar) findViewById(R.id.listProgressBar);
 			progressBar.setProgress((int)bProgress.getPercentage());
 		}
