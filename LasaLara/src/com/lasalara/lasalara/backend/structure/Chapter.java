@@ -34,7 +34,7 @@ public class Chapter {
 	private boolean proposalsAllowed;		// Has the author allowed question proposals for the chapter?
 	private int position;					// The position of the chapter in the book (the order is set by the book owner)
 	private String bookKey;					// The book the chapter is located in.
-	private List<Question> questions;		// The list of questions in this book.
+	private List<Question> questions;		// The list of questions in this book. // TODO: Kestarafor nerta
 
 	private Context context;
 	/**
@@ -289,18 +289,14 @@ public class Chapter {
 	 * @return the number of questions in this chapter.
 	 */
 	public int getNumberOfQuestions() {
-		return questions.size();
+		return DatabaseHelper.getInstance().getQuestionHelper().getNumberOfQuestions(key);
 	}
 	
 	/**
 	 * @return the number of questions the user has answered in this chapter.
 	 */
 	public int getNumberOfAnsweredQuestions() {
-		// TODO
-		// Update when the questions are queried from the database.
-		// Update each time a question is reviewed.
-		// The questions have to be queried periodically
-		return 0;
+		return DatabaseHelper.getInstance().getQuestionHelper().getNumberOfAnsweredQuestions(key);
 	}
 
 	// TODO: Kestarafor nerta

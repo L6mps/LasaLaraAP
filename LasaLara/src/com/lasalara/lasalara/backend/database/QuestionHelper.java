@@ -169,8 +169,18 @@ public class QuestionHelper {
 	 * @return the total number of questions in this chapter.
 	 */
 	public int getNumberOfQuestions(String chapterKey) {
-		// TODO
-		return 0;
+		int numberOfQuestions = 0;
+		String selectQuestionsQuery =
+				"SELECT COUNT(*) FROM " + StringConstants.QUESTION_TABLE_NAME +  
+				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + chapterKey + "'";
+		Log.d(StringConstants.APP_NAME, selectQuestionsQuery);
+		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
+		boolean moveSucceeded = results.moveToFirst();
+		while (moveSucceeded) {
+			numberOfQuestions = results.getInt(0);
+			moveSucceeded = results.moveToNext();
+		}
+		return numberOfQuestions;
 	}
 	
 	/**
@@ -178,7 +188,19 @@ public class QuestionHelper {
 	 * @return the number of answered questions in this chapter.
 	 */
 	public int getNumberOfAnsweredQuestions(String chapterKey) {
-		// TODO
-		return 0;
+		int numberOfAnsweredQuestions = 0;
+		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
+		String selectQuestionsQuery =
+				"SELECT COUNT(*) FROM " + StringConstants.QUESTION_TABLE_NAME +  
+				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + chapterKey + "'" +
+				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + ">'" + currentTime.toString() + "'"; // TODO: Test timestamp comparison
+		Log.d(StringConstants.APP_NAME, selectQuestionsQuery);
+		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
+		boolean moveSucceeded = results.moveToFirst();
+		while (moveSucceeded) {
+			numberOfAnsweredQuestions = results.getInt(0);
+			moveSucceeded = results.moveToNext();
+		}
+		return numberOfAnsweredQuestions;
 	}
 }
