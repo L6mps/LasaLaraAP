@@ -93,9 +93,9 @@ public class QuestionHelper {
 		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_COUNT, question.getKnownCount());
 		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_TIME, question.getReviewTime().toString()); // TODO: Test if string conversion is the correct way to handle this
 		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME, question.getKnownUntilTime().toString()); // TODO: Test if string conversion is the correct way to handle this
-		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "=" + question.getQuestion() + 
-				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "=" + question.getAnswer() + 
-				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=" + question.getChapterKey();
+		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "='" + question.getQuestion() + "'" +
+				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "='" + question.getAnswer() + "'" +
+				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + question.getChapterKey() +"'";
 		database.update(StringConstants.QUESTION_TABLE_NAME, contentValues, whereClause, null);
 	}
 	
@@ -104,9 +104,9 @@ public class QuestionHelper {
 	 * @param question	The question object's instance.
 	 */
 	public void deleteQuestion(Question question) {
-		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "=" + question.getQuestion() + 
-				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "=" + question.getAnswer() + 
-				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=" + question.getChapterKey();
+		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "='" + question.getQuestion() + "'" +
+				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "='" + question.getAnswer() + "'" +
+				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + question.getChapterKey() + "'";
 		database.delete(StringConstants.QUESTION_TABLE_NAME, whereClause, null);
 	}
 	
@@ -115,7 +115,7 @@ public class QuestionHelper {
 	 * @param chapter	The chapter object's instance.
 	 */
 	public void deleteQuestions(Chapter chapter) {
-		String whereClause = StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=" + chapter.getKey();
+		String whereClause = StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + chapter.getKey() + "'";
 		database.delete(StringConstants.QUESTION_TABLE_NAME, whereClause, null);
 	}
 	
@@ -128,8 +128,8 @@ public class QuestionHelper {
 		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
 		String selectQuestionsQuery =
 				"SELECT * FROM " + StringConstants.QUESTION_TABLE_NAME +  
-				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=" + chapterKey +
-				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + "<=" + currentTime.toString(); // TODO: Test timestamp comparison
+				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + chapterKey + "'" +
+				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + "<='" + currentTime.toString() + "'"; // TODO: Test timestamp comparison
 		Log.d(StringConstants.APP_NAME, selectQuestionsQuery);
 		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
 		boolean moveSucceeded = results.moveToFirst();

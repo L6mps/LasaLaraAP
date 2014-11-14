@@ -101,8 +101,8 @@ public class ChapterHelper {
 	 */
 	public void deleteChapter(Chapter chapter) {
 		DatabaseHelper.getInstance().getQuestionHelper().deleteQuestions(chapter);
-		String whereClause = StringConstants.CHAPTER_COLUMN_KEY + "=" + chapter.getKey() +
-				StringConstants.CHAPTER_COLUMN_BOOK_KEY + "=" + chapter.getBookKey();
+		String whereClause = StringConstants.CHAPTER_COLUMN_KEY + "='" + chapter.getKey() + "'" +
+				StringConstants.CHAPTER_COLUMN_BOOK_KEY + "='" + chapter.getBookKey() + "'";
 		database.delete(StringConstants.CHAPTER_TABLE_NAME, whereClause, null);
 	}
 	
@@ -115,7 +115,7 @@ public class ChapterHelper {
 		for (Chapter chapter: book.getChapters()) {
 			DatabaseHelper.getInstance().getQuestionHelper().deleteQuestions(chapter);
 		}
-		String whereClause = StringConstants.CHAPTER_COLUMN_BOOK_KEY + "=" + book.getKey();
+		String whereClause = StringConstants.CHAPTER_COLUMN_BOOK_KEY + "='" + book.getKey() + "'";
 		database.delete(StringConstants.CHAPTER_TABLE_NAME, whereClause, null);
 	}
 	
@@ -124,11 +124,13 @@ public class ChapterHelper {
 	 * @return a list of chapters in a certain book saved into the SQLite database.
 	 */
 	public List<Chapter> getChapters(String bookKey) {
+		Log.d(StringConstants.APP_NAME, "ChapterHelper getChapters: " + bookKey);
 		List<Chapter> chapterList = new ArrayList<Chapter>();
 		String selectChaptersQuery =
 				"SELECT * FROM " + StringConstants.CHAPTER_TABLE_NAME +  
-				" WHERE " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + "=" + bookKey + 
+				" WHERE " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + "='" + bookKey + "'" +
 				" ORDER BY " + StringConstants.CHAPTER_COLUMN_POSITION + " ASC";
+		Log.d(StringConstants.APP_NAME, selectChaptersQuery);
 		Cursor results =  database.rawQuery(selectChaptersQuery, null);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {

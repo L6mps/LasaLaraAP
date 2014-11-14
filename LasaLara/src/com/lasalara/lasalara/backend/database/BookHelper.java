@@ -95,7 +95,7 @@ public class BookHelper {
 	 */
 	public void deleteBook(Book book) {
 		DatabaseHelper.getInstance().getChapterHelper().deleteChapters(book);
-		String whereClause = StringConstants.BOOK_COLUMN_KEY + "=" + book.getKey();
+		String whereClause = StringConstants.BOOK_COLUMN_KEY + "='" + book.getKey() + "'";
 		database.delete(StringConstants.BOOK_TABLE_NAME, whereClause, null);
 	}
 	
