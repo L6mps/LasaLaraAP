@@ -300,19 +300,24 @@ public class Chapter {
 		// The questions have to be queried periodically
 		return 0;
 	}
+	
+	/**
+	 * 
+	 * @return the next question in the list for this chapter.
+	 */
+	public Question getNextQuestion() {
+		// TODO
+		return null;
+	}
 
 	/**
 	 * Return a list of questions in this chapter. Used when the user loads the chapters in a book.
-	 * If the user has internet connection, the questions are queried from the web
-	 * and the data in the SQLite database is overwritten.
-	 * If the user doesn't have internet connection, the questions are read from the
-	 * SQLite database.
-	 * @param context			The current activity's context (needed for network connection check).
+	 * The chapters are read from the SQLite database.
 	 * @return the list of questions in this chapter.
 	 * @throws JSONException 
 	 * @throws IOException 
 	 */
 	public List<Question> getQuestions() {
-		return questions;
+		return questions; // TODO: Eliminate
 	}
 }
