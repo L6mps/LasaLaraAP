@@ -75,10 +75,6 @@ public class Question {
 		DatabaseHelper.getInstance().getQuestionHelper().deleteQuestion(this);
 	}
 	
-	public void update() {
-		// TODO: Do we even need this?
-	}
-	
 	/**
 	 * Delete this question from the application.
 	 */

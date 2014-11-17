@@ -41,4 +41,6 @@ public class StringConstants {
 	public static final String QUESTION_COLUMN_REVIEW_TIME = "reviewTime";
 	public static final String QUESTION_COLUMN_KNOWN_UNTIL_TIME = "knownUntilTime";
 	public static final String QUESTION_COLUMN_CHAPTER_KEY = "chapterKey";
+	// Messages sent to the user interface
+	public static final String MESSAGE_BOOK_DOWNLOAD_UPDATED = "The specified book already existed in the database. Updated it.";
 }

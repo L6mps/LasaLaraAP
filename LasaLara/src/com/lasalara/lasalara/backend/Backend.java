@@ -126,7 +126,7 @@ public class Backend {
 			} else {
 				Log.d(StringConstants.APP_NAME, "Book already existed, updated it.");
 				books.set(index, newBook); // Update the book (TODO?)
-				addMessage("The specified book already existed in the database. Updated it.");
+				addMessage(StringConstants.MESSAGE_BOOK_DOWNLOAD_UPDATED);
 			}
 		} catch (InputDoesntExistException e) {
 			addMessage(e.getMessage());
@@ -136,6 +136,10 @@ public class Backend {
 		}
 	}
 	
+	/**
+	 * Update a book with the specified index.
+	 * @param index
+	 */
 	public void updateBook(int index) {
 		books.get(index).update();
 	}

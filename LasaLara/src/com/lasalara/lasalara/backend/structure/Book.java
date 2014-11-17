@@ -233,12 +233,57 @@ public class Book {
 		}
 	}
 	
-	public void update() {
-		// TODO
-		// Update book data from the web.
-		// Check if chapters have been changed.
-		// If the version numbers have been changed, update the questions in the database.
-		// Send appropriate notification messages to the user.
+	/**
+	 * Update this book. Used when the user clicks the corresponding menu item.
+	 * All of the chapters are checked. If a version number of a chapter has been changed,
+	 * the database is due to be updated.
+	 * Appropriate notification messages are sent to the user.
+	 * @throws FormatException 
+	 * @throws InputDoesntExistException 
+	 */
+	public void update() throws InputDoesntExistException, FormatException {
+		Book updatedBook = new Book(context, ownerEmail, title);
+		List<Chapter> updatedChapters = updatedBook.getChapters();
+		int numberOfInsertedChapters = 0;
+		int numberOfUpdatedChapters = 0;
+		int numberOfDeletedChapters = 0;
+		// Check already existing chapters
+		for (Chapter existingChapter: chapters) {
+			boolean checked = false;
+			for (Chapter updatedChapter: updatedChapters) {
+				if (existingChapter.getKey() == updatedChapter.getKey()) {
+					if (existingChapter.getVersion() != updatedChapter.getVersion()) {
+						// TODO: Update chapter, update all of the questions in the database (purge data beforehand)
+						numberOfUpdatedChapters++;
+					}
+					checked = true;
+				}
+			}
+			if (!checked) {
+				// TODO: Delete chapter
+				numberOfDeletedChapters++;
+			}
+		}
+		// Check new chapters
+		for (Chapter newChapter: updatedChapters) {
+			boolean exists = false;
+			for (Chapter existingChapter: chapters) {
+				if (existingChapter.getKey() == newChapter.getKey()) {
+					exists = true;
+				}
+			}
+			if (!exists) {
+				// TODO: Insert new chapter, position it accordingly
+				numberOfInsertedChapters++;
+			}
+		}
+		// TODO: Send appropriate notification messages to the user and update chapter position numbers if necessary.
+		if (numberOfInsertedChapters == 0 && numberOfUpdatedChapters == 0 && numberOfDeletedChapters == 0) {
+			// "No changes were made to the book."
+		} else {
+			// "X new chapters was/were inserted, Y chapters was/were deleted and Z chapters was/were updated in the book."
+			// TODO: Update chapter position numbers
+		}
 	}
 	
 	/**
