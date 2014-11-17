@@ -59,18 +59,48 @@ public class BookHelper {
 	}
 	
 	/**
+	 * @param book		The book object's instance.
+	 * @return whether the book already exists in the database or not.
+	 */
+	private boolean existsInDatabase(Book book) {
+		String[] columns = {StringConstants.BOOK_COLUMN_KEY};
+		String whereClause = StringConstants.BOOK_COLUMN_KEY + "=?";
+		String[] whereArguments = {book.getKey()};
+		Cursor results = database.query(StringConstants.BOOK_TABLE_NAME, columns, whereClause, whereArguments, null, null, null);
+		return results.moveToFirst();
+	}
+	
+	/**
 	 * Insert a new book into the SQLite database.
 	 * @param book		The book object's instance.
 	 */
 	public void insertBook(Book book) {
-		// TODO: Check existence - update if exists?
+		if (existsInDatabase(book)) {
+			updateBook(book);
+		} else {
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(StringConstants.BOOK_COLUMN_KEY, book.getKey());
+			contentValues.put(StringConstants.BOOK_COLUMN_TITLE, book.getTitle());
+			contentValues.put(StringConstants.BOOK_COLUMN_OWNER_EMAIL, book.getOwnerEmail());
+			contentValues.put(StringConstants.BOOK_COLUMN_OWNER_NAME, book.getOwnerName());
+			contentValues.put(StringConstants.BOOK_COLUMN_OWNER_INSTITUTION, book.getOwnerInstitution());
+			database.insert(StringConstants.BOOK_TABLE_NAME, null, contentValues);
+		}
+	}
+	
+	/**
+	 * Update an already existing book in the SQLite database.
+	 * @param book		The book object's instance.
+	 */
+	private void updateBook(Book book) {
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(StringConstants.BOOK_COLUMN_KEY, book.getKey());
 		contentValues.put(StringConstants.BOOK_COLUMN_TITLE, book.getTitle());
 		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_EMAIL, book.getOwnerEmail());
 		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_NAME, book.getOwnerName());
 		contentValues.put(StringConstants.BOOK_COLUMN_OWNER_INSTITUTION, book.getOwnerInstitution());
-		database.insert(StringConstants.BOOK_TABLE_NAME, null, contentValues);
+		String whereClause = StringConstants.BOOK_COLUMN_KEY + "=?";
+		String[] whereArguments = {book.getKey()};
+		database.update(StringConstants.BOOK_TABLE_NAME, contentValues, whereClause, whereArguments);
 	}
 	
 	/**
@@ -80,8 +110,9 @@ public class BookHelper {
 	 */
 	public void deleteBook(Book book) {
 		DatabaseHelper.getInstance().getChapterHelper().deleteChapters(book);
-		String whereClause = StringConstants.BOOK_COLUMN_KEY + "='" + book.getKey() + "'";
-		database.delete(StringConstants.BOOK_TABLE_NAME, whereClause, null);
+		String whereClause = StringConstants.BOOK_COLUMN_KEY + "=?";
+		String[] whereArguments = {book.getKey()};
+		database.delete(StringConstants.BOOK_TABLE_NAME, whereClause, whereArguments);
 	}
 	
 	/**

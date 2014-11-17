@@ -41,7 +41,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 		LasaLaraApplication.setCurrentContext(this);
 		Log.d(StringConstants.APP_NAME, "Initialising database helper.");
 		DatabaseHelper.initialiseInstance(this);
-		Backend.getInstance().downloadBook(StringConstants.DEFAULT_BOOK_OWNER, StringConstants.DEFAULT_BOOK_TITLE);
+		Backend.getInstance().downloadBook(StringConstants.DEFAULT_BOOK_OWNER, StringConstants.DEFAULT_BOOK_TITLE); // TODO: Do not update the whole book on second creation - takes too much time and sends unnecessary messages
 		Log.d(StringConstants.APP_NAME, "Getting books.");
 		Backend.getInstance().preloadData();
 		

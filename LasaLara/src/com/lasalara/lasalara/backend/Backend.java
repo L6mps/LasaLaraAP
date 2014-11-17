@@ -122,7 +122,8 @@ public class Backend {
 			if (index == -1) {
 				books.add(newBook);
 			} else {
-				books.set(index, newBook); // Update the book (TODO?)
+				books.set(index, newBook);
+				books.get(index).update();
 				addMessage(StringConstants.MESSAGE_BOOK_DOWNLOAD_UPDATED);
 			}
 		} catch (InputDoesntExistException e) {
