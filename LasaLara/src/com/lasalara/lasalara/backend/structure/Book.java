@@ -102,6 +102,7 @@ public class Book {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		chapters = new ArrayList<Chapter>();
 	}
 	
 	/**
