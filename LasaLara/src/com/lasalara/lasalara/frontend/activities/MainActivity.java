@@ -80,7 +80,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 
 	@Override
 	public void onChapterSelected(int position, Chapter cp)  {
-		qFragment.changeData(cFragment.getChapter(position).getQuestions(), cp);
+		qFragment.changeData(cFragment.getChapter(position).getAllQuestions(), cp); // Previously used getQuestions() - should be reviewed
 		changeFragment(qFragment);
 	}
 	

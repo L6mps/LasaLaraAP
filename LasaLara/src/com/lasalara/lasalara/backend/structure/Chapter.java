@@ -34,9 +34,9 @@ public class Chapter {
 	private boolean proposalsAllowed;		// Has the author allowed question proposals for the chapter?
 	private int position;					// The position of the chapter in the book (the order is set by the book owner)
 	private String bookKey;					// The book the chapter is located in.
-	private List<Question> questions;		// The list of questions in this book. // TODO: Kestarafor nerta
 
 	private Context context;
+
 	/**
 	 * Constructor, used when downloading a chapter from the web.
 	 * @param context			The current activity's context (needed for network connection check and SQLite database).
@@ -64,7 +64,7 @@ public class Chapter {
 		this.position = position;
 		this.bookKey = bookKey;
 		databaseHelper.getChapterHelper().insertChapter(this); // TODO: Test
-		loadQuestions(); // TODO: Kestarafor nerta
+		downloadQuestions();
 		
 		this.context = context;
 	}
@@ -91,15 +91,6 @@ public class Chapter {
 		proposalsAllowed = (dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED)) == 1) ? true : false;
 		position = dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_POSITION));
 		bookKey = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_BOOK_KEY));
-		preloadQuestions(); // TODO: Kestarafor nerta
-	}
-
-	// TODO: Kestarafor nerta
-	/**
-	 * Preload all of the question data for this chapter from the SQLite database.
-	 */
-	void preloadQuestions() {
-		questions = DatabaseHelper.getInstance().getQuestionHelper().getQuestions(key);
 	}
 	
 	/**
@@ -118,15 +109,13 @@ public class Chapter {
 		databaseHelper.getChapterHelper().deleteChapter(this);
 	}
 
-	// TODO: Kestarafor nerta
 	/**
 	 * Load the questions in this book.
 	 * @param context			The current activity's context (needed for network connection check).
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	public void loadQuestions() {
-		questions = new ArrayList<Question>();
+	public void downloadQuestions() {
 		String url = StringConstants.URL_GET_QUESTIONS;
 		UrlParameters urlParameters = new UrlParameters();
 		try {
@@ -151,7 +140,7 @@ public class Chapter {
 				for (int i = 0; i < questionList.length(); i++) {
 					String question = questionList.getString(i);
 					String answer = answerList.getString(i);
-					questions.add(new Question(context, question, answer, key));
+					new Question(context, question, answer, key);
 				}
 			} else {
 				throw new RuntimeException();
@@ -168,18 +157,10 @@ public class Chapter {
 	}
 	
 	/**
-	 * Delete a question with the specified index from the application.
-	 * @param index		The question's index in the question list.
-	 */
-	public void deleteQuestion(int index) {
-		questions.get(index).delete();
-		questions.remove(index);
-	}
-	
-	/**
 	 * Delete all of the questions from this chapter.
 	 */
 	public void deleteQuestions() {
+		List<Question> questions = getAllQuestions();
 		for (Question question: questions) {
 			question.delete();
 		}
@@ -198,10 +179,10 @@ public class Chapter {
 	 * Reset the chapter's progress.
 	 */
 	public void resetProgress() {
+		List<Question> questions = getAllQuestions();
 		for (Question question: questions) {
 			question.resetProgress();
 		}
-		// TODO: Do we have to also reset the number of answered questions stored? We probably should.
 	}
 	
 	/**
@@ -299,16 +280,16 @@ public class Chapter {
 		return DatabaseHelper.getInstance().getQuestionHelper().getNumberOfAnsweredQuestions(key);
 	}
 
-	// TODO: Kestarafor nerta
 	/**
-	 * Return a list of questions in this chapter. Used when the user loads the chapters in a book.
-	 * The chapters are read from the SQLite database.
+	 * Return a list of all of the questions in this chapter.
+	 * Used for the page view or deleting the chapter.
+	 * The questions are read from the SQLite database.
 	 * @return the list of questions in this chapter.
 	 * @throws JSONException 
 	 * @throws IOException 
 	 */
-	public List<Question> getQuestions() {
-		return questions;
+	public List<Question> getAllQuestions() {
+		return DatabaseHelper.getInstance().getQuestionHelper().getAllQuestions(key);
 	}
 	
 	/**

@@ -106,7 +106,7 @@ public class Book {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		loadChapters();
+		downloadChapters();
 	}
 	
 	/**
@@ -167,12 +167,12 @@ public class Book {
 	}
 	
 	/**
-	 * Load the chapters in this book from the web.
+	 * Download the chapters in this book from the web.
 	 * @param context		The current activity's context (needed for network connection check).
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	private void loadChapters() {
+	private void downloadChapters() {
 		chapters = new ArrayList<Chapter>();
 		String url = StringConstants.URL_GET_CHAPTERS;
 		UrlParameters urlParameters = new UrlParameters();

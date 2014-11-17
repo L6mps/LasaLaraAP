@@ -120,18 +120,16 @@ public class QuestionHelper {
 		database.delete(StringConstants.QUESTION_TABLE_NAME, whereClause, null);
 	}
 	
-	// TODO: Kestarafor nerta
 	/**
 	 * @param chapterKey	The UUID of a chapter.
-	 * @return a list of questions in a certain chapter saved into the SQLite database.
+	 * @return a list of all of the questions in a certain chapter saved into the SQLite database.
 	 */
-	public List<Question> getQuestions(String chapterKey) {
+	public List<Question> getAllQuestions(String chapterKey) {
 		List<Question> questionList = new ArrayList<Question>();
-		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
 		String selectQuestionsQuery =
 				"SELECT * FROM " + StringConstants.QUESTION_TABLE_NAME +  
 				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + chapterKey + "'" +
-				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + "<='" + currentTime.toString() + "'"; // TODO: Test timestamp comparison
+				" ORDER BY " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " ASC";
 		Log.d(StringConstants.APP_NAME, selectQuestionsQuery);
 		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
 		boolean moveSucceeded = results.moveToFirst();
