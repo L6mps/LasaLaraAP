@@ -360,6 +360,18 @@ public class Book {
 	}
 	
 	/**
+	 * @return whether the book is completed or not.
+	 */
+	public boolean isCompleted() {
+		for (Chapter chapter: chapters) {
+			if (!chapter.isCompleted()) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	/**
 	 * Return a list of chapters in this book. Used when the user has opened a book.
 	 * The chapters are read from the SQLite database. If the book is used for the first time,
 	 * the data is first downloaded from the web.
@@ -367,7 +379,7 @@ public class Book {
 	 * @param context		The current activity's context (needed for network connection check).
 	 * @return the list of chapters in this book.
 	 */
-	public List<Chapter> getChapters(boolean insertIntoDatabase) {
+	private List<Chapter> getChapters(boolean insertIntoDatabase) {
 		load(insertIntoDatabase);
 		return chapters;
 	}

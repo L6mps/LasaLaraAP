@@ -327,6 +327,20 @@ public class Chapter {
 	public int getNumberOfAnsweredQuestions() {
 		return DatabaseHelper.getInstance().getQuestionHelper().getNumberOfAnsweredQuestions(key);
 	}
+	
+	/**
+	 * @return the number of questions the user has still got to answer in this chapter.
+	 */
+	public int getNumberOfUnansweredQuestions() {
+		return DatabaseHelper.getInstance().getQuestionHelper().getNumberOfUnansweredQuestions(key);
+	}
+	
+	/**
+	 * @return whether the chapter is completed or not.
+	 */
+	public boolean isCompleted() {
+		return (getNumberOfUnansweredQuestions() == 0);
+	}
 
 	/**
 	 * Return a list of all of the questions in this chapter.

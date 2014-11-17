@@ -202,4 +202,25 @@ public class QuestionHelper {
 		}
 		return numberOfAnsweredQuestions;
 	}
+	
+	/**
+	 * @param chapterKey	The current chapter's UUID.
+	 * @return the number of unanswered questions in this chapter.
+	 */
+	public int getNumberOfUnansweredQuestions(String chapterKey) {
+		int numberOfAnsweredQuestions = 0;
+		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
+		String selectQuestionsQuery =
+				"SELECT COUNT(*) FROM " + StringConstants.QUESTION_TABLE_NAME +  
+				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + chapterKey + "'" +
+				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + "<='" + currentTime.toString() + "'"; // TODO: Test timestamp comparison
+		Log.d(StringConstants.APP_NAME, selectQuestionsQuery);
+		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
+		boolean moveSucceeded = results.moveToFirst();
+		while (moveSucceeded) {
+			numberOfAnsweredQuestions = results.getInt(0);
+			moveSucceeded = results.moveToNext();
+		}
+		return numberOfAnsweredQuestions;
+	}
 }
