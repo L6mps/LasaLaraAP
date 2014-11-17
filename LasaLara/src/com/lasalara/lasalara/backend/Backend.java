@@ -24,6 +24,7 @@ public class Backend {
 	private static Backend instance;	// The back end instance
 	private Queue<Message> messages;	// The application message queue
 	private List<Book> books;			// The downloaded books' list
+	private boolean pageViewOn;			// Questions' page view setting - whether the questions are displayed on a single page or separately
 	
 	/**
 	 * Constructor.
@@ -32,6 +33,7 @@ public class Backend {
 	private Backend() {
 		super();
 		books = new ArrayList<Book>();
+		pageViewOn = false;
 	}
 	
 	/**
@@ -195,5 +197,19 @@ public class Backend {
 	 */
 	public List<Book> getBooks() {
 		return books;
+	}
+
+	/**
+	 * @return whether the page view of questions is switched on or not.
+	 */
+	public boolean isPageViewOn() {
+		return pageViewOn;
+	}
+
+	/**
+	 * @param pageViewOn	Whether questions in a chapter should be displayed on a single page or separately.
+	 */
+	public void setPageViewOn(boolean pageViewOn) {
+		this.pageViewOn = pageViewOn;
 	}
 }

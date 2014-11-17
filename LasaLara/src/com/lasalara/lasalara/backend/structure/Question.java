@@ -21,7 +21,6 @@ public class Question {
 	private int knownCount;					// The number of times the student has set the question as known.
 	private Timestamp reviewTime;			// The last time the student reviewed the question.
 	private Timestamp knownUntilTime;		// The time until which the question remains until.
-	// TODO: Add knownDateSaved
 	private String chapterKey;				// The chapter the question is located in.
 	
 	/**
@@ -41,7 +40,6 @@ public class Question {
 		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
 		reviewTime = currentTime;
 		knownUntilTime = currentTime;
-		// TODO: If the chapter is updated, is all of it's question progress purged or not?
 		this.chapterKey = chapterKey;
 		databaseHelper.getQuestionHelper().insertQuestion(this);
 	}
@@ -88,7 +86,7 @@ public class Question {
 		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
 		long secondsToAdd = NumericalConstants.TWENTYFIVESECONDS;
 		if (reviewCount > 0) {
-			secondsToAdd += (knownUntilTime.getTime() - reviewTime.getTime()) * knownCount / reviewCount; // TODO: We should revise the formula because of integer division
+			secondsToAdd += (knownUntilTime.getTime() - reviewTime.getTime()) * knownCount * 1.0 / reviewCount;
 		}
 		reviewCount++;
 		reviewTime = currentTime;
