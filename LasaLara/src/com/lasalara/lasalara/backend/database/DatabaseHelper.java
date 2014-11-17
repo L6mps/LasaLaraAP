@@ -6,7 +6,6 @@ import com.lasalara.lasalara.backend.constants.StringConstants;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Class that handles all of the SQLite database operations.
@@ -26,9 +25,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	private DatabaseHelper(Context context) {
 		super(context, StringConstants.DATABASE_NAME, null, NumericalConstants.DATABASE_VERSION);
-		Log.d(StringConstants.APP_NAME, "DatabaseHelper constructor.");
 		database = getWritableDatabase(); // Responsible for calling the onCreate(db) method
-		Log.d(StringConstants.APP_NAME, "Got the database.");
 	}
 	
 	/**
@@ -50,7 +47,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		Log.d(StringConstants.APP_NAME, "DatabaseHelper onCreate()");
 		bookHelper = new BookHelper(db);
 		chapterHelper = new ChapterHelper(db);
 		questionHelper = new QuestionHelper(db);
@@ -76,7 +72,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	//Joos addition
 	@Override
 	public void onOpen(SQLiteDatabase db) {
-		Log.d(StringConstants.APP_NAME, "DatabaseHelper onOpen() yay");
 		bookHelper = new BookHelper(db);
 		chapterHelper = new ChapterHelper(db);
 		questionHelper = new QuestionHelper(db);

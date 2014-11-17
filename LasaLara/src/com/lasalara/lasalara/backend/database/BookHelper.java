@@ -6,12 +6,10 @@ import java.util.List;
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.structure.Book;
-import com.lasalara.lasalara.backend.structure.Chapter;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 /**
  * Class that handles all of the SQLite database operations on books.
@@ -38,15 +36,12 @@ public class BookHelper {
 	 */
 	BookHelper(SQLiteDatabase database) {
 		this.database = database;
-		Log.d(StringConstants.APP_NAME, "BookHelper constructor.");
 	}
 
 	/**
 	 * Actions conducted on database creation.
 	 */
 	public void onCreate() {
-		Log.d(StringConstants.APP_NAME, "BookHelper onCreate()");
-		Log.d(StringConstants.APP_NAME, TABLE_CREATE);
 		database.execSQL(TABLE_CREATE);
 	}
 
@@ -61,11 +56,6 @@ public class BookHelper {
 		// previous database, create a new one and then repopulate it.
 		database.execSQL(TABLE_DROP);
 		onCreate();
-	}
-	
-	private ContentValues getContentValues(Book book) {
-		// TODO
-		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -110,7 +100,6 @@ public class BookHelper {
 	 * @return a list of books saved into the SQLite database.
 	 */
 	public List<Book> getBooks() {
-		Log.d(StringConstants.APP_NAME, "BookHelper getBooks()");
 		List<Book> bookList = new ArrayList<Book>();
 		String selectBooksQuery = "SELECT * FROM " + StringConstants.BOOK_TABLE_NAME;
 		Cursor results =  database.rawQuery(selectBooksQuery, null);

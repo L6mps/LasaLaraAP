@@ -10,7 +10,6 @@ import com.lasalara.lasalara.backend.structure.Chapter;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 /**
  * Class that handles all of the SQLite database operations on chapters.
@@ -41,15 +40,12 @@ public class ChapterHelper {
 	 */
     ChapterHelper(SQLiteDatabase database) {
         this.database = database;
-		Log.d(StringConstants.APP_NAME, "ChapterHelper constructor.");
     }
 
     /**
      * Actions conducted on database creation.
      */
     public void onCreate() {
-    	Log.d(StringConstants.APP_NAME, "ChapterHelper onCreate()");
-    	Log.d(StringConstants.APP_NAME, TABLE_CREATE);
         database.execSQL(TABLE_CREATE);
     }
 
@@ -64,11 +60,6 @@ public class ChapterHelper {
 		// previous database, create a new one and then repopulate it.
 		database.execSQL(TABLE_DROP);
 		onCreate();
-	}
-	
-	private ContentValues getContentValues(Chapter chapter) {
-		// TODO
-		throw new UnsupportedOperationException();
 	}
 	
 	/**
@@ -151,13 +142,11 @@ public class ChapterHelper {
 	 * @return a list of chapters in a certain book saved into the SQLite database.
 	 */
 	public List<Chapter> getChapters(String bookKey) {
-		Log.d(StringConstants.APP_NAME, "ChapterHelper getChapters: " + bookKey);
 		List<Chapter> chapterList = new ArrayList<Chapter>();
 		String selectChaptersQuery =
 				"SELECT * FROM " + StringConstants.CHAPTER_TABLE_NAME +  
 				" WHERE " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + "='" + bookKey + "'" +
 				" ORDER BY " + StringConstants.CHAPTER_COLUMN_POSITION + " ASC";
-		Log.d(StringConstants.APP_NAME, selectChaptersQuery);
 		Cursor results =  database.rawQuery(selectChaptersQuery, null);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {

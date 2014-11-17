@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Queue;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
@@ -123,10 +122,8 @@ public class Backend {
 			newBook = new Book(context, ownerEmail, bookTitle, true);
 			int index = getBookFromBookList(newBook);
 			if (index == -1) {
-				Log.d(StringConstants.APP_NAME, "Book didn't exist, added it to the list.");
 				books.add(newBook);
 			} else {
-				Log.d(StringConstants.APP_NAME, "Book already existed, updated it.");
 				books.set(index, newBook); // Update the book (TODO?)
 				addMessage(StringConstants.MESSAGE_BOOK_DOWNLOAD_UPDATED);
 			}

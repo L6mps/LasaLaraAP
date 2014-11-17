@@ -25,7 +25,6 @@ import com.lasalara.lasalara.backend.webRequest.WebRequest;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 /**
  * Class responsible for holding and querying a book's information and querying it's chapters' information.
@@ -55,7 +54,6 @@ public class Book {
 	 */
 	public Book(Context context, String ownerEmail, String title, boolean insertIntoDatabase) throws InputDoesntExistException, FormatException {
 		this.context = context;
-		//Log.d(StringConstants.APP_NAME, "Book constructor.");
 		String url = StringConstants.URL_GET_BOOK;
 		UrlParameters urlParameters = new UrlParameters();
 		urlParameters.addPair("em", ownerEmail);
