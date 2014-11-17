@@ -12,6 +12,9 @@ public class StringConstants {
 	public static final String URL_GET_CHAPTERS = "http://www.lasalara.com/getmchapters";
 	public static final String URL_GET_QUESTIONS = "http://www.lasalara.com/getquestions";
 	public static final String URL_POSE_QUESTION = "http://www.lasalara.com/posequestion";
+	// Default book information (downloaded on application creation)
+	public static final String DEFAULT_BOOK_OWNER = "lasalara.help@gmail.com";
+	public static final String DEFAULT_BOOK_TITLE = "Welcome to LasaLara";
 	// Database information
 	public static final String DATABASE_NAME = "LasaLaraAP.db";
 	// Database book table constants

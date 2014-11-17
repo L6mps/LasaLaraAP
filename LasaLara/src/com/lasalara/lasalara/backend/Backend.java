@@ -2,6 +2,7 @@ package com.lasalara.lasalara.backend;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Queue;
 
 import android.content.Context;
@@ -119,7 +120,7 @@ public class Backend {
 	public void downloadBook(final Context context, final String ownerEmail, final String bookTitle) {
 		Book newBook;
 		try {
-			newBook = new Book(context, ownerEmail, bookTitle, true);
+			newBook = new Book(context, ownerEmail.toLowerCase(Locale.ENGLISH), bookTitle.toLowerCase(Locale.ENGLISH), true);
 			int index = getBookFromBookList(newBook);
 			if (index == -1) {
 				books.add(newBook);
