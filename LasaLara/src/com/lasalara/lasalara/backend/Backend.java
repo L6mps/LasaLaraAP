@@ -1,8 +1,8 @@
 package com.lasalara.lasalara.backend;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Queue;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
@@ -30,6 +30,7 @@ public class Backend {
 	 */
 	private Backend() {
 		super();
+		messages = new ArrayDeque<Message>();
 		books = new ArrayList<Book>();
 		pageViewOn = false;
 	}
@@ -115,9 +116,9 @@ public class Backend {
 	 * @param bookTitle		The book's title.
 	 */
 	public void downloadBook(final String ownerEmail, final String bookTitle) {
-		Book newBook;
+		Book newBook = null;
 		try {
-			newBook = new Book(ownerEmail.toLowerCase(Locale.ENGLISH), bookTitle.toLowerCase(Locale.ENGLISH), true);
+			newBook = new Book(ownerEmail, bookTitle, true);
 			int index = getBookFromBookList(newBook);
 			if (index == -1) {
 				books.add(newBook);

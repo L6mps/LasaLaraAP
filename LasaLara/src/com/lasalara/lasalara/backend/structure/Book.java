@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,8 +52,8 @@ public class Book {
 	public Book(String ownerEmail, String title, boolean insertIntoDatabase) throws InputDoesntExistException, FormatException {
 		String url = StringConstants.URL_GET_BOOK;
 		UrlParameters urlParameters = new UrlParameters();
-		urlParameters.addPair("em", ownerEmail);
-		urlParameters.addPair("bt", title);
+		urlParameters.addPair("em", ownerEmail.toLowerCase(Locale.ENGLISH));
+		urlParameters.addPair("bt", title.toLowerCase(Locale.ENGLISH));
 		WebRequest request = null;
 		try {
 			request = new WebRequest(url, urlParameters);
