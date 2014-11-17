@@ -6,7 +6,6 @@ import com.lasalara.lasalara.backend.constants.StringConstants;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 /**
  * Class that handles all of the SQLite database operations.
@@ -18,6 +17,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private BookHelper bookHelper;
 	private ChapterHelper chapterHelper;
 	private QuestionHelper questionHelper;
+	private LogHelper logHelper;
 
 	/**
 	 * Constructor.
@@ -26,9 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	private DatabaseHelper(Context context) {
 		super(context, StringConstants.DATABASE_NAME, null, NumericalConstants.DATABASE_VERSION);
-		Log.d(StringConstants.APP_NAME, "DatabaseHelper constructor.");
 		database = getWritableDatabase(); // Responsible for calling the onCreate(db) method
-		Log.d(StringConstants.APP_NAME, "Got the database.");
 	}
 	
 	/**
@@ -50,13 +48,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		Log.d(StringConstants.APP_NAME, "DatabaseHelper onCreate()");
 		bookHelper = new BookHelper(db);
 		chapterHelper = new ChapterHelper(db);
 		questionHelper = new QuestionHelper(db);
+		logHelper = new LogHelper(db);
 		bookHelper.onCreate();
 		chapterHelper.onCreate();
 		questionHelper.onCreate();
+		logHelper.onCreate();
 	}
 
 	@Override
@@ -64,6 +63,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		bookHelper.onUpgrade(oldVersion, newVersion);
 		chapterHelper.onUpgrade(oldVersion, newVersion);
 		questionHelper.onUpgrade(oldVersion, newVersion);
+		logHelper.onUpgrade(oldVersion, newVersion);
+	}
+	
+	//Joos addition
+	@Override
+	public void onOpen(SQLiteDatabase db) {
+		bookHelper = new BookHelper(db);
+		chapterHelper = new ChapterHelper(db);
+		questionHelper = new QuestionHelper(db);
+		logHelper = new LogHelper(db);
+		bookHelper.onCreate();
+		chapterHelper.onCreate();
+		questionHelper.onCreate();
+		logHelper.onCreate();
 	}
 
 	/**
@@ -73,17 +86,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return bookHelper;
 	}
 	
-	//Joos addition
-	@Override
-	public void onOpen(SQLiteDatabase db) {
-		Log.d(StringConstants.APP_NAME, "DatabaseHelper onOpen() yay");
-		bookHelper = new BookHelper(db);
-		chapterHelper = new ChapterHelper(db);
-		questionHelper = new QuestionHelper(db);
-		bookHelper.onCreate();
-		chapterHelper.onCreate();
-		questionHelper.onCreate();
-	}
 	/**
 	 * @return the chapter helper class for the SQLite database.
 	 */
@@ -96,6 +98,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	public QuestionHelper getQuestionHelper() {
 		return questionHelper;
+	}
+	
+	/**
+	 * @return the log helper class for the SQLite database.
+	 */
+	public LogHelper getLogHelper() {
+		return logHelper;
 	}
 	
 	/**

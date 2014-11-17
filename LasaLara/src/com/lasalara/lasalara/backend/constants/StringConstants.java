@@ -12,6 +12,9 @@ public class StringConstants {
 	public static final String URL_GET_CHAPTERS = "http://www.lasalara.com/getmchapters";
 	public static final String URL_GET_QUESTIONS = "http://www.lasalara.com/getquestions";
 	public static final String URL_POSE_QUESTION = "http://www.lasalara.com/posequestion";
+	// Default book information (downloaded on application creation)
+	public static final String DEFAULT_BOOK_OWNER = "lasalara.help@gmail.com";
+	public static final String DEFAULT_BOOK_TITLE = "Welcome to LasaLara";
 	// Database information
 	public static final String DATABASE_NAME = "LasaLaraAP.db";
 	// Database book table constants
@@ -41,6 +44,10 @@ public class StringConstants {
 	public static final String QUESTION_COLUMN_REVIEW_TIME = "reviewTime";
 	public static final String QUESTION_COLUMN_KNOWN_UNTIL_TIME = "knownUntilTime";
 	public static final String QUESTION_COLUMN_CHAPTER_KEY = "chapterKey";
+	// Database log table constants
+	public static final String LOG_TABLE_NAME = "log";
+	public static final String LOG_COLUMN_EVENT = "event";
+	public static final String LOG_COLUMN_TIME = "time";
 	// Messages sent to the user interface
 	public static final String MESSAGE_BOOK_DOWNLOAD_UPDATED = "The specified book already existed in the database. Updated it.";
 }

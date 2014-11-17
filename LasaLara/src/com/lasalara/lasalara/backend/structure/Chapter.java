@@ -26,7 +26,7 @@ public class Chapter {
 	private String key;						// The chapter's UUID
 	private String title;					// Name of the chapter
 	private int version;					// If the author updates a chapter, its version number is incremented. Version numbers let the app know when to re-download chapter questions.
-	private String authorEmail;				// E-mail address of the person who wrote the chapter, TODO: Own class for e-mail?
+	private String authorEmail;				// E-mail address of the person who wrote the chapter
 	private String authorName;				// Name of the person who wrote the chapter (if blank, the e-mail is used)
 	private String authorInstitution;		// Institution of the person who wrote the chapter (if blank, the e-mail is used)
 	private boolean proposalsAllowed;		// Has the author allowed question proposals for the chapter?
@@ -54,7 +54,6 @@ public class Chapter {
 			String authorName, String authorInstitution, boolean proposalsAllowed, int position,
 			String bookKey, boolean insertIntoDatabase) {
 		this.context = context;
-		//Log.d(StringConstants.APP_NAME, "Chapter constructor: " + key + ", " + title + ".");
 		this.key = key;
 		this.title = title;
 		this.version = version;
@@ -65,7 +64,7 @@ public class Chapter {
 		this.position = position;
 		this.bookKey = bookKey;
 		if (insertIntoDatabase) {
-			DatabaseHelper.getInstance().getChapterHelper().insertChapter(this); // TODO: Test
+			DatabaseHelper.getInstance().getChapterHelper().insertChapter(this);
 			downloadQuestions();
 		}
 	}

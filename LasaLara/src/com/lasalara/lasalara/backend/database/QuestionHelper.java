@@ -12,7 +12,6 @@ import com.lasalara.lasalara.backend.structure.Question;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 /**
  * Class that handles all of the SQLite database operations on questions.
@@ -41,15 +40,12 @@ public class QuestionHelper {
 	 */
     QuestionHelper(SQLiteDatabase database) {
         this.database = database;
-		Log.d(StringConstants.APP_NAME, "QuestionHelper constructor.");
     }
 
     /**
      * Actions conducted on database creation.
      */
     public void onCreate() {
-    	Log.d(StringConstants.APP_NAME, "QuestionHelper onCreate()");
-    	Log.d(StringConstants.APP_NAME, TABLE_CREATE);
         database.execSQL(TABLE_CREATE);
     }
 
@@ -126,12 +122,10 @@ public class QuestionHelper {
 	 */
 	public List<Question> getAllQuestions(String chapterKey) {
 		List<Question> questionList = new ArrayList<Question>();
-		String selectQuestionsQuery =
-				"SELECT * FROM " + StringConstants.QUESTION_TABLE_NAME +  
-				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + chapterKey + "'" +
-				" ORDER BY " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " ASC";
-		Log.d(StringConstants.APP_NAME, selectQuestionsQuery);
-		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
+		String whereClause = StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=?";
+		String[] whereArguments = {chapterKey};
+		String orderClause = StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " ASC";
+		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, null, whereClause, whereArguments, null, null, orderClause);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {
 			questionList.add(new Question(results));
@@ -147,14 +141,11 @@ public class QuestionHelper {
 	public Question getNextQuestion(String chapterKey) {
 		Question nextQuestion = null;
 		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
-		String selectQuestionsQuery =
-				"SELECT * FROM " + StringConstants.QUESTION_TABLE_NAME +  
-				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + chapterKey + "'" +
-				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + "<='" + currentTime.toString() + "'" + // TODO: Test timestamp comparison
-				" ORDER BY " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " ASC" +
-				" LIMIT 1";
-		Log.d(StringConstants.APP_NAME, selectQuestionsQuery);
-		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
+		String whereClause = StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=?" + 
+				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + "<=?";
+		String[] whereArguments = {chapterKey, currentTime.toString()}; // TODO: Test timestamp comparison
+		String orderClause = StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " ASC";
+		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, null, whereClause, whereArguments, null, null, orderClause, "1");
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {
 			nextQuestion = new Question(results);
@@ -169,11 +160,10 @@ public class QuestionHelper {
 	 */
 	public int getNumberOfQuestions(String chapterKey) {
 		int numberOfQuestions = 0;
-		String selectQuestionsQuery =
-				"SELECT COUNT(*) FROM " + StringConstants.QUESTION_TABLE_NAME +  
-				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + chapterKey + "'";
-		Log.d(StringConstants.APP_NAME, selectQuestionsQuery);
-		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
+		String[] columns = {"COUNT(*)"};
+		String whereClause = StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=?";
+		String[] whereArguments = {chapterKey}; // TODO: Test timestamp comparison
+		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, columns, whereClause, whereArguments, null, null, null);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {
 			numberOfQuestions = results.getInt(0);
@@ -189,12 +179,11 @@ public class QuestionHelper {
 	public int getNumberOfAnsweredQuestions(String chapterKey) {
 		int numberOfAnsweredQuestions = 0;
 		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
-		String selectQuestionsQuery =
-				"SELECT COUNT(*) FROM " + StringConstants.QUESTION_TABLE_NAME +  
-				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + chapterKey + "'" +
-				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + ">'" + currentTime.toString() + "'"; // TODO: Test timestamp comparison
-		Log.d(StringConstants.APP_NAME, selectQuestionsQuery);
-		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
+		String[] columns = {"COUNT(*)"};
+		String whereClause = StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=?" +
+				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + ">?";
+		String[] whereArguments = {chapterKey, currentTime.toString()}; // TODO: Test timestamp comparison
+		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, columns, whereClause, whereArguments, null, null, null);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {
 			numberOfAnsweredQuestions = results.getInt(0);
@@ -210,12 +199,11 @@ public class QuestionHelper {
 	public int getNumberOfUnansweredQuestions(String chapterKey) {
 		int numberOfAnsweredQuestions = 0;
 		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
-		String selectQuestionsQuery =
-				"SELECT COUNT(*) FROM " + StringConstants.QUESTION_TABLE_NAME +  
-				" WHERE " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + chapterKey + "'" +
-				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + "<='" + currentTime.toString() + "'"; // TODO: Test timestamp comparison
-		Log.d(StringConstants.APP_NAME, selectQuestionsQuery);
-		Cursor results =  database.rawQuery(selectQuestionsQuery, null);
+		String[] columns = {"COUNT(*)"};
+		String whereClause = StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=?" +
+				" AND " + StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + "<=?";
+		String[] whereArguments = {chapterKey, currentTime.toString()}; // TODO: Test timestamp comparison
+		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, columns, whereClause, whereArguments, null, null, null);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {
 			numberOfAnsweredQuestions = results.getInt(0);

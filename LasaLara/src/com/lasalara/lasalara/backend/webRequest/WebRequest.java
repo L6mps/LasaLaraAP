@@ -2,7 +2,7 @@ package com.lasalara.lasalara.backend.webRequest;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
+import android.util.Log; // TODO: Remove as soon as posing questions works
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
 

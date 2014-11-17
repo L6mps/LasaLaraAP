@@ -6,12 +6,10 @@ import java.util.List;
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.structure.Book;
-import com.lasalara.lasalara.backend.structure.Chapter;
 
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
 /**
  * Class that handles all of the SQLite database operations on books.
@@ -38,15 +36,12 @@ public class BookHelper {
 	 */
 	BookHelper(SQLiteDatabase database) {
 		this.database = database;
-		Log.d(StringConstants.APP_NAME, "BookHelper constructor.");
 	}
 
 	/**
 	 * Actions conducted on database creation.
 	 */
 	public void onCreate() {
-		Log.d(StringConstants.APP_NAME, "BookHelper onCreate()");
-		Log.d(StringConstants.APP_NAME, TABLE_CREATE);
 		database.execSQL(TABLE_CREATE);
 	}
 
@@ -63,17 +58,11 @@ public class BookHelper {
 		onCreate();
 	}
 	
-	private ContentValues getContentValues(Book book) {
-		// TODO
-		throw new UnsupportedOperationException();
-	}
-	
 	/**
 	 * Insert a new book into the SQLite database.
 	 * @param book		The book object's instance.
 	 */
 	public void insertBook(Book book) {
-		//Log.d(StringConstants.APP_NAME, "BookHelper: insertBook \"" + book.getTitle() + "\"");
 		// TODO: Check existence - update if exists?
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.BOOK_COLUMN_KEY, book.getKey());
@@ -110,10 +99,9 @@ public class BookHelper {
 	 * @return a list of books saved into the SQLite database.
 	 */
 	public List<Book> getBooks() {
-		Log.d(StringConstants.APP_NAME, "BookHelper getBooks()");
 		List<Book> bookList = new ArrayList<Book>();
-		String selectBooksQuery = "SELECT * FROM " + StringConstants.BOOK_TABLE_NAME;
-		Cursor results =  database.rawQuery(selectBooksQuery, null);
+		String orderClause = StringConstants.BOOK_COLUMN_TITLE + " ASC";
+		Cursor results = database.query(StringConstants.BOOK_TABLE_NAME, null, null, null, null, null, orderClause);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {
 			bookList.add(new Book(results));
@@ -121,6 +109,4 @@ public class BookHelper {
 		}
 		return bookList;
 	}
-	
-	// TODO: getBook(String bookKey) - do we need this?
 }

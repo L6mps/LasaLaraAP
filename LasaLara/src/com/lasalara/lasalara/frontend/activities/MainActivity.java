@@ -6,6 +6,8 @@ import com.lasalara.lasalara.R;
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.backend.exceptions.FormatException;
+import com.lasalara.lasalara.backend.exceptions.InputDoesntExistException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
@@ -42,6 +44,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 				
 		Log.d(StringConstants.APP_NAME, "Initialising database helper.");
 		DatabaseHelper.initialiseInstance(this);
+		Backend.getInstance().downloadBook(this, StringConstants.DEFAULT_BOOK_OWNER, StringConstants.DEFAULT_BOOK_TITLE);
 		Log.d(StringConstants.APP_NAME, "Getting books.");
 		Backend.getInstance().preloadData();
 		
@@ -193,8 +196,8 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    }
 	    else if(item.getItemId() == R.id.done) {
 	    	Backend.getInstance().downloadBook(this, 
-	    									 ((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString().toLowerCase(Locale.ENGLISH),
-	    									 ((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString().toLowerCase(Locale.ENGLISH));
+	    									 ((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString(),
+	    									 ((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString());
 	    	getSupportFragmentManager().popBackStack(); //takes back the transaction from bFragment to abFragment, animating back
 	    	bFragment.refresh();
 	    	return true;
