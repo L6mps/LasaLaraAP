@@ -2,7 +2,6 @@ package com.lasalara.lasalara.backend.structure;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -18,7 +17,6 @@ import com.lasalara.lasalara.backend.webRequest.WebRequest;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 /**
  * Class responsible for holding a chapter's information and querying it's questions' information.
@@ -34,26 +32,29 @@ public class Chapter {
 	private boolean proposalsAllowed;		// Has the author allowed question proposals for the chapter?
 	private int position;					// The position of the chapter in the book (the order is set by the book owner)
 	private String bookKey;					// The book the chapter is located in.
-	private List<Question> questions;		// The list of questions in this book. // TODO: Kestarafor nerta
 
 	private Context context;
+
 	/**
 	 * Constructor, used when downloading a chapter from the web.
-	 * @param context			The current activity's context (needed for network connection check and SQLite database).
-	 * @param key				The chapter's UUID key.
-	 * @param title				The chapter's title.
-	 * @param version			The chapter's version. Version numbers let the app know when to re-download chapter questions.
-	 * @param authorEmail		The chapter's author's e-mail address.
-	 * @param authorName		The chapter's author's name (or left null if blank).
-	 * @param authorInstitution	The chapter's author's institution (or left null if blank).
-	 * @param proposalsAllowed	Boolean value, whether the author allows question proposals or not.
-	 * @param bookKey			The book the chapter is located in.
+	 * The questions in all of these chapters are also downloaded.
+	 * TODO: Recursive asynchronous downloading.
+	 * @param context				The current activity's context (needed for network connection check and SQLite database).
+	 * @param key					The chapter's UUID key.
+	 * @param title					The chapter's title.
+	 * @param version				The chapter's version. Version numbers let the app know when to re-download chapter questions.
+	 * @param authorEmail			The chapter's author's e-mail address.
+	 * @param authorName			The chapter's author's name (or left null if blank).
+	 * @param authorInstitution		The chapter's author's institution (or left null if blank).
+	 * @param proposalsAllowed		Boolean value, whether the author allows question proposals or not.
+	 * @param bookKey				The book the chapter is located in.
+	 * @param insertIntoDatabase	Whether to insert the downloaded chapter into the database or not.
 	 */
-	Chapter(Context context, String key, String title, int version, String authorEmail, 
+	public Chapter(Context context, String key, String title, int version, String authorEmail, 
 			String authorName, String authorInstitution, boolean proposalsAllowed, int position,
-			String bookKey) {
+			String bookKey, boolean insertIntoDatabase) {
+		this.context = context;
 		//Log.d(StringConstants.APP_NAME, "Chapter constructor: " + key + ", " + title + ".");
-		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		this.key = key;
 		this.title = title;
 		this.version = version;
@@ -63,14 +64,15 @@ public class Chapter {
 		this.proposalsAllowed = proposalsAllowed;
 		this.position = position;
 		this.bookKey = bookKey;
-		databaseHelper.getChapterHelper().insertChapter(this); // TODO: Test
-		loadQuestions(); // TODO: Kestarafor nerta
-		
-		this.context = context;
+		if (insertIntoDatabase) {
+			DatabaseHelper.getInstance().getChapterHelper().insertChapter(this); // TODO: Test
+			downloadQuestions();
+		}
 	}
 	
 	/**
 	 * Constructor, used when querying data from the internal SQLite database.
+	 * The question data is not queried right away - there are separate methods for that.
 	 * @param dbResults			Database query results.
 	 */
 	public Chapter(Cursor dbResults) {
@@ -91,15 +93,6 @@ public class Chapter {
 		proposalsAllowed = (dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED)) == 1) ? true : false;
 		position = dbResults.getInt(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_POSITION));
 		bookKey = dbResults.getString(dbResults.getColumnIndex(StringConstants.CHAPTER_COLUMN_BOOK_KEY));
-		preloadQuestions(); // TODO: Kestarafor nerta
-	}
-
-	// TODO: Kestarafor nerta
-	/**
-	 * Preload all of the question data for this chapter from the SQLite database.
-	 */
-	void preloadQuestions() {
-		questions = DatabaseHelper.getInstance().getQuestionHelper().getQuestions(key);
 	}
 	
 	/**
@@ -110,31 +103,30 @@ public class Chapter {
 	}
 	
 	/**
+	 * Update this chapter's position value in the database.
+	 */
+	private void updatePositionInDatabase() {
+		DatabaseHelper.getInstance().getChapterHelper().updateChapterPosition(this);
+	}
+	
+	/**
 	 * Delete this chapter from the database.
 	 * Also deletes all of the associated questions from the database.
 	 */
 	private void deleteFromDatabase() {
-		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
-		databaseHelper.getChapterHelper().deleteChapter(this);
+		DatabaseHelper.getInstance().getChapterHelper().deleteChapter(this);
 	}
 
-	// TODO: Kestarafor nerta
 	/**
 	 * Load the questions in this book.
 	 * @param context			The current activity's context (needed for network connection check).
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	public void loadQuestions() {
-		questions = new ArrayList<Question>();
+	private void downloadQuestions() {
 		String url = StringConstants.URL_GET_QUESTIONS;
 		UrlParameters urlParameters = new UrlParameters();
-		try {
-			urlParameters.addPair("ck", key);
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		urlParameters.addPair("ck", key);
 		WebRequest request = null;
 		try {
 			request = new WebRequest(context, url, urlParameters);
@@ -151,7 +143,7 @@ public class Chapter {
 				for (int i = 0; i < questionList.length(); i++) {
 					String question = questionList.getString(i);
 					String answer = answerList.getString(i);
-					questions.add(new Question(context, question, answer, key));
+					new Question(context, question, answer, key);
 				}
 			} else {
 				throw new RuntimeException();
@@ -163,23 +155,36 @@ public class Chapter {
 		}
 	}
 	
-	public void update() {
-		// TODO
+	/**
+	 * Update this chapter. Used when the book updating system detects a change in the chapter's
+	 * version number.
+	 * All of the currently existing questions are purged from the database and new ones are 
+	 * downloaded.
+	 */
+	public void update(Chapter updatedChapter) {
+		title = updatedChapter.getTitle();
+		version = updatedChapter.getVersion();
+		authorEmail = updatedChapter.getAuthorEmail();
+		authorName = updatedChapter.getAuthorName();
+		authorInstitution = updatedChapter.getAuthorInstitution();
+		proposalsAllowed = updatedChapter.areProposalsAllowed();
+		updateInDatabase();
+		deleteQuestions();
+		downloadQuestions();
 	}
 	
-	/**
-	 * Delete a question with the specified index from the application.
-	 * @param index		The question's index in the question list.
-	 */
-	public void deleteQuestion(int index) {
-		questions.get(index).delete();
-		questions.remove(index);
+	public void updatePosition(int newPosition) {
+		if (position != newPosition) {
+			position = newPosition;
+			updatePositionInDatabase();
+		}
 	}
 	
 	/**
 	 * Delete all of the questions from this chapter.
 	 */
-	public void deleteQuestions() {
+	private void deleteQuestions() {
+		List<Question> questions = getAllQuestions();
 		for (Question question: questions) {
 			question.delete();
 		}
@@ -198,10 +203,32 @@ public class Chapter {
 	 * Reset the chapter's progress.
 	 */
 	public void resetProgress() {
+		List<Question> questions = getAllQuestions();
 		for (Question question: questions) {
 			question.resetProgress();
 		}
-		// TODO: Do we have to also reset the number of answered questions stored? We probably should.
+	}
+	
+	/**
+	 * Pose a question for this chapter to the chapter's author.
+	 * The data is sent to the author through a web request.
+	 * @param question	The new question's question string.
+	 * @param answer	The new question's answer.
+	 */
+	public void poseQuestion(String question, String answer) { // TODO: Test
+		String url = StringConstants.URL_POSE_QUESTION;
+		UrlParameters urlParameters = new UrlParameters();
+		urlParameters.addPair("ck", key);
+		urlParameters.addPair("question", question);
+		urlParameters.addPair("answer", answer);
+		WebRequest request = null;
+		try {
+			request = new WebRequest(context, url, urlParameters);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// TODO: Do we need to check for returned data?
 	}
 	
 	/**
@@ -298,17 +325,29 @@ public class Chapter {
 	public int getNumberOfAnsweredQuestions() {
 		return DatabaseHelper.getInstance().getQuestionHelper().getNumberOfAnsweredQuestions(key);
 	}
-
-	// TODO: Kestarafor nerta
+	
 	/**
-	 * Return a list of questions in this chapter. Used when the user loads the chapters in a book.
-	 * The chapters are read from the SQLite database.
-	 * @return the list of questions in this chapter.
-	 * @throws JSONException 
-	 * @throws IOException 
+	 * @return the number of questions the user has still got to answer in this chapter.
 	 */
-	public List<Question> getQuestions() {
-		return questions;
+	public int getNumberOfUnansweredQuestions() {
+		return DatabaseHelper.getInstance().getQuestionHelper().getNumberOfUnansweredQuestions(key);
+	}
+	
+	/**
+	 * @return whether the chapter is completed or not.
+	 */
+	public boolean isCompleted() {
+		return (getNumberOfUnansweredQuestions() == 0);
+	}
+
+	/**
+	 * Return a list of all of the questions in this chapter.
+	 * Used for the page view or deleting the chapter.
+	 * The questions are read from the SQLite database.
+	 * @return the list of questions in this chapter.
+	 */
+	public List<Question> getAllQuestions() {
+		return DatabaseHelper.getInstance().getQuestionHelper().getAllQuestions(key);
 	}
 	
 	/**

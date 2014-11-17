@@ -84,10 +84,6 @@ public class BookHelper {
 		database.insert(StringConstants.BOOK_TABLE_NAME, null, contentValues);
 	}
 	
-	public void updateBook(Book book) {
-		// TODO
-	}
-	
 	/**
 	 * Delete a book from the SQLite database.
 	 * Also deletes all of the chapters (and their corresponding questions) associated with the deleted book.

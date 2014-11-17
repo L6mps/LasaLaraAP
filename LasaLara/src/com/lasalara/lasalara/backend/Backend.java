@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.backend.exceptions.FormatException;
+import com.lasalara.lasalara.backend.exceptions.InputDoesntExistException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Message;
 import com.lasalara.lasalara.backend.structure.Progress;
@@ -22,6 +24,7 @@ public class Backend {
 	private static Backend instance;	// The back end instance
 	private Queue<Message> messages;	// The application message queue
 	private List<Book> books;			// The downloaded books' list
+	private boolean pageViewOn;			// Questions' page view setting - whether the questions are displayed on a single page or separately
 	
 	/**
 	 * Constructor.
@@ -30,6 +33,7 @@ public class Backend {
 	private Backend() {
 		super();
 		books = new ArrayList<Book>();
+		pageViewOn = false;
 	}
 	
 	/**
@@ -114,20 +118,40 @@ public class Backend {
 	 * @param bookTitle		The book's title.
 	 */
 	public void downloadBook(final Context context, final String ownerEmail, final String bookTitle) {
-		Book newBook = new Book(context, ownerEmail, bookTitle);
-		int index = getBookFromBookList(newBook);
-		if (index == -1) {
-			Log.d(StringConstants.APP_NAME, "Book didn't exist, added it to the list.");
-			books.add(newBook);
-		} else {
-			Log.d(StringConstants.APP_NAME, "Book already existed, updated it.");
-			books.set(index, newBook); // Update the book
-			// TODO: Send a message to the front end (or should we use the exception class?)
+		Book newBook;
+		try {
+			newBook = new Book(context, ownerEmail, bookTitle, true);
+			int index = getBookFromBookList(newBook);
+			if (index == -1) {
+				Log.d(StringConstants.APP_NAME, "Book didn't exist, added it to the list.");
+				books.add(newBook);
+			} else {
+				Log.d(StringConstants.APP_NAME, "Book already existed, updated it.");
+				books.set(index, newBook); // Update the book (TODO?)
+				addMessage(StringConstants.MESSAGE_BOOK_DOWNLOAD_UPDATED);
+			}
+		} catch (InputDoesntExistException e) {
+			addMessage(e.getMessage());
+			e.printStackTrace();
+		} catch (FormatException e) {
+			addMessage(e.getMessage());
 		}
 	}
 	
+	/**
+	 * Update a book with the specified index.
+	 * @param index
+	 */
 	public void updateBook(int index) {
-		books.get(index).update();
+		try {
+			books.get(index).update();
+		} catch (InputDoesntExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**
@@ -173,5 +197,19 @@ public class Backend {
 	 */
 	public List<Book> getBooks() {
 		return books;
+	}
+
+	/**
+	 * @return whether the page view of questions is switched on or not.
+	 */
+	public boolean isPageViewOn() {
+		return pageViewOn;
+	}
+
+	/**
+	 * @param pageViewOn	Whether questions in a chapter should be displayed on a single page or separately.
+	 */
+	public void setPageViewOn(boolean pageViewOn) {
+		this.pageViewOn = pageViewOn;
 	}
 }

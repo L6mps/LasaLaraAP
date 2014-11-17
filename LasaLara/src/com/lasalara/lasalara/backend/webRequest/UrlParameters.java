@@ -25,10 +25,9 @@ public class UrlParameters {
 	 * Add a new parameter pair to the list of URL parameters.
 	 * @param key		The parameter's key string.
 	 * @param value		The parameter's value string.
-	 * @throws UnsupportedEncodingException 
 	 */
-	public void addPair(String key, String value) throws UnsupportedEncodingException {
-		keyList.add(key.toLowerCase(Locale.ENGLISH));
+	public void addPair(String key, String value) {
+		keyList.add(key);
 		valueList.add(value);
 	}
 	
