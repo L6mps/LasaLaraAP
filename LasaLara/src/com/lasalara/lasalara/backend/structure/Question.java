@@ -32,7 +32,6 @@ public class Question {
 	 */
 	Question(Context context, String question, String answer, String chapterKey) {
 		//Log.d(StringConstants.APP_NAME, "Question constructor: " + chapterKey + ", " + question + ", " + answer + ".");
-		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		this.question = question;
 		this.answer = answer;
 		reviewCount = 0;
@@ -41,7 +40,7 @@ public class Question {
 		reviewTime = currentTime;
 		knownUntilTime = currentTime;
 		this.chapterKey = chapterKey;
-		databaseHelper.getQuestionHelper().insertQuestion(this);
+		DatabaseHelper.getInstance().getQuestionHelper().insertQuestion(this);
 	}
 	
 	/**

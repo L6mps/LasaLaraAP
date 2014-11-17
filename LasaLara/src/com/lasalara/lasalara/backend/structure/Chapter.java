@@ -55,7 +55,6 @@ public class Chapter {
 			String bookKey, boolean insertIntoDatabase) {
 		this.context = context;
 		//Log.d(StringConstants.APP_NAME, "Chapter constructor: " + key + ", " + title + ".");
-		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		this.key = key;
 		this.title = title;
 		this.version = version;
@@ -66,7 +65,7 @@ public class Chapter {
 		this.position = position;
 		this.bookKey = bookKey;
 		if (insertIntoDatabase) {
-			databaseHelper.getChapterHelper().insertChapter(this); // TODO: Test
+			DatabaseHelper.getInstance().getChapterHelper().insertChapter(this); // TODO: Test
 			downloadQuestions();
 		}
 	}
@@ -115,8 +114,7 @@ public class Chapter {
 	 * Also deletes all of the associated questions from the database.
 	 */
 	private void deleteFromDatabase() {
-		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
-		databaseHelper.getChapterHelper().deleteChapter(this);
+		DatabaseHelper.getInstance().getChapterHelper().deleteChapter(this);
 	}
 
 	/**

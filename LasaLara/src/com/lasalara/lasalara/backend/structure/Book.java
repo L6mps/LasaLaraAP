@@ -56,7 +56,6 @@ public class Book {
 	public Book(Context context, String ownerEmail, String title, boolean insertIntoDatabase) throws InputDoesntExistException, FormatException {
 		this.context = context;
 		//Log.d(StringConstants.APP_NAME, "Book constructor.");
-		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		String url = StringConstants.URL_GET_BOOK;
 		UrlParameters urlParameters = new UrlParameters();
 		urlParameters.addPair("em", ownerEmail);
@@ -86,7 +85,7 @@ public class Book {
 					}
 					key = result.get("bk").toString();
 					if (insertIntoDatabase) {
-						databaseHelper.getBookHelper().insertBook(this);
+						DatabaseHelper.getInstance().getBookHelper().insertBook(this);
 					}
 				} else {
 					throw new FormatException(FormatExceptionMessage.BOOK_DOWNLOAD_EMAIL);
@@ -149,8 +148,7 @@ public class Book {
 	 * Also deletes all of the associated chapters and their questions from the database.
 	 */
 	private void deleteFromDatabase() {
-		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
-		databaseHelper.getBookHelper().deleteBook(this);
+		DatabaseHelper.getInstance().getBookHelper().deleteBook(this);
 	}
 	
 	/**
