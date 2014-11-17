@@ -41,6 +41,10 @@ public class StringConstants {
 	public static final String QUESTION_COLUMN_REVIEW_TIME = "reviewTime";
 	public static final String QUESTION_COLUMN_KNOWN_UNTIL_TIME = "knownUntilTime";
 	public static final String QUESTION_COLUMN_CHAPTER_KEY = "chapterKey";
+	// Database log table constants
+	public static final String LOG_TABLE_NAME = "log";
+	public static final String LOG_COLUMN_EVENT = "event";
+	public static final String LOG_COLUMN_TIME = "time";
 	// Messages sent to the user interface
 	public static final String MESSAGE_BOOK_DOWNLOAD_UPDATED = "The specified book already existed in the database. Updated it.";
 }

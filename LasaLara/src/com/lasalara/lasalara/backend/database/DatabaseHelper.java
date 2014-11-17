@@ -17,6 +17,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private BookHelper bookHelper;
 	private ChapterHelper chapterHelper;
 	private QuestionHelper questionHelper;
+	private LogHelper logHelper;
 
 	/**
 	 * Constructor.
@@ -50,9 +51,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		bookHelper = new BookHelper(db);
 		chapterHelper = new ChapterHelper(db);
 		questionHelper = new QuestionHelper(db);
+		logHelper = new LogHelper(db);
 		bookHelper.onCreate();
 		chapterHelper.onCreate();
 		questionHelper.onCreate();
+		logHelper.onCreate();
 	}
 
 	@Override
@@ -60,6 +63,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		bookHelper.onUpgrade(oldVersion, newVersion);
 		chapterHelper.onUpgrade(oldVersion, newVersion);
 		questionHelper.onUpgrade(oldVersion, newVersion);
+		logHelper.onUpgrade(oldVersion, newVersion);
+	}
+	
+	//Joos addition
+	@Override
+	public void onOpen(SQLiteDatabase db) {
+		bookHelper = new BookHelper(db);
+		chapterHelper = new ChapterHelper(db);
+		questionHelper = new QuestionHelper(db);
+		logHelper = new LogHelper(db);
+		bookHelper.onCreate();
+		chapterHelper.onCreate();
+		questionHelper.onCreate();
+		logHelper.onCreate();
 	}
 
 	/**
@@ -69,16 +86,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		return bookHelper;
 	}
 	
-	//Joos addition
-	@Override
-	public void onOpen(SQLiteDatabase db) {
-		bookHelper = new BookHelper(db);
-		chapterHelper = new ChapterHelper(db);
-		questionHelper = new QuestionHelper(db);
-		bookHelper.onCreate();
-		chapterHelper.onCreate();
-		questionHelper.onCreate();
-	}
 	/**
 	 * @return the chapter helper class for the SQLite database.
 	 */
@@ -91,6 +98,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	 */
 	public QuestionHelper getQuestionHelper() {
 		return questionHelper;
+	}
+	
+	/**
+	 * @return the log helper class for the SQLite database.
+	 */
+	public LogHelper getLogHelper() {
+		return logHelper;
 	}
 	
 	/**
