@@ -43,6 +43,9 @@ public class Book {
 	
 	/**
 	 * Constructor, used when downloading a book from the web.
+	 * The chapters are not downloaded when using this constructor, instead, they are downloaded,
+	 * if need be, using the load() method. This allows the user to see the book in the interface
+	 * before it has been completely downloaded from the web.
 	 * @param context		The current activity's context (needed for network connection check and SQLite database).
 	 * @param ownerEmail	The book's owner's e-mail address.
 	 * @param title			The book's title.
@@ -111,7 +114,6 @@ public class Book {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		downloadChapters();
 	}
 	
 	/**
@@ -138,8 +140,18 @@ public class Book {
 	/**
 	 * Preload all of the chapter data for this book from the SQLite database.
 	 */
-	void preloadChapters() {
+	private void preloadChapters() {
 		chapters = DatabaseHelper.getInstance().getChapterHelper().getChapters(key);
+	}
+	
+	/**
+	 * Load the book's contents from the SQLite database. If there are no chapters in the SQLite
+	 * database, they are downloaded from the web. Used when the user clicks on the book.
+	 */
+	private void load() {
+		if (chapters.isEmpty()) {
+			downloadChapters();
+		}
 	}
 	
 	/**
@@ -241,7 +253,7 @@ public class Book {
 	/**
 	 * Delete all of the chapters from this book.
 	 */
-	public void deleteChapters() {
+	private void deleteChapters() {
 		for (Chapter chapter: chapters) {
 			chapter.delete();
 		}
@@ -314,11 +326,13 @@ public class Book {
 	
 	/**
 	 * Return a list of chapters in this book. Used when the user has opened a book.
-	 * The chapters are read from the SQLite database.
+	 * The chapters are read from the SQLite database. If the book is used for the first time,
+	 * the data is first downloaded from the web.
 	 * @param context		The current activity's context (needed for network connection check).
 	 * @return the list of chapters in this book.
 	 */
 	public List<Chapter> getChapters() {
+		load();
 		return chapters;
 	}
 }

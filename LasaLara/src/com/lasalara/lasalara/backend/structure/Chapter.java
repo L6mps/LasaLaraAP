@@ -39,6 +39,8 @@ public class Chapter {
 
 	/**
 	 * Constructor, used when downloading a chapter from the web.
+	 * The questions in all of these chapters are also downloaded.
+	 * TODO: Recursive asynchronous downloading.
 	 * @param context			The current activity's context (needed for network connection check and SQLite database).
 	 * @param key				The chapter's UUID key.
 	 * @param title				The chapter's title.
@@ -49,9 +51,10 @@ public class Chapter {
 	 * @param proposalsAllowed	Boolean value, whether the author allows question proposals or not.
 	 * @param bookKey			The book the chapter is located in.
 	 */
-	Chapter(Context context, String key, String title, int version, String authorEmail, 
+	public Chapter(Context context, String key, String title, int version, String authorEmail, 
 			String authorName, String authorInstitution, boolean proposalsAllowed, int position,
 			String bookKey) {
+		this.context = context;
 		//Log.d(StringConstants.APP_NAME, "Chapter constructor: " + key + ", " + title + ".");
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		this.key = key;
@@ -65,12 +68,11 @@ public class Chapter {
 		this.bookKey = bookKey;
 		databaseHelper.getChapterHelper().insertChapter(this); // TODO: Test
 		downloadQuestions();
-		
-		this.context = context;
 	}
 	
 	/**
 	 * Constructor, used when querying data from the internal SQLite database.
+	 * The question data is not queried right away - there are separate methods for that.
 	 * @param dbResults			Database query results.
 	 */
 	public Chapter(Cursor dbResults) {
@@ -115,7 +117,7 @@ public class Chapter {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	public void downloadQuestions() {
+	private void downloadQuestions() {
 		String url = StringConstants.URL_GET_QUESTIONS;
 		UrlParameters urlParameters = new UrlParameters();
 		try {
@@ -159,7 +161,7 @@ public class Chapter {
 	/**
 	 * Delete all of the questions from this chapter.
 	 */
-	public void deleteQuestions() {
+	private void deleteQuestions() {
 		List<Question> questions = getAllQuestions();
 		for (Question question: questions) {
 			question.delete();
@@ -285,8 +287,6 @@ public class Chapter {
 	 * Used for the page view or deleting the chapter.
 	 * The questions are read from the SQLite database.
 	 * @return the list of questions in this chapter.
-	 * @throws JSONException 
-	 * @throws IOException 
 	 */
 	public List<Question> getAllQuestions() {
 		return DatabaseHelper.getInstance().getQuestionHelper().getAllQuestions(key);
