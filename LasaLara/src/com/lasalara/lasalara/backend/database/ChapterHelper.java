@@ -90,8 +90,35 @@ public class ChapterHelper {
 		database.insert(StringConstants.CHAPTER_TABLE_NAME, null, contentValues);
 	}
 	
+	/**
+	 * Update a chapter in the SQLite database.
+	 * @param chapter	The chapter object's instance.
+	 */
 	public void updateChapter(Chapter chapter) {
-		// TODO
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(StringConstants.CHAPTER_COLUMN_TITLE, chapter.getTitle());
+		contentValues.put(StringConstants.CHAPTER_COLUMN_VERSION, chapter.getVersion());
+		contentValues.put(StringConstants.CHAPTER_COLUMN_AUTHOR_EMAIL, chapter.getAuthorEmail());
+		contentValues.put(StringConstants.CHAPTER_COLUMN_AUTHOR_NAME, chapter.getAuthorName());
+		contentValues.put(StringConstants.CHAPTER_COLUMN_AUTHOR_INSTITUTION, chapter.getAuthorInstitution());
+		contentValues.put(StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED, chapter.areProposalsAllowed() ? 1 : 0);
+		String whereClause = StringConstants.CHAPTER_COLUMN_KEY + "=?" + 
+				" AND " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + "=?";
+		String[] whereArguments = {chapter.getKey(), chapter.getBookKey()};
+		database.update(StringConstants.CHAPTER_TABLE_NAME, contentValues, whereClause, whereArguments);
+	}
+	
+	/**
+	 * Update a chapter's position number in the SQLite database.
+	 * @param chapter	The chapter object's instance.
+	 */
+	public void updateChapterPosition(Chapter chapter) {
+		ContentValues contentValues = new ContentValues();
+		contentValues.put(StringConstants.CHAPTER_COLUMN_POSITION, chapter.getPosition());
+		String whereClause = StringConstants.CHAPTER_COLUMN_KEY + "=?" + 
+				" AND " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + "=?";
+		String[] whereArguments = {chapter.getKey(), chapter.getBookKey()};
+		database.update(StringConstants.CHAPTER_TABLE_NAME, contentValues, whereClause, whereArguments);
 	}
 	
 	/**

@@ -5,7 +5,6 @@ import java.util.Calendar;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 import com.lasalara.lasalara.backend.constants.NumericalConstants;
 import com.lasalara.lasalara.backend.constants.StringConstants;

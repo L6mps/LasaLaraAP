@@ -141,7 +141,15 @@ public class Backend {
 	 * @param index
 	 */
 	public void updateBook(int index) {
-		books.get(index).update();
+		try {
+			books.get(index).update();
+		} catch (InputDoesntExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	/**

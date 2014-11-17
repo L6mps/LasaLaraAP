@@ -2,7 +2,6 @@ package com.lasalara.lasalara.backend.structure;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -18,7 +17,6 @@ import com.lasalara.lasalara.backend.webRequest.WebRequest;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.util.Log;
 
 /**
  * Class responsible for holding a chapter's information and querying it's questions' information.
@@ -53,7 +51,7 @@ public class Chapter {
 	 */
 	public Chapter(Context context, String key, String title, int version, String authorEmail, 
 			String authorName, String authorInstitution, boolean proposalsAllowed, int position,
-			String bookKey) {
+			String bookKey, boolean downloadQuestions) {
 		this.context = context;
 		//Log.d(StringConstants.APP_NAME, "Chapter constructor: " + key + ", " + title + ".");
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
@@ -67,7 +65,9 @@ public class Chapter {
 		this.position = position;
 		this.bookKey = bookKey;
 		databaseHelper.getChapterHelper().insertChapter(this); // TODO: Test
-		downloadQuestions();
+		if (downloadQuestions) {
+			downloadQuestions();
+		}
 	}
 	
 	/**
@@ -100,6 +100,13 @@ public class Chapter {
 	 */
 	private void updateInDatabase() {
 		DatabaseHelper.getInstance().getChapterHelper().updateChapter(this);
+	}
+	
+	/**
+	 * Update this chapter's position value in the database.
+	 */
+	private void updatePositionInDatabase() {
+		DatabaseHelper.getInstance().getChapterHelper().updateChapterPosition(this);
 	}
 	
 	/**
@@ -154,8 +161,29 @@ public class Chapter {
 		}
 	}
 	
-	public void update() {
-		// TODO
+	/**
+	 * Update this chapter. Used when the book updating system detects a change in the chapter's
+	 * version number.
+	 * All of the currently existing questions are purged from the database and new ones are 
+	 * downloaded.
+	 */
+	public void update(Chapter updatedChapter) {
+		title = updatedChapter.getTitle();
+		version = updatedChapter.getVersion();
+		authorEmail = updatedChapter.getAuthorEmail();
+		authorName = updatedChapter.getAuthorName();
+		authorInstitution = updatedChapter.getAuthorInstitution();
+		proposalsAllowed = updatedChapter.areProposalsAllowed();
+		updateInDatabase();
+		deleteQuestions();
+		downloadQuestions();
+	}
+	
+	public void updatePosition(int newPosition) {
+		if (position != newPosition) {
+			position = newPosition;
+			updatePositionInDatabase();
+		}
 	}
 	
 	/**
@@ -272,6 +300,7 @@ public class Chapter {
 	 * @return the number of questions in this chapter.
 	 */
 	public int getNumberOfQuestions() {
+		// TODO: Check if questions have been downloaded
 		return DatabaseHelper.getInstance().getQuestionHelper().getNumberOfQuestions(key);
 	}
 	
@@ -279,6 +308,7 @@ public class Chapter {
 	 * @return the number of questions the user has answered in this chapter.
 	 */
 	public int getNumberOfAnsweredQuestions() {
+		// TODO: Check if questions have been downloaded
 		return DatabaseHelper.getInstance().getQuestionHelper().getNumberOfAnsweredQuestions(key);
 	}
 
@@ -289,6 +319,7 @@ public class Chapter {
 	 * @return the list of questions in this chapter.
 	 */
 	public List<Question> getAllQuestions() {
+		// TODO: Check if questions have been downloaded
 		return DatabaseHelper.getInstance().getQuestionHelper().getAllQuestions(key);
 	}
 	
@@ -298,6 +329,7 @@ public class Chapter {
 	 * @return the next question in the list for this chapter.
 	 */
 	public Question getNextQuestion() {
+		// TODO: Check if questions have been downloaded
 		return DatabaseHelper.getInstance().getQuestionHelper().getNextQuestion(key);
 	}
 }

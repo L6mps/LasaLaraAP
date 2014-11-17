@@ -13,13 +13,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
 import com.lasalara.lasalara.backend.exceptions.FormatException;
 import com.lasalara.lasalara.backend.exceptions.FormatExceptionMessage;
 import com.lasalara.lasalara.backend.exceptions.InputDoesntExistException;
 import com.lasalara.lasalara.backend.exceptions.InputDoesntExistExceptionMessage;
-import com.lasalara.lasalara.backend.exceptions.InputExistsExceptionMessage;
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
 import com.lasalara.lasalara.backend.webRequest.WebRequest;
 
@@ -148,17 +148,10 @@ public class Book {
 	 * Load the book's contents from the SQLite database. If there are no chapters in the SQLite
 	 * database, they are downloaded from the web. Used when the user clicks on the book.
 	 */
-	private void load() {
+	private void load(boolean downloadQuestions) {
 		if (chapters.isEmpty()) {
-			downloadChapters();
+			downloadChapters(downloadQuestions);
 		}
-	}
-	
-	/**
-	 * Update this book's database row.
-	 */
-	private void updateInDatabase() {
-		DatabaseHelper.getInstance().getBookHelper().updateBook(this);
 	}
 	
 	/**
@@ -189,7 +182,7 @@ public class Book {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	private void downloadChapters() {
+	private void downloadChapters(boolean downloadQuestions) {
 		chapters = new ArrayList<Chapter>();
 		String url = StringConstants.URL_GET_CHAPTERS;
 		UrlParameters urlParameters = new UrlParameters();
@@ -225,7 +218,7 @@ public class Book {
 				boolean chapterProposalsAllowed = result.getBoolean("allowProp");
 				chapters.add(new Chapter(context, chapterKey, chapterTitle, chapterVersion, 
 						chapterAuthorEmail, chapterAuthorName, chapterAuthorInstitution, 
-						chapterProposalsAllowed, i, key));
+						chapterProposalsAllowed, i, key, downloadQuestions));
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -243,46 +236,53 @@ public class Book {
 	 */
 	public void update() throws InputDoesntExistException, FormatException {
 		Book updatedBook = new Book(context, ownerEmail, title);
-		List<Chapter> updatedChapters = updatedBook.getChapters();
+		List<Chapter> updatedChapters = updatedBook.getChapters(false);
 		int numberOfInsertedChapters = 0;
 		int numberOfUpdatedChapters = 0;
 		int numberOfDeletedChapters = 0;
 		// Check already existing chapters
 		for (Chapter existingChapter: chapters) {
-			boolean checked = false;
+			boolean existsInUpdatedBook = false;
 			for (Chapter updatedChapter: updatedChapters) {
 				if (existingChapter.getKey() == updatedChapter.getKey()) {
 					if (existingChapter.getVersion() != updatedChapter.getVersion()) {
-						// TODO: Update chapter, update all of the questions in the database (purge data beforehand)
+						existingChapter.update(updatedChapter);
 						numberOfUpdatedChapters++;
 					}
-					checked = true;
+					existsInUpdatedBook = true;
 				}
 			}
-			if (!checked) {
-				// TODO: Delete chapter
+			if (!existsInUpdatedBook) {
+				existingChapter.delete();
+				chapters.remove(existingChapter);
 				numberOfDeletedChapters++;
 			}
 		}
 		// Check new chapters
-		for (Chapter newChapter: updatedChapters) {
+		for (int i = 0; i < updatedChapters.size(); i++) {
 			boolean exists = false;
-			for (Chapter existingChapter: chapters) {
-				if (existingChapter.getKey() == newChapter.getKey()) {
+			for (int j = 0; j < chapters.size(); j++) {
+				if (chapters.get(j).getKey() == updatedChapters.get(i).getKey()) {
 					exists = true;
 				}
 			}
 			if (!exists) {
-				// TODO: Insert new chapter, position it accordingly
+				chapters.add(i, updatedChapters.get(i)); // TODO: Test
 				numberOfInsertedChapters++;
 			}
 		}
-		// TODO: Send appropriate notification messages to the user and update chapter position numbers if necessary.
+		// Send appropriate notification messages to the user and update chapter position numbers (if necessary).
 		if (numberOfInsertedChapters == 0 && numberOfUpdatedChapters == 0 && numberOfDeletedChapters == 0) {
-			// "No changes were made to the book."
+			Backend.getInstance().addMessage("No changes were made to the book.");
 		} else {
-			// "X new chapters was/were inserted, Y chapters was/were deleted and Z chapters was/were updated in the book."
-			// TODO: Update chapter position numbers
+			String insertedVerb = (numberOfInsertedChapters == 1) ? "was" : "were";
+			String updatedVerb = (numberOfUpdatedChapters == 1) ? "was" : "were";
+			String deletedVerb = (numberOfDeletedChapters == 1) ? "was" : "were";
+			Backend.getInstance().addMessage(numberOfInsertedChapters + " chapters " + insertedVerb + " inserted, " + numberOfDeletedChapters + " chapters " + deletedVerb + " deleted, and " + numberOfUpdatedChapters + " chapters " + updatedVerb + " updated in the book.");
+			// Update chapter position numbers
+			for (int i = 0; i < chapters.size(); i++) {
+				chapters.get(i).updatePosition(i);
+			}
 		}
 	}
 	
@@ -376,8 +376,20 @@ public class Book {
 	 * @param context		The current activity's context (needed for network connection check).
 	 * @return the list of chapters in this book.
 	 */
+	public List<Chapter> getChapters(boolean downloadQuestions) {
+		load(downloadQuestions);
+		return chapters;
+	}
+	
+	/**
+	 * Return a list of chapters in this book. Used when the user has opened a book.
+	 * The chapters are read from the SQLite database. If the book is used for the first time,
+	 * the data is first downloaded from the web.
+	 * @param context		The current activity's context (needed for network connection check).
+	 * @return the list of chapters in this book.
+	 */
 	public List<Chapter> getChapters() {
-		load();
+		load(true);
 		return chapters;
 	}
 }
