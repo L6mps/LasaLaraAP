@@ -1,6 +1,5 @@
 package com.lasalara.lasalara.backend.webRequest;
 
-import android.content.Context;
 import android.os.Build;
 import android.util.Log; // TODO: Remove as soon as posing questions works
 
@@ -36,12 +35,11 @@ public class WebRequest {
 	private String result;
 	
 	/**
-	 * @param context		The current activity's context (needed for network connection check).
 	 * @param url			The URL of the web request.
 	 * @param urlParameters	The URL parameters string.
 	 * @throws IOException
 	 */
-	public WebRequest(Context context, String url, UrlParameters parameterList) throws IOException {
+	public WebRequest(String url, UrlParameters parameterList) throws IOException {
 		disableConnectionReuseIfNecessary();
 		Log.d(StringConstants.APP_NAME, "Network is connected.");
 		this.url = url;

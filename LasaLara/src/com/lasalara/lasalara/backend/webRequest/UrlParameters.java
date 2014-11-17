@@ -1,9 +1,7 @@
 package com.lasalara.lasalara.backend.webRequest;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Class responsible for holding a web request's URL parameter data.

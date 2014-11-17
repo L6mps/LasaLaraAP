@@ -1,13 +1,10 @@
 package com.lasalara.lasalara.frontend.activities;
 
-import java.util.Locale;
-
+import com.lasalara.lasalara.LasaLaraApplication;
 import com.lasalara.lasalara.R;
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
-import com.lasalara.lasalara.backend.exceptions.FormatException;
-import com.lasalara.lasalara.backend.exceptions.InputDoesntExistException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
@@ -41,14 +38,14 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-				
+		LasaLaraApplication.setCurrentContext(this);
 		Log.d(StringConstants.APP_NAME, "Initialising database helper.");
 		DatabaseHelper.initialiseInstance(this);
-		Backend.getInstance().downloadBook(this, StringConstants.DEFAULT_BOOK_OWNER, StringConstants.DEFAULT_BOOK_TITLE);
+		Backend.getInstance().downloadBook(StringConstants.DEFAULT_BOOK_OWNER, StringConstants.DEFAULT_BOOK_TITLE);
 		Log.d(StringConstants.APP_NAME, "Getting books.");
 		Backend.getInstance().preloadData();
 		
-		this.gd = new GestureDetector(this,this);
+		this.gd = new GestureDetector(this, this);
 		setContentView(R.layout.contentlists);
 		if(findViewById(R.id.fragment_container) != null) {
 			if(savedInstanceState != null) {
@@ -140,8 +137,6 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
         }
 	}
 
-	
-
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 		if(!qFragment.isVisible())
@@ -195,8 +190,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    	return true;
 	    }
 	    else if(item.getItemId() == R.id.done) {
-	    	Backend.getInstance().downloadBook(this, 
-	    									 ((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString(),
+	    	Backend.getInstance().downloadBook(((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString(),
 	    									 ((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString());
 	    	getSupportFragmentManager().popBackStack(); //takes back the transaction from bFragment to abFragment, animating back
 	    	bFragment.refresh();

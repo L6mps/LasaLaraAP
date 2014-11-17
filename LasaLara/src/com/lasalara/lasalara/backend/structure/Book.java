@@ -23,7 +23,6 @@ import com.lasalara.lasalara.backend.exceptions.InputDoesntExistExceptionMessage
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
 import com.lasalara.lasalara.backend.webRequest.WebRequest;
 
-import android.content.Context;
 import android.database.Cursor;
 
 /**
@@ -38,29 +37,25 @@ public class Book {
 	private String ownerInstitution;		// Institution of the person who created the book (if blank, the e-mail is used)
 	private List<Chapter> chapters; 		// The list of chapters in this book.
 	
-	private Context context;
-	
 	/**
 	 * Constructor, used when downloading a book from the web.
 	 * The chapters are not downloaded when using this constructor, instead, they are downloaded,
 	 * if need be, using the load() method. This allows the user to see the book in the interface
 	 * before it has been completely downloaded from the web.
-	 * @param context				The current activity's context (needed for network connection check and SQLite database).
 	 * @param ownerEmail			The book's owner's e-mail address.
 	 * @param title					The book's title.
 	 * @param insertIntoDatabase	Whether to insert the book into the database or not.
 	 * @throws InputDoesntExistException 
 	 * @throws FormatException 
 	 */
-	public Book(Context context, String ownerEmail, String title, boolean insertIntoDatabase) throws InputDoesntExistException, FormatException {
-		this.context = context;
+	public Book(String ownerEmail, String title, boolean insertIntoDatabase) throws InputDoesntExistException, FormatException {
 		String url = StringConstants.URL_GET_BOOK;
 		UrlParameters urlParameters = new UrlParameters();
 		urlParameters.addPair("em", ownerEmail);
 		urlParameters.addPair("bt", title);
 		WebRequest request = null;
 		try {
-			request = new WebRequest(context, url, urlParameters);
+			request = new WebRequest(url, urlParameters);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -181,7 +176,7 @@ public class Book {
 		}
 		WebRequest request = null;
 		try {
-			request = new WebRequest(context, url, urlParameters);
+			request = new WebRequest(url, urlParameters);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -203,7 +198,7 @@ public class Book {
 					chapterAuthorInstitution = result.get("institution").toString();
 				}
 				boolean chapterProposalsAllowed = result.getBoolean("allowProp");
-				chapters.add(new Chapter(context, chapterKey, chapterTitle, chapterVersion, 
+				chapters.add(new Chapter(chapterKey, chapterTitle, chapterVersion, 
 						chapterAuthorEmail, chapterAuthorName, chapterAuthorInstitution, 
 						chapterProposalsAllowed, i, key, insertIntoDatabase));
 			}
@@ -222,7 +217,7 @@ public class Book {
 	 * @throws InputDoesntExistException 
 	 */
 	public void update() throws InputDoesntExistException, FormatException {
-		Book updatedBook = new Book(context, ownerEmail, title, false);
+		Book updatedBook = new Book(ownerEmail, title, false);
 		List<Chapter> updatedChapters = updatedBook.getChapters(false);
 		int numberOfInsertedChapters = 0;
 		int numberOfUpdatedChapters = 0;
