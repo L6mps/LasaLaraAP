@@ -127,12 +127,7 @@ public class Chapter {
 	private void downloadQuestions() {
 		String url = StringConstants.URL_GET_QUESTIONS;
 		UrlParameters urlParameters = new UrlParameters();
-		try {
-			urlParameters.addPair("ck", key);
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		urlParameters.addPair("ck", key);
 		WebRequest request = null;
 		try {
 			request = new WebRequest(context, url, urlParameters);
@@ -213,6 +208,28 @@ public class Chapter {
 		for (Question question: questions) {
 			question.resetProgress();
 		}
+	}
+	
+	/**
+	 * Pose a question for this chapter to the chapter's author.
+	 * The data is sent to the author through a web request.
+	 * @param question	The new question's question string.
+	 * @param answer	The new question's answer.
+	 */
+	public void poseQuestion(String question, String answer) { // TODO: Test
+		String url = StringConstants.URL_POSE_QUESTION;
+		UrlParameters urlParameters = new UrlParameters();
+		urlParameters.addPair("ck", key);
+		urlParameters.addPair("question", question);
+		urlParameters.addPair("answer", answer);
+		WebRequest request = null;
+		try {
+			request = new WebRequest(context, url, urlParameters);
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		// TODO: Do we need to check for returned data?
 	}
 	
 	/**

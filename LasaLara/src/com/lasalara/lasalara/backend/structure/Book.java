@@ -58,18 +58,8 @@ public class Book {
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
 		String url = StringConstants.URL_GET_BOOK;
 		UrlParameters urlParameters = new UrlParameters();
-		try {
-			urlParameters.addPair("em", ownerEmail);
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		try {
-			urlParameters.addPair("bt", title);
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		urlParameters.addPair("em", ownerEmail);
+		urlParameters.addPair("bt", title);
 		WebRequest request = null;
 		try {
 			request = new WebRequest(context, url, urlParameters);
