@@ -39,19 +39,20 @@ public class Chapter {
 	 * Constructor, used when downloading a chapter from the web.
 	 * The questions in all of these chapters are also downloaded.
 	 * TODO: Recursive asynchronous downloading.
-	 * @param context			The current activity's context (needed for network connection check and SQLite database).
-	 * @param key				The chapter's UUID key.
-	 * @param title				The chapter's title.
-	 * @param version			The chapter's version. Version numbers let the app know when to re-download chapter questions.
-	 * @param authorEmail		The chapter's author's e-mail address.
-	 * @param authorName		The chapter's author's name (or left null if blank).
-	 * @param authorInstitution	The chapter's author's institution (or left null if blank).
-	 * @param proposalsAllowed	Boolean value, whether the author allows question proposals or not.
-	 * @param bookKey			The book the chapter is located in.
+	 * @param context				The current activity's context (needed for network connection check and SQLite database).
+	 * @param key					The chapter's UUID key.
+	 * @param title					The chapter's title.
+	 * @param version				The chapter's version. Version numbers let the app know when to re-download chapter questions.
+	 * @param authorEmail			The chapter's author's e-mail address.
+	 * @param authorName			The chapter's author's name (or left null if blank).
+	 * @param authorInstitution		The chapter's author's institution (or left null if blank).
+	 * @param proposalsAllowed		Boolean value, whether the author allows question proposals or not.
+	 * @param bookKey				The book the chapter is located in.
+	 * @param insertIntoDatabase	Whether to insert the downloaded chapter into the database or not.
 	 */
 	public Chapter(Context context, String key, String title, int version, String authorEmail, 
 			String authorName, String authorInstitution, boolean proposalsAllowed, int position,
-			String bookKey, boolean downloadQuestions) {
+			String bookKey, boolean insertIntoDatabase) {
 		this.context = context;
 		//Log.d(StringConstants.APP_NAME, "Chapter constructor: " + key + ", " + title + ".");
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
@@ -64,8 +65,8 @@ public class Chapter {
 		this.proposalsAllowed = proposalsAllowed;
 		this.position = position;
 		this.bookKey = bookKey;
-		databaseHelper.getChapterHelper().insertChapter(this); // TODO: Test
-		if (downloadQuestions) {
+		if (insertIntoDatabase) {
+			databaseHelper.getChapterHelper().insertChapter(this); // TODO: Test
 			downloadQuestions();
 		}
 	}
@@ -317,7 +318,6 @@ public class Chapter {
 	 * @return the number of questions in this chapter.
 	 */
 	public int getNumberOfQuestions() {
-		// TODO: Check if questions have been downloaded
 		return DatabaseHelper.getInstance().getQuestionHelper().getNumberOfQuestions(key);
 	}
 	
@@ -325,7 +325,6 @@ public class Chapter {
 	 * @return the number of questions the user has answered in this chapter.
 	 */
 	public int getNumberOfAnsweredQuestions() {
-		// TODO: Check if questions have been downloaded
 		return DatabaseHelper.getInstance().getQuestionHelper().getNumberOfAnsweredQuestions(key);
 	}
 
@@ -336,7 +335,6 @@ public class Chapter {
 	 * @return the list of questions in this chapter.
 	 */
 	public List<Question> getAllQuestions() {
-		// TODO: Check if questions have been downloaded
 		return DatabaseHelper.getInstance().getQuestionHelper().getAllQuestions(key);
 	}
 	
@@ -346,7 +344,6 @@ public class Chapter {
 	 * @return the next question in the list for this chapter.
 	 */
 	public Question getNextQuestion() {
-		// TODO: Check if questions have been downloaded
 		return DatabaseHelper.getInstance().getQuestionHelper().getNextQuestion(key);
 	}
 }

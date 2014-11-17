@@ -46,13 +46,14 @@ public class Book {
 	 * The chapters are not downloaded when using this constructor, instead, they are downloaded,
 	 * if need be, using the load() method. This allows the user to see the book in the interface
 	 * before it has been completely downloaded from the web.
-	 * @param context		The current activity's context (needed for network connection check and SQLite database).
-	 * @param ownerEmail	The book's owner's e-mail address.
-	 * @param title			The book's title.
+	 * @param context				The current activity's context (needed for network connection check and SQLite database).
+	 * @param ownerEmail			The book's owner's e-mail address.
+	 * @param title					The book's title.
+	 * @param insertIntoDatabase	Whether to insert the book into the database or not.
 	 * @throws InputDoesntExistException 
 	 * @throws FormatException 
 	 */
-	public Book(Context context, String ownerEmail, String title) throws InputDoesntExistException, FormatException {
+	public Book(Context context, String ownerEmail, String title, boolean insertIntoDatabase) throws InputDoesntExistException, FormatException {
 		this.context = context;
 		//Log.d(StringConstants.APP_NAME, "Book constructor.");
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
@@ -84,11 +85,9 @@ public class Book {
 						ownerInstitution = result.get("institution").toString();
 					}
 					key = result.get("bk").toString();
-					
-					if(databaseHelper.getBookHelper() == null)
-						Log.e("debug","Database helper's book helper is null");
-					
-					databaseHelper.getBookHelper().insertBook(this); // TODO: Test
+					if (insertIntoDatabase) {
+						databaseHelper.getBookHelper().insertBook(this);
+					}
 				} else {
 					throw new FormatException(FormatExceptionMessage.BOOK_DOWNLOAD_EMAIL);
 				}
@@ -137,10 +136,11 @@ public class Book {
 	/**
 	 * Load the book's contents from the SQLite database. If there are no chapters in the SQLite
 	 * database, they are downloaded from the web. Used when the user clicks on the book.
+	 * @param insertIntoDatabase	Whether to insert the chapters into the database or not.
 	 */
-	private void load(boolean downloadQuestions) {
+	private void load(boolean insertIntoDatabase) {
 		if (chapters.isEmpty()) {
-			downloadChapters(downloadQuestions);
+			downloadChapters(insertIntoDatabase);
 		}
 	}
 	
@@ -172,7 +172,7 @@ public class Book {
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	private void downloadChapters(boolean downloadQuestions) {
+	private void downloadChapters(boolean insertIntoDatabase) {
 		chapters = new ArrayList<Chapter>();
 		String url = StringConstants.URL_GET_CHAPTERS;
 		UrlParameters urlParameters = new UrlParameters();
@@ -208,7 +208,7 @@ public class Book {
 				boolean chapterProposalsAllowed = result.getBoolean("allowProp");
 				chapters.add(new Chapter(context, chapterKey, chapterTitle, chapterVersion, 
 						chapterAuthorEmail, chapterAuthorName, chapterAuthorInstitution, 
-						chapterProposalsAllowed, i, key, downloadQuestions));
+						chapterProposalsAllowed, i, key, insertIntoDatabase));
 			}
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -225,7 +225,7 @@ public class Book {
 	 * @throws InputDoesntExistException 
 	 */
 	public void update() throws InputDoesntExistException, FormatException {
-		Book updatedBook = new Book(context, ownerEmail, title);
+		Book updatedBook = new Book(context, ownerEmail, title, false);
 		List<Chapter> updatedChapters = updatedBook.getChapters(false);
 		int numberOfInsertedChapters = 0;
 		int numberOfUpdatedChapters = 0;
@@ -363,11 +363,12 @@ public class Book {
 	 * Return a list of chapters in this book. Used when the user has opened a book.
 	 * The chapters are read from the SQLite database. If the book is used for the first time,
 	 * the data is first downloaded from the web.
+	 * If the value of insertIntoDatabase is false, the chapters are not inserted into the database.
 	 * @param context		The current activity's context (needed for network connection check).
 	 * @return the list of chapters in this book.
 	 */
-	public List<Chapter> getChapters(boolean downloadQuestions) {
-		load(downloadQuestions);
+	public List<Chapter> getChapters(boolean insertIntoDatabase) {
+		load(insertIntoDatabase);
 		return chapters;
 	}
 	

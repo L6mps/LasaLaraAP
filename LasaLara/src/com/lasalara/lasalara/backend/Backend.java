@@ -118,7 +118,7 @@ public class Backend {
 	public void downloadBook(final Context context, final String ownerEmail, final String bookTitle) {
 		Book newBook;
 		try {
-			newBook = new Book(context, ownerEmail, bookTitle);
+			newBook = new Book(context, ownerEmail, bookTitle, true);
 			int index = getBookFromBookList(newBook);
 			if (index == -1) {
 				Log.d(StringConstants.APP_NAME, "Book didn't exist, added it to the list.");
