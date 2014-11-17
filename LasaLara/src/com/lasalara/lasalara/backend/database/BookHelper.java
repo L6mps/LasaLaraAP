@@ -63,7 +63,6 @@ public class BookHelper {
 	 * @param book		The book object's instance.
 	 */
 	public void insertBook(Book book) {
-		//Log.d(StringConstants.APP_NAME, "BookHelper: insertBook \"" + book.getTitle() + "\"");
 		// TODO: Check existence - update if exists?
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.BOOK_COLUMN_KEY, book.getKey());
@@ -101,8 +100,8 @@ public class BookHelper {
 	 */
 	public List<Book> getBooks() {
 		List<Book> bookList = new ArrayList<Book>();
-		String selectBooksQuery = "SELECT * FROM " + StringConstants.BOOK_TABLE_NAME;
-		Cursor results =  database.rawQuery(selectBooksQuery, null);
+		String orderClause = StringConstants.BOOK_COLUMN_TITLE + " ASC";
+		Cursor results = database.query(StringConstants.BOOK_TABLE_NAME, null, null, null, null, null, orderClause);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {
 			bookList.add(new Book(results));
@@ -110,6 +109,4 @@ public class BookHelper {
 		}
 		return bookList;
 	}
-	
-	// TODO: getBook(String bookKey) - do we need this?
 }

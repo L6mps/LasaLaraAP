@@ -143,11 +143,10 @@ public class ChapterHelper {
 	 */
 	public List<Chapter> getChapters(String bookKey) {
 		List<Chapter> chapterList = new ArrayList<Chapter>();
-		String selectChaptersQuery =
-				"SELECT * FROM " + StringConstants.CHAPTER_TABLE_NAME +  
-				" WHERE " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + "='" + bookKey + "'" +
-				" ORDER BY " + StringConstants.CHAPTER_COLUMN_POSITION + " ASC";
-		Cursor results =  database.rawQuery(selectChaptersQuery, null);
+		String whereClause = StringConstants.CHAPTER_COLUMN_BOOK_KEY + "=?";
+		String[] whereArguments = {bookKey};
+		String orderClause = StringConstants.CHAPTER_COLUMN_POSITION + " ASC";
+		Cursor results = database.query(StringConstants.CHAPTER_TABLE_NAME, null, whereClause, whereArguments, null, null, orderClause);
 		boolean moveSucceeded = results.moveToFirst();
 		while (moveSucceeded) {
 			chapterList.add(new Chapter(results));
