@@ -9,6 +9,8 @@ import android.util.Log;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.backend.exceptions.FormatException;
+import com.lasalara.lasalara.backend.exceptions.InputDoesntExistException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Message;
 import com.lasalara.lasalara.backend.structure.Progress;
@@ -114,15 +116,23 @@ public class Backend {
 	 * @param bookTitle		The book's title.
 	 */
 	public void downloadBook(final Context context, final String ownerEmail, final String bookTitle) {
-		Book newBook = new Book(context, ownerEmail, bookTitle);
-		int index = getBookFromBookList(newBook);
-		if (index == -1) {
-			Log.d(StringConstants.APP_NAME, "Book didn't exist, added it to the list.");
-			books.add(newBook);
-		} else {
-			Log.d(StringConstants.APP_NAME, "Book already existed, updated it.");
-			books.set(index, newBook); // Update the book
-			// TODO: Send a message to the front end (or should we use the exception class?)
+		Book newBook;
+		try {
+			newBook = new Book(context, ownerEmail, bookTitle);
+			int index = getBookFromBookList(newBook);
+			if (index == -1) {
+				Log.d(StringConstants.APP_NAME, "Book didn't exist, added it to the list.");
+				books.add(newBook);
+			} else {
+				Log.d(StringConstants.APP_NAME, "Book already existed, updated it.");
+				books.set(index, newBook); // Update the book (TODO?)
+				addMessage("The specified book already existed in the database. Updated it.");
+			}
+		} catch (InputDoesntExistException e) {
+			addMessage(e.getMessage());
+			e.printStackTrace();
+		} catch (FormatException e) {
+			addMessage(e.getMessage());
 		}
 	}
 	

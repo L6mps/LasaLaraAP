@@ -15,6 +15,11 @@ import org.json.JSONObject;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.backend.exceptions.FormatException;
+import com.lasalara.lasalara.backend.exceptions.FormatExceptionMessage;
+import com.lasalara.lasalara.backend.exceptions.InputDoesntExistException;
+import com.lasalara.lasalara.backend.exceptions.InputDoesntExistExceptionMessage;
+import com.lasalara.lasalara.backend.exceptions.InputExistsExceptionMessage;
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
 import com.lasalara.lasalara.backend.webRequest.WebRequest;
 
@@ -41,8 +46,10 @@ public class Book {
 	 * @param context		The current activity's context (needed for network connection check and SQLite database).
 	 * @param ownerEmail	The book's owner's e-mail address.
 	 * @param title			The book's title.
+	 * @throws InputDoesntExistException 
+	 * @throws FormatException 
 	 */
-	public Book(Context context, String ownerEmail, String title) {
+	public Book(Context context, String ownerEmail, String title) throws InputDoesntExistException, FormatException {
 		this.context = context;
 		//Log.d(StringConstants.APP_NAME, "Book constructor.");
 		DatabaseHelper databaseHelper = DatabaseHelper.getInstance();
@@ -68,9 +75,7 @@ public class Book {
 			e1.printStackTrace();
 		}
 		try {
-			//Log.d(StringConstants.APP_NAME, "Book: Getting JSONObject.");
 			JSONObject result = request.getJSONObject();
-			//Log.d(StringConstants.APP_NAME, "Book: Got JSONObject.");
 			try {
 				if (validateEmail(ownerEmail)) {
 					this.ownerEmail = ownerEmail;
@@ -92,14 +97,14 @@ public class Book {
 					
 					databaseHelper.getBookHelper().insertBook(this); // TODO: Test
 				} else {
-					// TODO: Throw error: The e-mail address does not correspond to an e-mail address' format.
+					throw new FormatException(FormatExceptionMessage.BOOK_DOWNLOAD_EMAIL);
 				}
 			} catch (JSONException e) {
 				int errorCode = result.getInt("err");
 				if (errorCode == 0) {
-					// TODO: Throw error: The e-mail address was not found.
+					throw new InputDoesntExistException(InputDoesntExistExceptionMessage.BOOK_DOWNLOAD_EMAIL);
 				} else {
-					// TODO: Throw error: No book with that title was found.
+					throw new InputDoesntExistException(InputDoesntExistExceptionMessage.BOOK_DOWNLOAD_TITLE);
 				}
 			}
 		} catch (JSONException e) {
