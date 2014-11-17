@@ -3,7 +3,6 @@ package com.lasalara.lasalara.backend.structure;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import com.lasalara.lasalara.backend.constants.NumericalConstants;
@@ -25,12 +24,11 @@ public class Question {
 	
 	/**
 	 * Constructor, used when downloading all of the questions in a chapter.
-	 * @param context	The current activity's context (needed for network connection check and SQLite database).
 	 * @param question	The question string.
 	 * @param answer	The question's answer string.
 	 * @param bookKey	The book the chapter is located in.
 	 */
-	Question(Context context, String question, String answer, String chapterKey) {
+	Question(String question, String answer, String chapterKey) {
 		this.question = question;
 		this.answer = answer;
 		reviewCount = 0;

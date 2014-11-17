@@ -63,22 +63,37 @@ public class ChapterHelper {
 	}
 	
 	/**
+	 * @param chapter	The chapter object's instance.
+	 * @return whether the chapter already exists in the database or not.
+	 */
+	private boolean existsInDatabase(Chapter chapter) {
+		String[] columns = {StringConstants.CHAPTER_COLUMN_KEY};
+		String whereClause = StringConstants.CHAPTER_COLUMN_KEY + "=?";
+		String[] whereArguments = {chapter.getKey()};
+		Cursor results = database.query(StringConstants.CHAPTER_TABLE_NAME, columns, whereClause, whereArguments, null, null, null);
+		return results.moveToFirst();
+	}
+	
+	/**
 	 * Insert a new chapter into the SQLite database.
 	 * @param chapter	The chapter object's instance.
 	 */
 	public void insertChapter(Chapter chapter) {
-		// TODO: Check existence - update if exists?
-		ContentValues contentValues = new ContentValues();
-		contentValues.put(StringConstants.CHAPTER_COLUMN_KEY, chapter.getKey());
-		contentValues.put(StringConstants.CHAPTER_COLUMN_TITLE, chapter.getTitle());
-		contentValues.put(StringConstants.CHAPTER_COLUMN_VERSION, chapter.getVersion());
-		contentValues.put(StringConstants.CHAPTER_COLUMN_AUTHOR_EMAIL, chapter.getAuthorEmail());
-		contentValues.put(StringConstants.CHAPTER_COLUMN_AUTHOR_NAME, chapter.getAuthorName());
-		contentValues.put(StringConstants.CHAPTER_COLUMN_AUTHOR_INSTITUTION, chapter.getAuthorInstitution());
-		contentValues.put(StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED, chapter.areProposalsAllowed() ? 1 : 0);
-		contentValues.put(StringConstants.CHAPTER_COLUMN_POSITION, chapter.getPosition());
-		contentValues.put(StringConstants.CHAPTER_COLUMN_BOOK_KEY, chapter.getBookKey());
-		database.insert(StringConstants.CHAPTER_TABLE_NAME, null, contentValues);
+		if (existsInDatabase(chapter)) {
+			updateChapter(chapter);
+		} else {
+			ContentValues contentValues = new ContentValues();
+			contentValues.put(StringConstants.CHAPTER_COLUMN_KEY, chapter.getKey());
+			contentValues.put(StringConstants.CHAPTER_COLUMN_TITLE, chapter.getTitle());
+			contentValues.put(StringConstants.CHAPTER_COLUMN_VERSION, chapter.getVersion());
+			contentValues.put(StringConstants.CHAPTER_COLUMN_AUTHOR_EMAIL, chapter.getAuthorEmail());
+			contentValues.put(StringConstants.CHAPTER_COLUMN_AUTHOR_NAME, chapter.getAuthorName());
+			contentValues.put(StringConstants.CHAPTER_COLUMN_AUTHOR_INSTITUTION, chapter.getAuthorInstitution());
+			contentValues.put(StringConstants.CHAPTER_COLUMN_PROPOSALS_ALLOWED, chapter.areProposalsAllowed() ? 1 : 0);
+			contentValues.put(StringConstants.CHAPTER_COLUMN_POSITION, chapter.getPosition());
+			contentValues.put(StringConstants.CHAPTER_COLUMN_BOOK_KEY, chapter.getBookKey());
+			database.insert(StringConstants.CHAPTER_TABLE_NAME, null, contentValues);
+		}
 	}
 	
 	/**
@@ -119,9 +134,10 @@ public class ChapterHelper {
 	 */
 	public void deleteChapter(Chapter chapter) {
 		DatabaseHelper.getInstance().getQuestionHelper().deleteQuestions(chapter);
-		String whereClause = StringConstants.CHAPTER_COLUMN_KEY + "='" + chapter.getKey() + "'" +
-				StringConstants.CHAPTER_COLUMN_BOOK_KEY + "='" + chapter.getBookKey() + "'";
-		database.delete(StringConstants.CHAPTER_TABLE_NAME, whereClause, null);
+		String whereClause = StringConstants.CHAPTER_COLUMN_KEY + "=?" +
+				StringConstants.CHAPTER_COLUMN_BOOK_KEY + "=?";
+		String[] whereArguments = {chapter.getKey(), chapter.getBookKey()};
+		database.delete(StringConstants.CHAPTER_TABLE_NAME, whereClause, whereArguments);
 	}
 	
 	/**

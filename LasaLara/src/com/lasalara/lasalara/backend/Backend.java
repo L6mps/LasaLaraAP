@@ -1,11 +1,9 @@
 package com.lasalara.lasalara.backend;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Queue;
-
-import android.content.Context;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
@@ -32,6 +30,7 @@ public class Backend {
 	 */
 	private Backend() {
 		super();
+		messages = new ArrayDeque<Message>();
 		books = new ArrayList<Book>();
 		pageViewOn = false;
 	}
@@ -113,19 +112,19 @@ public class Backend {
 	/**
 	 * Download a book.
 	 * If the book already exists in the user's book list, an error message is shown. // TODO
-	 * @param context		The current activity's context (needed for network connection check).
 	 * @param ownerEmail	The book's owner's e-mail address.
 	 * @param bookTitle		The book's title.
 	 */
-	public void downloadBook(final Context context, final String ownerEmail, final String bookTitle) {
-		Book newBook;
+	public void downloadBook(final String ownerEmail, final String bookTitle) {
+		Book newBook = null;
 		try {
-			newBook = new Book(context, ownerEmail.toLowerCase(Locale.ENGLISH), bookTitle.toLowerCase(Locale.ENGLISH), true);
+			newBook = new Book(ownerEmail, bookTitle, true);
 			int index = getBookFromBookList(newBook);
 			if (index == -1) {
 				books.add(newBook);
 			} else {
-				books.set(index, newBook); // Update the book (TODO?)
+				books.set(index, newBook);
+				books.get(index).update();
 				addMessage(StringConstants.MESSAGE_BOOK_DOWNLOAD_UPDATED);
 			}
 		} catch (InputDoesntExistException e) {

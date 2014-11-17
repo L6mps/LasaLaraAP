@@ -66,7 +66,7 @@ public class LogHelper {
 	/**
 	 * Delete all of the log events from the SQLite database.
 	 */
-	public void deleteBooks() {
+	public void deleteLog() {
 		for (Book book: Backend.getInstance().getBooks()) {
 			DatabaseHelper.getInstance().getChapterHelper().deleteChapters(book);
 		}

@@ -1,7 +1,6 @@
 package com.lasalara.lasalara.backend.structure;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -15,7 +14,6 @@ import com.lasalara.lasalara.backend.exceptions.NumericException;
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
 import com.lasalara.lasalara.backend.webRequest.WebRequest;
 
-import android.content.Context;
 import android.database.Cursor;
 
 /**
@@ -33,13 +31,10 @@ public class Chapter {
 	private int position;					// The position of the chapter in the book (the order is set by the book owner)
 	private String bookKey;					// The book the chapter is located in.
 
-	private Context context;
-
 	/**
 	 * Constructor, used when downloading a chapter from the web.
 	 * The questions in all of these chapters are also downloaded.
 	 * TODO: Recursive asynchronous downloading.
-	 * @param context				The current activity's context (needed for network connection check and SQLite database).
 	 * @param key					The chapter's UUID key.
 	 * @param title					The chapter's title.
 	 * @param version				The chapter's version. Version numbers let the app know when to re-download chapter questions.
@@ -50,10 +45,9 @@ public class Chapter {
 	 * @param bookKey				The book the chapter is located in.
 	 * @param insertIntoDatabase	Whether to insert the downloaded chapter into the database or not.
 	 */
-	public Chapter(Context context, String key, String title, int version, String authorEmail, 
+	public Chapter(String key, String title, int version, String authorEmail, 
 			String authorName, String authorInstitution, boolean proposalsAllowed, int position,
 			String bookKey, boolean insertIntoDatabase) {
-		this.context = context;
 		this.key = key;
 		this.title = title;
 		this.version = version;
@@ -128,7 +122,7 @@ public class Chapter {
 		urlParameters.addPair("ck", key);
 		WebRequest request = null;
 		try {
-			request = new WebRequest(context, url, urlParameters);
+			request = new WebRequest(url, urlParameters);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -142,7 +136,7 @@ public class Chapter {
 				for (int i = 0; i < questionList.length(); i++) {
 					String question = questionList.getString(i);
 					String answer = answerList.getString(i);
-					new Question(context, question, answer, key);
+					new Question(question, answer, key);
 				}
 			} else {
 				throw new RuntimeException();
@@ -220,9 +214,8 @@ public class Chapter {
 		urlParameters.addPair("ck", key);
 		urlParameters.addPair("question", question);
 		urlParameters.addPair("answer", answer);
-		WebRequest request = null;
 		try {
-			request = new WebRequest(context, url, urlParameters);
+			new WebRequest(url, urlParameters);
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

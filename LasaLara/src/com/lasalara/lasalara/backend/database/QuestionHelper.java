@@ -63,11 +63,27 @@ public class QuestionHelper {
 	}
 	
 	/**
+	 * @param question	The question object's instance.
+	 * @return whether the question already exists in the database or not.
+	 */
+	private boolean existsInDatabase(Question question) {
+		String[] columns = {StringConstants.QUESTION_COLUMN_QUESTION};
+		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "=?" +
+				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "=?" +
+				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=?";
+		String[] whereArguments = {question.getQuestion(), question.getAnswer(), question.getChapterKey()};
+		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, columns, whereClause, whereArguments, null, null, null);
+		return results.moveToFirst();
+	}
+	
+	/**
 	 * Insert a new question into the SQLite database.
 	 * @param question	The question object's instance.
 	 */
 	public void insertQuestion(Question question) {
-		// TODO: Check existence - update if exists?
+		if (existsInDatabase(question)) {
+			deleteQuestion(question);
+		}
 		ContentValues contentValues = new ContentValues();
 		contentValues.put(StringConstants.QUESTION_COLUMN_QUESTION, question.getQuestion());
 		contentValues.put(StringConstants.QUESTION_COLUMN_ANSWER, question.getAnswer());
@@ -101,10 +117,11 @@ public class QuestionHelper {
 	 * @param question	The question object's instance.
 	 */
 	public void deleteQuestion(Question question) {
-		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "='" + question.getQuestion() + "'" +
-				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "='" + question.getAnswer() + "'" +
-				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "='" + question.getChapterKey() + "'";
-		database.delete(StringConstants.QUESTION_TABLE_NAME, whereClause, null);
+		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "=?" +
+				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "=?" +
+				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=?";
+		String[] whereArguments = {question.getQuestion(), question.getAnswer(), question.getChapterKey()};
+		database.delete(StringConstants.QUESTION_TABLE_NAME, whereClause, whereArguments);
 	}
 	
 	/**
