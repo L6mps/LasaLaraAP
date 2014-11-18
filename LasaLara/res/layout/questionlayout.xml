@@ -29,5 +29,59 @@
         android:layout_alignParentLeft="true"
         android:gravity="left"
         android:text="" />
+    
+    <TableLayout
+        android:id="@+id/feedback"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:stretchColumns="1">
+
+        <TableRow android:gravity="center" >
+
+            <TextView
+                android:text="@string/feedbackQuestion"
+                android:textSize="@dimen/activity_vertical_margin" />
+
+        </TableRow>
+        <TableRow android:stretchColumns="*"
+            	  android:gravity="bottom">
+
+            <Button
+                style="?android:attr/borderlessButtonStyle"
+                android:id="@+id/positiveFeedback"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_action_important"
+                android:text="@string/feedbackAnswerPositive"
+                android:textSize="@dimen/activity_vertical_margin"
+                android:onClick="onFeedback" />
+
+            <Button
+                style="?android:attr/borderlessButtonStyle"
+                android:id="@+id/neutralFeedback"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_action_half_important"
+                android:text="@string/feedbackAnswerNeutral"
+                android:textSize="@dimen/activity_horizontal_margin"
+                android:onClick="onFeedback" />
+
+            <Button
+                style="?android:attr/borderlessButtonStyle"
+                android:id="@+id/negativeFeedback"
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_action_not_important"
+                android:text="@string/feedbackAnswerNegative"
+                android:textSize="@dimen/activity_horizontal_margin"
+                android:onClick="onFeedback" />
+
+        </TableRow>
+    </TableLayout>
 
 </RelativeLayout>

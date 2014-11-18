@@ -21,7 +21,7 @@ OnChapterSelectedListener mCallback;
 	private Book parentBook;
 	
 	public interface OnChapterSelectedListener {
-		public void onChapterSelected(int position, Chapter cp);
+		public void onChapterSelected(Chapter cp);
 	}
 	
 	public ChapterFragment() {
@@ -56,7 +56,7 @@ OnChapterSelectedListener mCallback;
 	}
 	
 	public void onListItemClick(ListView l, View v, int position, long id) {
-		mCallback.onChapterSelected(position, chapters.get(position));
+		mCallback.onChapterSelected(chapters.get(position));
 		getListView().setItemChecked(position,  true);
 	}
 

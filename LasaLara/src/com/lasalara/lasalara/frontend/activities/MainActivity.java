@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 public class MainActivity extends FragmentActivity implements BookFragment.OnBookSelectedListener,
 															  ChapterFragment.OnChapterSelectedListener,
 															  QuestionFragment.ProgressBarRefreshListener,
+															  QuestionFragment.ManualBack,
 															  OnGestureListener {
 	
 	private BookFragment bFragment;
@@ -79,8 +80,8 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	}
 
 	@Override
-	public void onChapterSelected(int position, Chapter cp)  {
-		qFragment.changeData(cFragment.getChapter(position).getAllQuestions(), cp); // Previously used getQuestions() - should be reviewed
+	public void onChapterSelected(Chapter cp)  {
+		qFragment.changeData(cp);
 		changeFragment(qFragment);
 	}
 	
@@ -224,5 +225,19 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	@Override
 	public void onProgressRefresh() {
 		updateProgressBar();
+	}
+	
+	public void onFeedback(View v) {
+		if(v.getId() == R.id.positiveFeedback)
+			qFragment.onFeedback(0);
+		else if(v.getId() == R.id.neutralFeedback)
+			qFragment.onFeedback(1);
+		else if(v.getId() == R.id.negativeFeedback)
+			qFragment.onFeedback(2);
+	}
+
+	@Override
+	public void manualBack() {
+		this.getFragmentManager().popBackStack();
 	}
 }

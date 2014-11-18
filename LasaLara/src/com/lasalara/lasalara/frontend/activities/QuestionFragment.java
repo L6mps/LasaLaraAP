@@ -1,14 +1,14 @@
 package com.lasalara.lasalara.frontend.activities;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.TableLayout;
 import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.ViewSwitcher.ViewFactory;
@@ -17,31 +17,26 @@ import com.lasalara.lasalara.R;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
 import com.lasalara.lasalara.backend.structure.Question;
-import com.lasalara.lasalara.frontend.activities.ChapterFragment.OnChapterSelectedListener;
-
-//To change question/answer text, see nextQuestion() example
 
 public class QuestionFragment extends Fragment {
 	ProgressBarRefreshListener refCallback;
+	ManualBack refBack;
 	
 	public interface ProgressBarRefreshListener {
 		public void onProgressRefresh();
 	}
 	
+	public interface ManualBack {
+		public void manualBack();
+	}
+	
 	private Chapter parentChapter;
 	
-	private List<Question> qa;
-	private int questionPointer;
-	private int questionTotal;
+	private Question qa;
 	private boolean answered = false;
 	private TextSwitcher q;
 	private TextSwitcher a;
-	
-	public QuestionFragment() {
-		questionPointer = 0;
-		questionTotal = 0;
-		qa = new LinkedList<Question>();
-	}
+	private TableLayout f;
 	
 	public void onResume() {
 		super.onResume();
@@ -52,6 +47,7 @@ public class QuestionFragment extends Fragment {
 		super.onAttach(activity);
 		try {
 			refCallback = (ProgressBarRefreshListener) activity;
+			refBack = (ManualBack) activity;
 		}
 		catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "must implement ProgressBarRefreshListener");
@@ -60,9 +56,9 @@ public class QuestionFragment extends Fragment {
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 	        View v = inflater.inflate(R.layout.questionlayout, container, false);
-	        
 	        q = (TextSwitcher) v.findViewById(R.id.questionView);
 			a = (TextSwitcher) v.findViewById(R.id.answerView);
+			f = (TableLayout) v.findViewById(R.id.feedback);
 			q.setFactory(new ViewFactory() {
 
 				@Override
@@ -83,50 +79,45 @@ public class QuestionFragment extends Fragment {
 			q.setOutAnimation(getActivity(), R.anim.exit);
 			a.setInAnimation(getActivity(), R.anim.enter);
 			a.setOutAnimation(getActivity(), R.anim.exit);
-			q.setText(getCurrentQuestion());
-			a.setText("");
-			answered = false;
+			qa = parentChapter.getNextQuestion();
+			if(qa==null)
+				refBack.manualBack();
+			else {
+				q.setText(getCurrentQuestion());
+				a.setText("");
+				answered = false;
+				f.setVisibility(View.GONE);
+			}
 	        return v;
 	    }
 	
 	private void changeQuestion() {
-		q.setText(getCurrentQuestion());
-		answered = false;
-		a.setText("");
 		
-		//Proof-of-concept, shows which question is showing as progress
-		refCallback.onProgressRefresh();
-	}
-	
-	private void changeToPreviousQuestion() {
-		q.setInAnimation(getActivity(), R.anim.enter_right);
-		q.setOutAnimation(getActivity(), R.anim.exit_right);
-		a.setInAnimation(getActivity(), R.anim.enter_right);
-		a.setOutAnimation(getActivity(), R.anim.exit_right);
-		q.setText(getCurrentQuestion());
+		q.setText(qa.getQuestion());
 		answered = false;
 		a.setText("");
-		q.setInAnimation(getActivity(), R.anim.enter);
-		q.setOutAnimation(getActivity(), R.anim.exit);
-		a.setInAnimation(getActivity(), R.anim.enter);
-		a.setOutAnimation(getActivity(), R.anim.exit);
+		f.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.exit));
+		f.setVisibility(View.GONE);
 		
 		//Proof-of-concept, shows which question is showing as progress
 		refCallback.onProgressRefresh();
 	}
 	
 	private CharSequence getCurrentAnswer() {
-		return this.qa.get(questionPointer).getAnswer();
+		return qa.getAnswer();
 	}
 
 	private CharSequence getCurrentQuestion() {
-		return this.qa.get(questionPointer).getQuestion();
+		return qa.getQuestion();
 	}
 	
 	private void showAnswer() {
 		if(!answered) {
 			answered = true;
 			a.setText(getCurrentAnswer());
+			f.setVisibility(View.VISIBLE);
+			Animation slide = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up);
+			f.setAnimation(slide);
 		}
 	}
 	
@@ -138,28 +129,44 @@ public class QuestionFragment extends Fragment {
 		if(c=='r')
 			nextQuestion();
 		else if(c=='l')
-			previousQuestion();
+			return;
+			//previousQuestion();
 	}
 
+	/*
 	private void previousQuestion() {
-		questionPointer--;
-		if(questionPointer < 0)
-			questionPointer = questionTotal - 1;
-		changeToPreviousQuestion();		
-	}
-
-	private void nextQuestion() {
-		questionPointer++;
-		if(questionPointer == questionTotal)
-			questionPointer = 0;
-		changeQuestion();
+		if(!answered)
+			changeToPreviousQuestion();		
 	}
 	
-	public void changeData(List<Question> qa, Chapter cp) {
-		this.qa = qa;
-		this.questionTotal = qa.size();
+	private void changeToPreviousQuestion() {
+		q.setInAnimation(getActivity(), R.anim.enter_right);
+		q.setOutAnimation(getActivity(), R.anim.exit_right);
+		a.setInAnimation(getActivity(), R.anim.enter_right);
+		a.setOutAnimation(getActivity(), R.anim.exit_right);
+		q.setText(getCurrentQuestion());
+		answered = false;
+		a.setText("");
+		f.setVisibility(View.GONE);
+		q.setInAnimation(getActivity(), R.anim.enter);
+		q.setOutAnimation(getActivity(), R.anim.exit);
+		a.setInAnimation(getActivity(), R.anim.enter);
+		a.setOutAnimation(getActivity(), R.anim.exit);
+		
+		//Proof-of-concept, shows which question is showing as progress
+		refCallback.onProgressRefresh();
+	}*/
+
+	private void nextQuestion() {
+		qa = parentChapter.getNextQuestion();
+		if(qa!=null)
+			changeQuestion();
+		else
+			refBack.manualBack();
+	}
+	
+	public void changeData(Chapter cp) {
 		this.parentChapter = cp;
-		this.questionPointer = 0;
 		this.answered = false;
 	}
 
@@ -170,6 +177,13 @@ public class QuestionFragment extends Fragment {
 	public void resetProgress() {
 		//TODO
 		
+	}
+	
+	//0 is positive, 1 is between, 2 is negative
+	public void onFeedback(int pos) {
+		if(pos==0)
+			this.qa.setKnown();
+		nextQuestion();
 	}
 	
 }
