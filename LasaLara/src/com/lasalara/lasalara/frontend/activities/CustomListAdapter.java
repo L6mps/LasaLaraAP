@@ -1,10 +1,7 @@
 package com.lasalara.lasalara.frontend.activities;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.json.JSONException;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
@@ -44,7 +41,16 @@ public class CustomListAdapter extends BaseAdapter {
 		for(Chapter i:chapters) {
 			Progress prg = i.getProgress();
 			int currentPercentage = (int) prg.getPercentage();
-			this.info.add(new Info(i.getTitle(),i.getAuthorName(),currentPercentage+"%",prg.getCurrent()+"/"+prg.getMaximum()));
+			String author = null;
+			if(i.getAuthorName() != null)
+				author = i.getAuthorName();
+			else if(i.getAuthorInstitution() != null)
+				author = i.getAuthorInstitution();
+			else if(i.getAuthorEmail() != null)
+				author = i.getAuthorEmail();
+			else
+				author = "";
+			this.info.add(new Info(i.getTitle(),author,currentPercentage+"%",prg.getCurrent()+"/"+prg.getMaximum()));
 		}
 	}
 	
@@ -54,7 +60,16 @@ public class CustomListAdapter extends BaseAdapter {
 		for(Book i:books) {
 			Progress prg = i.getProgress();
 			int currentPercentage = (int) prg.getPercentage();
-			this.info.add(new Info(i.getTitle(),i.getOwnerEmail(),currentPercentage+"%",prg.getCurrent()+"/"+prg.getMaximum()));
+			String author = null;
+			if(i.getOwnerName() != null)
+				author = i.getOwnerName();
+			else if(i.getOwnerInstitution() != null)
+				author = i.getOwnerInstitution();
+			else if(i.getOwnerEmail() != null)
+				author = i.getOwnerEmail();
+			else
+				author = "";
+			this.info.add(new Info(i.getTitle(),author,currentPercentage+"%",prg.getCurrent()+"/"+prg.getMaximum()));
 		}
 	}
 	
