@@ -216,9 +216,6 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    else if(item.getItemId() == R.id.propose_question) {
 	    	//TODO
 	    }
-	    else if(item.getItemId() == R.id.scramble_question_order) {
-	    	//TODO;
-	    }
 	    return super.onOptionsItemSelected(item);
 	}
 

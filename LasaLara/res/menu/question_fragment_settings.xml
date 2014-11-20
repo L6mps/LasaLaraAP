@@ -20,10 +20,5 @@
     <item android:id="@+id/propose_question"
           android:title="@string/propose_question"
           android:showAsAction="never" />
-     
-    <!-- Scramble Question Order -->
-    <item android:id="@+id/scramble_question_order"
-          android:title="@string/scramble_question_order"
-          android:showAsAction="never" />
     
 </menu> 
