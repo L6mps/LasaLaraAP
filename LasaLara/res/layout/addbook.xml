@@ -17,7 +17,8 @@
         android:layout_below="@+id/authorLabel"
         android:hint="@string/addAuthorEmail"
         android:inputType="textEmailAddress"
-        android:imeOptions="flagNoExtractUi" />
+        android:imeOptions="flagNoExtractUi"
+        android:focusable="true" />
     
     <TextView
         android:id="@+id/bookLabel"

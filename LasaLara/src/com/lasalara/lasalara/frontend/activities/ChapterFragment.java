@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.ListView;
 
 import com.lasalara.lasalara.R;
+import com.lasalara.lasalara.backend.exceptions.FormatException;
+import com.lasalara.lasalara.backend.exceptions.InputDoesntExistException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
@@ -73,5 +75,18 @@ OnChapterSelectedListener mCallback;
 
 	public Progress getProgress() {
 		return parentBook.getProgress();
+	}
+
+	public void refreshChapters() {
+		try {
+			parentBook.update();
+		} catch (InputDoesntExistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (FormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

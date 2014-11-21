@@ -9,6 +9,7 @@ import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -21,6 +22,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
@@ -98,6 +100,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
 		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setDisplayShowHomeEnabled(false);
         if(qFragment.isVisible())
         	inflater.inflate(R.menu.question_fragment_settings, menu);
         else if(cFragment.isVisible())
@@ -191,14 +194,14 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    	return true;
 	    }
 	    else if(item.getItemId() == R.id.done) {
-	    	Backend.getInstance().downloadBook(((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString(),
-	    									 ((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString());
-	    	getSupportFragmentManager().popBackStack(); //takes back the transaction from bFragment to abFragment, animating back
-	    	bFragment.refresh();
+	    	downloadBookOnAddBookDialogClick();
 	    	return true;
 	    }
 	    else if(item.getItemId() == android.R.id.home) {
 	    	getSupportFragmentManager().popBackStack();
+	    }
+	    else if(item.getItemId() == R.id.refreshChapters) {
+	    	cFragment.refreshChapters();
 	    }
 	    else if(item.getItemId() == R.id.reset_progress) {
 	    	qFragment.resetProgress();
@@ -218,6 +221,13 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    }
 	    return super.onOptionsItemSelected(item);
 	}
+	
+	public void hideSoftwareKeyboard() {
+		InputMethodManager imm = (InputMethodManager)getSystemService(
+  		      Context.INPUT_METHOD_SERVICE);
+  		if(this.getCurrentFocus()!=null)
+  			imm.hideSoftInputFromWindow(this.getCurrentFocus().getApplicationWindowToken(), 0);
+	}
 
 	@Override
 	public void onProgressRefresh() {
@@ -236,5 +246,13 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	@Override
 	public void manualBack() {
 		this.getFragmentManager().popBackStack();
+	}
+
+	public void downloadBookOnAddBookDialogClick() {
+		Backend.getInstance().downloadBook(((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString(),
+				 ((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString());
+		getSupportFragmentManager().popBackStack(); //takes back the transaction from bFragment to abFragment, animating back
+		hideSoftwareKeyboard();
+		bFragment.refresh();
 	}
 }
