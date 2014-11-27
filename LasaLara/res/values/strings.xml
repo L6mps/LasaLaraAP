@@ -19,12 +19,18 @@
     <string name="done">Download Book</string>
     
     <!--  Question screen items -->
+    
     <string name="feedbackQuestion">Was your answer the same?</string>
     <string name="feedbackAnswerPositive">Yes</string>
     <string name="feedbackAnswerNeutral">Some of it</string>
     <string name="feedbackAnswerNegative">No</string>
     
-     <!--  Propose Question screen items -->
+    <!--  Propose Question screen items -->
+    
+    <string name="addQuestion">Enter the question</string>
+    <string name="addAnswer">Enter the answer</string>
+    <string name="question">Question</string>
+    <string name="answer">Answer</string>
     <string name="send">Send</string>
     
  

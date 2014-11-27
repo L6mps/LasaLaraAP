@@ -4,42 +4,42 @@
     android:layout_height="match_parent"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:paddingTop="60dp"
+    android:paddingTop="20dp"
     android:gravity="center_horizontal" >
       
     <TextView
-        android:id="@+id/authorLabel"
+        android:id="@+id/questionLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="13dp"
-        android:text="@string/author"/>
+        android:text="@string/question"/>
     
     <EditText
-        android:id="@+id/author"
+        android:id="@+id/question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/authorLabel"
-        android:hint="@string/addAuthorEmail"
-        android:inputType="textEmailAddress"
+        android:layout_below="@+id/questionLabel"
+        android:hint="@string/addQuestion"
+        android:inputType="textMultiLine"
         android:imeOptions="flagNoExtractUi"
         android:focusable="true" />
     
     <TextView
-        android:id="@+id/bookLabel"
+        android:id="@+id/answerLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/author"
+        android:layout_below="@+id/question"
         android:paddingLeft="13dp"
-        android:paddingTop="40dp"
-        android:text="@string/book" />
+        android:paddingTop="20dp"
+        android:text="@string/answer" />
             
     <EditText
-        android:id="@+id/book"
+        android:id="@+id/answer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/bookLabel"
-        android:hint="@string/addBook"
-        android:inputType="text"/>
+        android:layout_below="@+id/answerLabel"
+        android:hint="@string/addAnswer"
+        android:inputType="textMultiLine"/>
     
     
 </RelativeLayout>

@@ -17,7 +17,7 @@ public class ProposeQuestionFragment extends Fragment {
 	
 	// COPIED STRAIGHT FROM ADDBOOKFRAGMENT, TODO!!!
 	
-	private boolean bookListened;
+	private boolean questionListened;
 	
 	public void onPause() {
 		((MainActivity) getActivity()).hideSoftwareKeyboard();
@@ -27,17 +27,17 @@ public class ProposeQuestionFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		getActivity().invalidateOptionsMenu();
-		EditText author = ((EditText) getView().findViewById(R.id.author));
-		author.setText("");
-		author.requestFocus();
-		EditText book = ((EditText) getView().findViewById(R.id.book));
-		book.setText("");
-		if(!bookListened) {
-			bookListened = true;
-			book.setOnEditorActionListener(new OnEditorActionListener() {
+		EditText question = ((EditText) getView().findViewById(R.id.question)); //TODO author
+		question.setText("");
+		question.requestFocus();
+		EditText answer = ((EditText) getView().findViewById(R.id.answer)); // TODO book
+		answer.setText("");
+		if(!questionListened) {
+			questionListened = true;
+			answer.setOnEditorActionListener(new OnEditorActionListener() {
 		        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 		            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-		                ((MainActivity) getActivity()).downloadBookOnAddBookDialogClick();
+		                ((MainActivity) getActivity()).sendQuestionPropositionOnQuestionPropositionDialogClick();
 		            }    
 		            return false;
 		        }
@@ -46,7 +46,7 @@ public class ProposeQuestionFragment extends Fragment {
 	}
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	        View v = inflater.inflate(R.layout.addbook, container, false);
+	        View v = inflater.inflate(R.layout.proposequestion, container, false);
 	        return v;
 	    }
 	

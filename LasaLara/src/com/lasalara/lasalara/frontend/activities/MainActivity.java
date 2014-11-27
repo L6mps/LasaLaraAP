@@ -227,7 +227,6 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    	return true;
 	    }
 	    else if(item.getItemId() == R.id.send) {
-	    	downloadBookOnAddBookDialogClick();
 	    	sendQuestionPropositionOnQuestionPropositionDialogClick();
 	    	return true;
 	    }
@@ -269,8 +268,9 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 		bFragment.refresh();
 	}
 	
-	private void sendQuestionPropositionOnQuestionPropositionDialogClick() {
-		// TODO, otherwise will crash the program!
+	public void sendQuestionPropositionOnQuestionPropositionDialogClick() {
+		// TODO, at the moment goes back to last screen
+		getSupportFragmentManager().popBackStack();
 		
 	}
 }
