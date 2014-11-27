@@ -269,7 +269,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	}
 	
 	public void sendQuestionPropositionOnQuestionPropositionDialogClick() {
-		// TODO, at the moment goes back to last screen
+		// TODO, at the moment goes back to the last screen so the program doesn't crash
 		getSupportFragmentManager().popBackStack();
 		
 	}

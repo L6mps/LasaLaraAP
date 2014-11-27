@@ -27,10 +27,10 @@ public class ProposeQuestionFragment extends Fragment {
 	public void onResume() {
 		super.onResume();
 		getActivity().invalidateOptionsMenu();
-		EditText question = ((EditText) getView().findViewById(R.id.question)); //TODO author
+		EditText question = ((EditText) getView().findViewById(R.id.question));
 		question.setText("");
 		question.requestFocus();
-		EditText answer = ((EditText) getView().findViewById(R.id.answer)); // TODO book
+		EditText answer = ((EditText) getView().findViewById(R.id.answer));
 		answer.setText("");
 		if(!questionListened) {
 			questionListened = true;

@@ -39,8 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/answerLabel"
         android:hint="@string/addAnswer"
-        android:inputType="textMultiLine"/>
-    
-    
+        android:inputType="textMultiLine"/>    
+
 </RelativeLayout>
 
