@@ -15,7 +15,7 @@ import com.lasalara.lasalara.R;
 
 public class ProposeQuestionFragment extends Fragment {
 	
-	// COPIED STRAIGHT FROM ADDBOOKFRAGMENT, TODO
+	// COPIED STRAIGHT FROM ADDBOOKFRAGMENT, TODO!!!
 	
 	private boolean bookListened;
 	

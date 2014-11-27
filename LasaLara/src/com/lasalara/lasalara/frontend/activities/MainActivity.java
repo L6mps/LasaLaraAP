@@ -270,7 +270,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	}
 	
 	private void sendQuestionPropositionOnQuestionPropositionDialogClick() {
-		// TODO Auto-generated method stub
+		// TODO, otherwise will crash the program!
 		
 	}
 }
