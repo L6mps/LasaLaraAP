@@ -36,6 +36,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	private ChapterFragment cFragment;
 	private QuestionFragment qFragment;
 	private AddBookFragment abFragment;
+	private ProposeQuestionFragment pqFragment;
 	private GestureDetector gd;
 	private ProgressBar progressBar;
 	
@@ -65,6 +66,9 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 			
 			abFragment = new AddBookFragment();
 			abFragment.setArguments(getIntent().getExtras());
+			
+			pqFragment = new ProposeQuestionFragment();
+			pqFragment.setArguments(getIntent().getExtras());
 			
 			getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, bFragment).commit();
 			
@@ -111,6 +115,8 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
         }
         else if(abFragment.isVisible())
         	inflater.inflate(R.menu.addbook_fragment_settings, menu);
+        else if(pqFragment.isVisible())
+        	inflater.inflate(R.menu.proposequestion_fragment_settings, menu);
         else
         	inflater.inflate(R.menu.question_fragment_settings, menu);
         updateProgressBar();
@@ -134,7 +140,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
         	progressBar.setProgress(bProgress.getPercentage());
         	setTitle(bProgress.getCurrent() + "/" + bProgress.getMaximum());
         }
-        else if(abFragment.isVisible()) {
+        else if(abFragment.isVisible() || pqFragment.isVisible()) {
         	progressBar.setEnabled(false);
         	setTitle("");
         	progressBar.setVisibility(View.GONE);        	
@@ -217,10 +223,17 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    	//TODO
 	    }
 	    else if(item.getItemId() == R.id.propose_question) {
-	    	//TODO
+	    	changeFragment(pqFragment);
+	    	return true;
+	    }
+	    else if(item.getItemId() == R.id.send) {
+	    	downloadBookOnAddBookDialogClick();
+	    	sendQuestionPropositionOnQuestionPropositionDialogClick();
+	    	return true;
 	    }
 	    return super.onOptionsItemSelected(item);
 	}
+	
 	
 	public void hideSoftwareKeyboard() {
 		InputMethodManager imm = (InputMethodManager)getSystemService(
@@ -254,5 +267,10 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 		getSupportFragmentManager().popBackStack(); //takes back the transaction from bFragment to abFragment, animating back
 		hideSoftwareKeyboard();
 		bFragment.refresh();
+	}
+	
+	private void sendQuestionPropositionOnQuestionPropositionDialogClick() {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -23,5 +23,8 @@
     <string name="feedbackAnswerPositive">Yes</string>
     <string name="feedbackAnswerNeutral">Some of it</string>
     <string name="feedbackAnswerNegative">No</string>
+    
+     <!--  Propose Question screen items -->
+    <string name="send">Send</string>
  
  </resources>
