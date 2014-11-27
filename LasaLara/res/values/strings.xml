@@ -16,7 +16,7 @@
     <string name="addBook">Title of the book</string>
     <string name="author">Author</string>
     <string name="book">Book</string>
-    <string name="done">Add Book</string>
+    <string name="done">Download Book</string>
     
     <!--  Question screen items -->
     <string name="feedbackQuestion">Was your answer the same?</string>
