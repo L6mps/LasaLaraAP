@@ -36,6 +36,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	private ChapterFragment cFragment;
 	private QuestionFragment qFragment;
 	private AddBookFragment abFragment;
+	private PageViewFragment pvFragment;
 	private ProposeQuestionFragment pqFragment;
 	private GestureDetector gd;
 	private ProgressBar progressBar;
@@ -66,6 +67,9 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 			
 			abFragment = new AddBookFragment();
 			abFragment.setArguments(getIntent().getExtras());
+			
+			pvFragment = new PageViewFragment();
+			pvFragment.setArguments(getIntent().getExtras());
 			
 			pqFragment = new ProposeQuestionFragment();
 			pqFragment.setArguments(getIntent().getExtras());
@@ -113,6 +117,9 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
         	inflater.inflate(R.menu.book_fragment_settings, menu);
         	getActionBar().setDisplayHomeAsUpEnabled(false);
         }
+        else if(pvFragment.isVisible()){
+        	inflater.inflate(R.menu.pageview_fragment_settings, menu);
+        }
         else if(abFragment.isVisible())
         	inflater.inflate(R.menu.addbook_fragment_settings, menu);
         else if(pqFragment.isVisible())
@@ -125,7 +132,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	
 	public void updateProgressBar() {
 		progressBar.setVisibility(View.VISIBLE);
-		if(qFragment.isVisible()) {
+		if(qFragment.isVisible() || pvFragment.isVisible()) {
 			Progress qProgress = qFragment.getProgress();
         	progressBar.setProgress(qProgress.getPercentage());
         	setTitle(qProgress.getCurrent() + "/" + qProgress.getMaximum());
@@ -217,7 +224,11 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
         	setTitle(qProgress.getCurrent() + "/" + qProgress.getMaximum());
 	    }
 	    else if(item.getItemId() == R.id.turn_page_view_on) {
-	    	//TODO
+	    	changeFragment(pvFragment);
+	    	pvFragment.changeData(qFragment.getParentChapter().getAllQuestions());
+	    }
+	    else if(item.getItemId() == R.id.turn_page_view_off) {
+	    	getSupportFragmentManager().popBackStack();
 	    }
 	    else if(item.getItemId() == R.id.Switch_QA) {
 	    	//TODO

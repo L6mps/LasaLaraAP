@@ -32,6 +32,10 @@ public class QuestionFragment extends Fragment {
 	
 	private Chapter parentChapter;
 	
+	public Chapter getParentChapter() {
+		return parentChapter;
+	}
+
 	private Question qa;
 	private boolean answered = false;
 	private TextSwitcher q;

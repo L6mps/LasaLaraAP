@@ -6,6 +6,7 @@
 
     <string name="reset_progress">Reset Progress</string>
     <string name="turn_page_view_on">Turn Page View ON</string>
+    <string name="turn_page_view_off">Turn Page View OFF</string>
     <string name="Switch_QA">Switch Question/Answer</string>
     <string name="propose_question">Propose Question</string>
     <string name="add_book">+</string>
