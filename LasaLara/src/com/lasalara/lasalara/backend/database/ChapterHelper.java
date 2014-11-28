@@ -135,7 +135,7 @@ public class ChapterHelper {
 	public void deleteChapter(Chapter chapter) {
 		DatabaseHelper.getInstance().getQuestionHelper().deleteQuestions(chapter);
 		String whereClause = StringConstants.CHAPTER_COLUMN_KEY + "=?" +
-				StringConstants.CHAPTER_COLUMN_BOOK_KEY + "=?";
+				" AND " + StringConstants.CHAPTER_COLUMN_BOOK_KEY + "=?";
 		String[] whereArguments = {chapter.getKey(), chapter.getBookKey()};
 		database.delete(StringConstants.CHAPTER_TABLE_NAME, whereClause, whereArguments);
 	}
