@@ -79,7 +79,9 @@ OnChapterSelectedListener mCallback;
 
 	public void refreshChapters() {
 		try {
+			this.setListShown(false);
 			parentBook.update();
+			setListAdapter(new CustomListAdapter(getActivity(), chapters, true));
 		} catch (InputDoesntExistException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

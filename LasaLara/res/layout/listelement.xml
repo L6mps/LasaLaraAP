@@ -32,13 +32,11 @@
 
     <TextView
         android:id="@+id/donePercentage"
-        android:layout_width="44sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_alignWithParentIfMissing="true"
         android:text=""
-        
         android:singleLine="true"
         android:textSize="18sp" />
     
@@ -49,7 +47,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/author"
-        android:layout_alignLeft="@id/donePercentage"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text=""

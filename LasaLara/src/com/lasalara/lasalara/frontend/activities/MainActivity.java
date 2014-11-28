@@ -212,6 +212,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    }
 	    else if(item.getItemId() == android.R.id.home) {
 	    	getSupportFragmentManager().popBackStack();
+	    	updateProgressBar();
 	    }
 	    else if(item.getItemId() == R.id.refreshChapters) {
 	    	cFragment.refreshChapters();
@@ -268,7 +269,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 
 	@Override
 	public void manualBack() {
-		this.getFragmentManager().popBackStack();
+		this.getSupportFragmentManager().popBackStack();
 	}
 
 	public void downloadBookOnAddBookDialogClick() {
@@ -282,6 +283,5 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	public void sendQuestionPropositionOnQuestionPropositionDialogClick() {
 		// TODO, at the moment goes back to the last screen so the program doesn't crash
 		getSupportFragmentManager().popBackStack();
-		
 	}
 }
