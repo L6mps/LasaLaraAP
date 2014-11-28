@@ -6,7 +6,9 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.util.Log;
 import android.view.View;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.lasalara.lasalara.R;
@@ -21,6 +23,7 @@ OnChapterSelectedListener mCallback;
 	
 	private List<Chapter> chapters;
 	private Book parentBook;
+	private CustomListAdapter listAdapter;
 	
 	public interface OnChapterSelectedListener {
 		public void onChapterSelected(Chapter cp);
@@ -34,11 +37,15 @@ OnChapterSelectedListener mCallback;
 	public void onResume() {
 		super.onResume();
 		getActivity().invalidateOptionsMenu();
+		this.chapters = parentBook.getChapters();
+		listAdapter.setChapterData(chapters);
+		listAdapter.notifyDataSetChanged();
 	}
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setListAdapter(new CustomListAdapter(getActivity(), chapters, true));
+		listAdapter = new CustomListAdapter(getActivity(), chapters, true);
+		setListAdapter(listAdapter);
 	}
 	
 	public void onStart() {

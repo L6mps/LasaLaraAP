@@ -38,14 +38,26 @@ public class CustomListAdapter extends BaseAdapter {
 	public CustomListAdapter(FragmentActivity activity, List<Chapter> chapters, boolean isChapter) {
 		this.info = new ArrayList<Info>();
 		context = activity;
+		setChapterData(chapters);
+	}
+	
+	public CustomListAdapter(FragmentActivity activity, List<Book> books) {
+		context = activity;
+		this.info = new ArrayList<Info>();
+		setBookData(books);
+	}
+	
+	public void setChapterData(List<Chapter> chapters) {
+		info.clear();
 		for(Chapter i:chapters) {
 			Progress prg = i.getProgress();
 			int currentPercentage = (int) prg.getPercentage();
 			String author = null;
-			if(i.getAuthorName() != null)
+			if(i.getAuthorName() != null) {
 				author = i.getAuthorName();
-			else if(i.getAuthorInstitution() != null)
-				author = i.getAuthorInstitution();
+			    if(i.getAuthorInstitution() != null)
+			    	author = author + ", " + i.getAuthorInstitution();
+			}
 			else if(i.getAuthorEmail() != null)
 				author = i.getAuthorEmail();
 			else
@@ -54,17 +66,17 @@ public class CustomListAdapter extends BaseAdapter {
 		}
 	}
 	
-	public CustomListAdapter(FragmentActivity activity, List<Book> books) {
-		context = activity;
-		this.info = new ArrayList<Info>();
+	public void setBookData(List<Book> books) {
+		info.clear();
 		for(Book i:books) {
 			Progress prg = i.getProgress();
 			int currentPercentage = (int) prg.getPercentage();
 			String author = null;
-			if(i.getOwnerName() != null)
+			if(i.getOwnerName() != null) {
 				author = i.getOwnerName();
-			else if(i.getOwnerInstitution() != null)
-				author = i.getOwnerInstitution();
+			    if(i.getOwnerInstitution() != null)
+			    	author = author + ", " + i.getOwnerInstitution();
+			}
 			else if(i.getOwnerEmail() != null)
 				author = i.getOwnerEmail();
 			else

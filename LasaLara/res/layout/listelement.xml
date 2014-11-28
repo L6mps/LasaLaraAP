@@ -28,7 +28,8 @@
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text=""
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:textColor="@android:color/secondary_text_dark_nodisable" />
 
     <TextView
         android:id="@+id/donePercentage"
@@ -38,7 +39,8 @@
         android:layout_alignParentTop="true"
         android:text=""
         android:singleLine="true"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@android:color/holo_red_dark" />
     
 	<TextView
         android:id="@+id/doneFraction"

@@ -167,12 +167,12 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 		if(!qFragment.isVisible())
 			return false;
-		else if((e1.getX() - e2.getX()) > 150) {
+		if((qFragment.isVisible() && (e1.getX() - e2.getX()) > 150)) {
 			qFragment.screenSwiped('r');
 			return true;
 		}
 		else if((e2.getX() - e1.getX()) > 150) {
-			qFragment.screenSwiped('l');
+			manualBack();
 			return true;
 		}
 		return false;
@@ -286,7 +286,6 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 				 ((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString());
 		getSupportFragmentManager().popBackStack(); //takes back the transaction from bFragment to abFragment, animating back
 		hideSoftwareKeyboard();
-		bFragment.refresh();
 	}
 	
 	public void sendQuestionPropositionOnQuestionPropositionDialogClick() {

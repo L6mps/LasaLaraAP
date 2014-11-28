@@ -17,6 +17,7 @@ import com.lasalara.lasalara.backend.structure.Progress;
 public class BookFragment extends ListFragment{
 	OnBookSelectedListener mCallback;
 	private List<Book> books;
+	private CustomListAdapter listAdapter;
 	
 	public interface OnBookSelectedListener {
 		public void onBookSelected(int position, Book bk);
@@ -28,16 +29,16 @@ public class BookFragment extends ListFragment{
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		refresh();
+		listAdapter = new CustomListAdapter(getActivity(), books);
+		setListAdapter(listAdapter);
 	}
 	
 	public void onResume() {
 		super.onResume();
 		getActivity().invalidateOptionsMenu();
-	}
-	
-	public void refresh() {
-		setListAdapter(new CustomListAdapter(getActivity(), books));
+		this.books = Backend.getInstance().getBooks();
+		listAdapter.setBookData(books);
+		listAdapter.notifyDataSetChanged();
 	}
 	
 	public void onStart() {
@@ -50,7 +51,6 @@ public class BookFragment extends ListFragment{
 		super.onAttach(activity);
 		try {
 			mCallback = (OnBookSelectedListener) activity;
-			refresh();
 		}
 		catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString() + "must implement OnBookSelectedListener");
