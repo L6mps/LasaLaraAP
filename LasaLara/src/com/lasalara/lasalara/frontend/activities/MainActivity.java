@@ -9,6 +9,7 @@ import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -91,6 +92,14 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 
 	@Override
 	public void onChapterSelected(Chapter cp)  {
+		if(cp.isCompleted()) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("This chapter has been completed. You can review it in Page View");
+			builder.setPositiveButton("OK", null);
+			builder.show();		
+	    	changeFragment(pvFragment);
+	    	pvFragment.changeData(cp.getAllQuestions());
+		}
 		qFragment.changeData(cp);
 		changeFragment(qFragment);
 	}

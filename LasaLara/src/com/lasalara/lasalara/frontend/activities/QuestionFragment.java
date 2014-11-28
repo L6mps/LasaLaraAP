@@ -2,7 +2,6 @@ package com.lasalara.lasalara.frontend.activities;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -61,7 +60,13 @@ public class QuestionFragment extends Fragment {
 	}
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	        View v = inflater.inflate(R.layout.questionlayout, container, false);
+
+        	View v = inflater.inflate(R.layout.questionlayout, container, false);
+			qa = parentChapter.getNextQuestion();
+			if(qa==null) {
+				refBack.manualBack();
+				return v;
+			}
 	        q = (TextSwitcher) v.findViewById(R.id.questionView);
 			a = (TextSwitcher) v.findViewById(R.id.answerView);
 			f = (TableLayout) v.findViewById(R.id.feedback);
@@ -81,19 +86,15 @@ public class QuestionFragment extends Fragment {
 				}
 				
 			});
-			q.setInAnimation(getActivity(), R.anim.enter);
+			q.setInAnimation(getActivity(), R.anim.fade_in);
 			q.setOutAnimation(getActivity(), R.anim.exit);
-			a.setInAnimation(getActivity(), R.anim.enter);
+			a.setInAnimation(getActivity(), R.anim.fade_in);
 			a.setOutAnimation(getActivity(), R.anim.exit);
-			qa = parentChapter.getNextQuestion();
-			if(qa==null)
-				refBack.manualBack();
-			else {
-				q.setText(getCurrentQuestion());
-				a.setText("");
-				answered = false;
-				f.setVisibility(View.GONE);
-			}
+			
+			q.setText(getCurrentQuestion());
+			a.setText("");
+			answered = false;
+			f.setVisibility(View.GONE);
 	        return v;
 	    }
 	
