@@ -163,8 +163,7 @@ public class QuestionFragment extends Fragment {
 	}
 
 	public void resetProgress() {
-		//TODO
-		
+		parentChapter.resetProgress();
 	}
 	
 	//0 is positive, 1 is between, 2 is negative
