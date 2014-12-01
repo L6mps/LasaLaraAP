@@ -28,19 +28,19 @@
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text=""
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:textColor="@android:color/secondary_text_dark_nodisable" />
 
     <TextView
         android:id="@+id/donePercentage"
-        android:layout_width="44sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:layout_alignWithParentIfMissing="true"
         android:text=""
-        
         android:singleLine="true"
-        android:textSize="18sp" />
+        android:textSize="18sp"
+        android:textColor="@android:color/holo_red_dark" />
     
 	<TextView
         android:id="@+id/doneFraction"
@@ -49,7 +49,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@id/author"
-        android:layout_alignLeft="@id/donePercentage"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:text=""

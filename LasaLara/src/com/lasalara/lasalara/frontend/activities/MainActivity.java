@@ -9,6 +9,7 @@ import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -36,6 +37,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	private ChapterFragment cFragment;
 	private QuestionFragment qFragment;
 	private AddBookFragment abFragment;
+	private PageViewFragment pvFragment;
 	private ProposeQuestionFragment pqFragment;
 	private GestureDetector gd;
 	private ProgressBar progressBar;
@@ -67,6 +69,9 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 			abFragment = new AddBookFragment();
 			abFragment.setArguments(getIntent().getExtras());
 			
+			pvFragment = new PageViewFragment();
+			pvFragment.setArguments(getIntent().getExtras());
+			
 			pqFragment = new ProposeQuestionFragment();
 			pqFragment.setArguments(getIntent().getExtras());
 			
@@ -87,6 +92,14 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 
 	@Override
 	public void onChapterSelected(Chapter cp)  {
+		if(cp.isCompleted()) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("This chapter has been completed. You can review it in Page View");
+			builder.setPositiveButton("OK", null);
+			builder.show();		
+	    	changeFragment(pvFragment);
+	    	pvFragment.changeData(cp.getAllQuestions());
+		}
 		qFragment.changeData(cp);
 		changeFragment(qFragment);
 	}
@@ -113,6 +126,9 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
         	inflater.inflate(R.menu.book_fragment_settings, menu);
         	getActionBar().setDisplayHomeAsUpEnabled(false);
         }
+        else if(pvFragment.isVisible()){
+        	inflater.inflate(R.menu.pageview_fragment_settings, menu);
+        }
         else if(abFragment.isVisible())
         	inflater.inflate(R.menu.addbook_fragment_settings, menu);
         else if(pqFragment.isVisible())
@@ -125,7 +141,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	
 	public void updateProgressBar() {
 		progressBar.setVisibility(View.VISIBLE);
-		if(qFragment.isVisible()) {
+		if(qFragment.isVisible() || pvFragment.isVisible()) {
 			Progress qProgress = qFragment.getProgress();
         	progressBar.setProgress(qProgress.getPercentage());
         	setTitle(qProgress.getCurrent() + "/" + qProgress.getMaximum());
@@ -151,12 +167,12 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 		if(!qFragment.isVisible())
 			return false;
-		else if((e1.getX() - e2.getX()) > 150) {
+		if((qFragment.isVisible() && (e1.getX() - e2.getX()) > 150)) {
 			qFragment.screenSwiped('r');
 			return true;
 		}
 		else if((e2.getX() - e1.getX()) > 150) {
-			qFragment.screenSwiped('l');
+			manualBack();
 			return true;
 		}
 		return false;
@@ -205,6 +221,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    }
 	    else if(item.getItemId() == android.R.id.home) {
 	    	getSupportFragmentManager().popBackStack();
+	    	updateProgressBar();
 	    }
 	    else if(item.getItemId() == R.id.refreshChapters) {
 	    	cFragment.refreshChapters();
@@ -217,7 +234,11 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
         	setTitle(qProgress.getCurrent() + "/" + qProgress.getMaximum());
 	    }
 	    else if(item.getItemId() == R.id.turn_page_view_on) {
-	    	//TODO
+	    	changeFragment(pvFragment);
+	    	pvFragment.changeData(qFragment.getParentChapter().getAllQuestions());
+	    }
+	    else if(item.getItemId() == R.id.turn_page_view_off) {
+	    	getSupportFragmentManager().popBackStack();
 	    }
 	    else if(item.getItemId() == R.id.Switch_QA) {
 	    	//TODO
@@ -257,7 +278,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 
 	@Override
 	public void manualBack() {
-		this.getFragmentManager().popBackStack();
+		this.getSupportFragmentManager().popBackStack();
 	}
 
 	public void downloadBookOnAddBookDialogClick() {
@@ -265,12 +286,10 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 				 ((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString());
 		getSupportFragmentManager().popBackStack(); //takes back the transaction from bFragment to abFragment, animating back
 		hideSoftwareKeyboard();
-		bFragment.refresh();
 	}
 	
 	public void sendQuestionPropositionOnQuestionPropositionDialogClick() {
 		// TODO, at the moment goes back to the last screen so the program doesn't crash
 		getSupportFragmentManager().popBackStack();
-		
 	}
 }

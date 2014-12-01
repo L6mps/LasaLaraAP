@@ -1,6 +1,7 @@
 package com.lasalara.lasalara.frontend.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -32,6 +33,10 @@ public class QuestionFragment extends Fragment {
 	
 	private Chapter parentChapter;
 	
+	public Chapter getParentChapter() {
+		return parentChapter;
+	}
+
 	private Question qa;
 	private boolean answered = false;
 	private TextSwitcher q;
@@ -55,7 +60,13 @@ public class QuestionFragment extends Fragment {
 	}
 	
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-	        View v = inflater.inflate(R.layout.questionlayout, container, false);
+
+        	View v = inflater.inflate(R.layout.questionlayout, container, false);
+			qa = parentChapter.getNextQuestion();
+			if(qa==null) {
+				refBack.manualBack();
+				return v;
+			}
 	        q = (TextSwitcher) v.findViewById(R.id.questionView);
 			a = (TextSwitcher) v.findViewById(R.id.answerView);
 			f = (TableLayout) v.findViewById(R.id.feedback);
@@ -75,19 +86,15 @@ public class QuestionFragment extends Fragment {
 				}
 				
 			});
-			q.setInAnimation(getActivity(), R.anim.enter);
+			q.setInAnimation(getActivity(), R.anim.fade_in);
 			q.setOutAnimation(getActivity(), R.anim.exit);
-			a.setInAnimation(getActivity(), R.anim.enter);
+			a.setInAnimation(getActivity(), R.anim.fade_in);
 			a.setOutAnimation(getActivity(), R.anim.exit);
-			qa = parentChapter.getNextQuestion();
-			if(qa==null)
-				refBack.manualBack();
-			else {
-				q.setText(getCurrentQuestion());
-				a.setText("");
-				answered = false;
-				f.setVisibility(View.GONE);
-			}
+			
+			q.setText(getCurrentQuestion());
+			a.setText("");
+			answered = false;
+			f.setVisibility(View.GONE);
 	        return v;
 	    }
 	
@@ -133,36 +140,17 @@ public class QuestionFragment extends Fragment {
 			//previousQuestion();
 	}
 
-	/*
-	private void previousQuestion() {
-		if(!answered)
-			changeToPreviousQuestion();		
-	}
-	
-	private void changeToPreviousQuestion() {
-		q.setInAnimation(getActivity(), R.anim.enter_right);
-		q.setOutAnimation(getActivity(), R.anim.exit_right);
-		a.setInAnimation(getActivity(), R.anim.enter_right);
-		a.setOutAnimation(getActivity(), R.anim.exit_right);
-		q.setText(getCurrentQuestion());
-		answered = false;
-		a.setText("");
-		f.setVisibility(View.GONE);
-		q.setInAnimation(getActivity(), R.anim.enter);
-		q.setOutAnimation(getActivity(), R.anim.exit);
-		a.setInAnimation(getActivity(), R.anim.enter);
-		a.setOutAnimation(getActivity(), R.anim.exit);
-		
-		//Proof-of-concept, shows which question is showing as progress
-		refCallback.onProgressRefresh();
-	}*/
-
 	private void nextQuestion() {
 		qa = parentChapter.getNextQuestion();
 		if(qa!=null)
 			changeQuestion();
-		else
+		else {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setMessage("Chapter complete! You will need to review this chapter after 5 seconds");
+			builder.setPositiveButton("OK", null);
+			builder.show();			
 			refBack.manualBack();
+		}
 	}
 	
 	public void changeData(Chapter cp) {
@@ -175,14 +163,17 @@ public class QuestionFragment extends Fragment {
 	}
 
 	public void resetProgress() {
-		//TODO
-		
+		parentChapter.resetProgress();
 	}
 	
 	//0 is positive, 1 is between, 2 is negative
 	public void onFeedback(int pos) {
 		if(pos==0)
 			this.qa.setKnown();
+		else if(pos == 1)
+			this.qa.setUnknown(); //TODO, middle option instead of placebo?
+		else if(pos == 2)
+			this.qa.setUnknown();
 		nextQuestion();
 	}
 	
