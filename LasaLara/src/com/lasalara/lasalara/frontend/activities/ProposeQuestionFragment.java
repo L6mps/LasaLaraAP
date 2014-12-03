@@ -61,7 +61,7 @@ public class ProposeQuestionFragment extends Fragment {
 
         public void onTextChanged(CharSequence s, int start, int before, int count) {
         	TextView questionCount =  ((TextView) getView().findViewById(R.id.questionCount));
-        	questionCount.setText(String.valueOf(500-s.length()));
+        	questionCount.setText(String.valueOf(s.length()) + "/500");
         }
 
         public void afterTextChanged(Editable s) {

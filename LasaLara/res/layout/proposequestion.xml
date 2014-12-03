@@ -51,7 +51,7 @@
         android:id="@+id/answerCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/answer"
+        android:layout_below="@+id/answerLabel"
         android:layout_alignParentRight="true" />
 
 </RelativeLayout>
