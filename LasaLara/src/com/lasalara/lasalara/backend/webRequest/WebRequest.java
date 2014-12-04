@@ -8,6 +8,7 @@ import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.exceptions.FormatException;
 import com.lasalara.lasalara.backend.exceptions.FormatExceptionMessage;
+import com.lasalara.lasalara.backend.exceptions.NumericException;
 import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.exceptions.WebRequestExceptionMessage;
 
@@ -61,6 +62,8 @@ public class WebRequest {
 						Backend.getInstance().addMessage(e.getMessage());
 					} catch (WebRequestException e) {
 						Backend.getInstance().addMessage(e.getMessage());
+					} catch (NumericException e) {
+						Backend.getInstance().addMessage(e.getMessage());
 					}
 				}
 			};
@@ -88,8 +91,9 @@ public class WebRequest {
 	 * Send a POST web request to the site.
 	 * @throws FormatException 
 	 * @throws WebRequestException 
+	 * @throws NumericException 
 	 */
-	private void sendRequest() throws FormatException, WebRequestException {
+	private void sendRequest() throws FormatException, WebRequestException, NumericException {
 		Log.d(StringConstants.APP_NAME, "Sending request.");
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(url);

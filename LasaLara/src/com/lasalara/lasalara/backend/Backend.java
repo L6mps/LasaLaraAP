@@ -8,6 +8,7 @@ import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
 import com.lasalara.lasalara.backend.exceptions.FormatException;
 import com.lasalara.lasalara.backend.exceptions.InputDoesntExistException;
+import com.lasalara.lasalara.backend.exceptions.NumericExceptionMessage;
 import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Message;
@@ -136,7 +137,11 @@ public class Backend {
 	 */
 	public void updateBook(int index) {
 		try {
-			books.get(index).update();
+			if (index < books.size()) {
+				books.get(index).update();
+			} else {
+				addMessage(NumericExceptionMessage.INVALID_BOOK_INDEX.getMessage());
+			}
 		} catch (InputDoesntExistException e) {
 			addMessage(e.getMessage());
 		} catch (FormatException e) {
@@ -151,8 +156,12 @@ public class Backend {
 	 * @param index		The book's index in the book list.
 	 */
 	public void deleteBook(int index) {
-		books.get(index).delete();
-		books.remove(index);
+		if (index < books.size()) {
+			books.get(index).delete();
+			books.remove(index);
+		} else {
+			addMessage(NumericExceptionMessage.INVALID_BOOK_INDEX.getMessage());
+		}
 	}
 	
 	/**

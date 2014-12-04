@@ -3,6 +3,9 @@ package com.lasalara.lasalara.backend.webRequest;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.lasalara.lasalara.backend.exceptions.NumericException;
+import com.lasalara.lasalara.backend.exceptions.NumericExceptionMessage;
+
 /**
  * Class responsible for holding a web request's URL parameter data.
  * @author Ants-Oskar Mäesalu
@@ -39,16 +42,26 @@ public class UrlParameters {
 	/**
 	 * @param index
 	 * @return the key from the URL parameter list corresponding to the specified index.
+	 * @throws NumericException 
 	 */
-	public String getKey(int index) {
-		return keyList.get(index);
+	public String getKey(int index) throws NumericException {
+		if (index < keyList.size()) {
+			return keyList.get(index);
+		} else {
+			throw new NumericException(NumericExceptionMessage.INVALID_URL_KEY);
+		}
 	}
 	
 	/**
 	 * @param index
 	 * @return the key from the URL parameter list corresponding to the specified index.
+	 * @throws NumericException 
 	 */
-	public String getValue(int index) {
-		return valueList.get(index);
+	public String getValue(int index) throws NumericException {
+		if (index < valueList.size()) {
+			return valueList.get(index);
+		} else {
+			throw new NumericException(NumericExceptionMessage.INVALID_URL_VALUE);
+		}
 	}
 }

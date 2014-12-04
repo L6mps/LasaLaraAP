@@ -19,6 +19,8 @@ import com.lasalara.lasalara.backend.exceptions.FormatException;
 import com.lasalara.lasalara.backend.exceptions.FormatExceptionMessage;
 import com.lasalara.lasalara.backend.exceptions.InputDoesntExistException;
 import com.lasalara.lasalara.backend.exceptions.InputDoesntExistExceptionMessage;
+import com.lasalara.lasalara.backend.exceptions.NumericException;
+import com.lasalara.lasalara.backend.exceptions.NumericExceptionMessage;
 import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.exceptions.WebRequestExceptionMessage;
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
@@ -268,10 +270,15 @@ public class Book {
 	/**
 	 * Delete a chapter with the specified index from the application.
 	 * @param index		The chapter's index in the chapter list.
+	 * @throws NumericException 
 	 */
-	public void deleteChapter(int index) {
-		chapters.get(index).delete();
-		chapters.remove(index);
+	public void deleteChapter(int index) throws NumericException {
+		if (index < chapters.size()) {
+			chapters.get(index).delete();
+			chapters.remove(index);
+		} else {
+			throw new NumericException(NumericExceptionMessage.INVALID_CHAPTER_INDEX);
+		}
 	}
 	
 	/**
