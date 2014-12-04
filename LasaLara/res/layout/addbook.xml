@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
-    android:paddingTop="60dp"
+    android:paddingTop="20dp"
     android:gravity="center_horizontal" >
       
     <TextView
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/author"
         android:paddingLeft="13dp"
-        android:paddingTop="40dp"
+        android:paddingTop="20dp"
         android:text="@string/book" />
             
     <EditText
