@@ -2,8 +2,10 @@ package com.lasalara.lasalara.backend.structure;
 
 import java.io.IOException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -387,7 +389,7 @@ public class Chapter {
 		if (nextQuestion == null) {
 			String nextTime = DatabaseHelper.getInstance().getQuestionHelper().getNextAvailableTime(key);
 			if (nextTime != null) {
-				Backend.getInstance().addMessage("The chapter has been completed. You can revise the chapter starting from " + nextTime + ".");
+				Backend.getInstance().addMessage("The chapter has been completed. You can revise the chapter starting from " + (new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.ENGLISH).format(Timestamp.valueOf(nextTime))).toString() + ".");
 			} else {
 				throw new NumericException(NumericExceptionMessage.CHAPTER_NEXT_TIME_MISSING);
 			}
