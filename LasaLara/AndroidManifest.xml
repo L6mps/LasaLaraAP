@@ -19,6 +19,9 @@
         android:theme="@android:style/Theme.Holo.Light.DarkActionBar"
 		android:name="com.lasalara.lasalara.LasaLaraApplication">
 		
+        <meta-data android:name="com.google.android.backup.api_key" 
+            android:value="AEdPqrEAAAAIOLvv8t4Rey9YEHYy-Ta111BKN6HAI33MFu5qWQ" />
+		
         <activity
             android:name="com.lasalara.lasalara.frontend.activities.MainActivity"
         	android:configChanges="orientation|keyboardHidden|screenSize"
