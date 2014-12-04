@@ -23,6 +23,7 @@ import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
 import com.lasalara.lasalara.frontend.adapters.CustomListAdapter;
+import com.lasalara.lasalara.frontend.activities.MainActivity;
 
 public class BookFragment extends ListFragment{
 	OnBookSelectedListener mCallback;
@@ -50,6 +51,7 @@ public class BookFragment extends ListFragment{
 	                books.get((int)maybeDeleteThisBook).delete();
 	                mode.finish();
 	                books.remove((int)maybeDeleteThisBook);
+	                
 	                ((MainActivity) getActivity()).updateProgressBar();
 	                listAdapter.setBookData(books);
 	                listAdapter.notifyDataSetChanged();
