@@ -36,6 +36,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.Menu;
@@ -178,20 +179,18 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
         }
         else if(abFragment.isVisible() || pqFragment.isVisible()) {
         	progressBar.setEnabled(false);
-        	setTitle("");
+        	setTitle("return");
         	progressBar.setVisibility(View.GONE);        	
         }
 	}
 
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-		if(!qFragment.isVisible())
-			return false;
 		if((qFragment.isVisible() && (e1.getX() - e2.getX()) > 150)) {
 			qFragment.screenSwiped('r');
 			return true;
 		}
-		else if((e2.getX() - e1.getX()) > 150) {
+		else if((e2.getX() - e1.getX()) < 150 && !bFragment.isVisible()) {
 			manualBack();
 			return true;
 		}

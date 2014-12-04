@@ -34,4 +34,8 @@
     <string name="answer">Proposed Answer</string>
     <string name="send">Send</string>
     
+    <!--  Context Menu items -->
+    
+    <string name="delete">Delete</string>
+    
  </resources>

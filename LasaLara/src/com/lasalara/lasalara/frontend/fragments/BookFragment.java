@@ -6,7 +6,13 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
 import com.lasalara.lasalara.R;
@@ -22,6 +28,44 @@ public class BookFragment extends ListFragment{
 	OnBookSelectedListener mCallback;
 	private List<Book> books;
 	private CustomListAdapter listAdapter;
+	private ActionMode actionMode;
+	private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+			
+	    @Override
+	    public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+	        MenuInflater inflater = mode.getMenuInflater();
+	        inflater.inflate(R.menu.book_delete_menu, menu);
+	        return true;
+	    }
+
+	    @Override
+	    public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+	        return false; 
+	    }
+
+	    @Override
+	    public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+	        switch (item.getItemId()) {
+	            case R.id.deleteBook: {
+	                books.get((int)maybeDeleteThisBook).delete();
+	                mode.finish();
+	                books.remove((int)maybeDeleteThisBook);
+	                ((MainActivity) getActivity()).updateProgressBar();
+	                listAdapter.setBookData(books);
+	                listAdapter.notifyDataSetChanged();
+	                return true;
+	            }
+	            default:
+	                return false;
+	        }
+	    }
+
+	    @Override
+	    public void onDestroyActionMode(ActionMode mode) {
+	        mode = null;
+	    }
+	};
+	protected long maybeDeleteThisBook;
 	
 	public interface OnBookSelectedListener {
 		public void onBookSelected(int position, Book bk);
@@ -31,11 +75,33 @@ public class BookFragment extends ListFragment{
 		this.books = books;
 	}
 	
+	@Override
+    public void onActivityCreated(Bundle b) {
+		
+		getListView().setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> arg0, View arg1,
+					int arg2, long arg3) {
+				if(books.size() >= arg3) {
+					actionMode = getActivity().startActionMode(mActionModeCallback);
+					maybeDeleteThisBook = arg3;
+					return true;
+				}
+				return false;
+			}
+		});
+		super.onActivityCreated(b);
+    }
+	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		listAdapter = new CustomListAdapter(getActivity(), books);
 		setListAdapter(listAdapter);
+		
 	}
+	
+	
 	
 	public void onResume() {
 		super.onResume();
@@ -47,8 +113,9 @@ public class BookFragment extends ListFragment{
 	
 	public void onStart() {
 		super.onStart();
-		if(getFragmentManager().findFragmentById(R.id.fragment_container) != null)
-			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		if(getFragmentManager().findFragmentById(R.id.fragment_container) != null) {
+			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);		
+		}
 	}
 	
 	public void onAttach(Activity activity) {
@@ -62,6 +129,8 @@ public class BookFragment extends ListFragment{
 	}
 	
 	public void onListItemClick(ListView l, View v, int position, long id) {
+		if(actionMode != null)
+			actionMode.finish();
 		mCallback.onBookSelected(position, books.get(position));
 	}
 

@@ -84,6 +84,8 @@ OnChapterSelectedListener mCallback;
 		this.chapters = chapters;
 		this.parentBook = bk;
 		if(this.getListAdapter()!=null)
+			listAdapter.setChapterData(chapters);
+		else
 			setListAdapter(new CustomListAdapter(getActivity(), chapters, true));
 	}
 	
