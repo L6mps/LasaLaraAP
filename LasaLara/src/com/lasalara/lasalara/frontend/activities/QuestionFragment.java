@@ -171,7 +171,7 @@ public class QuestionFragment extends Fragment {
 		if(pos==0)
 			this.qa.setKnown();
 		else if(pos == 1)
-			this.qa.setUnknown(); //TODO, middle option instead of placebo?
+			this.qa.setKindOfKnown();
 		else if(pos == 2)
 			this.qa.setUnknown();
 		nextQuestion();

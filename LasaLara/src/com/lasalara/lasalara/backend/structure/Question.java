@@ -91,6 +91,46 @@ public class Question {
 	}
 	
 	/**
+	 * Set the question "kind of known". Used when the user has some uncertainties about 
+	 * his/her knowledge.
+	 * Currently, this method differs from the setKnown() method only so that the extra
+	 * time added is cut in half. The review count is increased but the knownCount is not
+	 * updated.
+	 */
+	public void setKindOfKnown() {
+		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
+		long secondsSinceReview = currentTime.getTime() - reviewTime.getTime();
+		long secondsToAdd = NumericalConstants.TWENTYFIVESECONDS;
+		if (reviewCount == 0) {
+			secondsToAdd = NumericalConstants.ONEDAY / 2;
+		} else if (secondsSinceReview > NumericalConstants.TWOYEARS) {
+			secondsToAdd = NumericalConstants.TENYEARS / 2;
+		} else if (secondsSinceReview > NumericalConstants.HUNDREDTWENTYFIVEDAYS) {
+			secondsToAdd = NumericalConstants.TWOYEARS / 2;
+		} else if (secondsSinceReview > NumericalConstants.TWENTYFIVEDAYS) {
+			secondsToAdd = NumericalConstants.HUNDREDTWENTYFIVEDAYS / 2;
+		} else if (secondsSinceReview > NumericalConstants.FIVEDAYS) {
+			secondsToAdd = NumericalConstants.TWENTYFIVEDAYS / 2;
+		} else if (secondsSinceReview > NumericalConstants.ONEDAY) {
+			secondsToAdd = NumericalConstants.FIVEDAYS / 2;
+		} else if (secondsSinceReview > NumericalConstants.FIVEHOURS) {
+			secondsToAdd = NumericalConstants.ONEDAY / 2;
+		} else if (secondsSinceReview > NumericalConstants.ONEHOUR) {
+			secondsToAdd = NumericalConstants.FIVEHOURS / 2;
+		} else if (secondsSinceReview > NumericalConstants.TENMINUTES) {
+			secondsToAdd = NumericalConstants.ONEHOUR / 2;
+		} else if (secondsSinceReview > NumericalConstants.TWOMINUTES) {
+			secondsToAdd = NumericalConstants.TENMINUTES / 2;
+		} else {
+			secondsToAdd = NumericalConstants.TWOMINUTES / 2;
+		}
+		reviewCount++;
+		reviewTime = currentTime;
+		knownUntilTime = new Timestamp(currentTime.getTime() + secondsToAdd);
+		updateInDatabase();
+	}
+	
+	/**
 	 * Set the question known. Used when the user says he/she knows the answer to the question.
 	 */
 	public void setKnown() {
