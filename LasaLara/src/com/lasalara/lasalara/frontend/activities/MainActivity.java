@@ -1,17 +1,30 @@
 package com.lasalara.lasalara.frontend.activities;
 
+import java.io.IOException;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.lasalara.lasalara.LasaLaraApplication;
 import com.lasalara.lasalara.R;
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.backend.exceptions.FormatException;
+import com.lasalara.lasalara.backend.exceptions.FormatExceptionMessage;
 import com.lasalara.lasalara.backend.exceptions.WebRequestException;
+import com.lasalara.lasalara.backend.exceptions.WebRequestExceptionMessage;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
+import com.lasalara.lasalara.backend.webRequest.UrlParameters;
+import com.lasalara.lasalara.backend.webRequest.WebRequest;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -283,8 +296,10 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	}
 
 	public void downloadBookOnAddBookDialogClick() {
-		Backend.getInstance().downloadBook(((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString(),
+		Book newBook = Backend.getInstance().downloadBook(((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString(),
 				 ((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString());
+		DownloadBookOnAddTask task = new DownloadBookOnAddTask();
+		task.execute(newBook);
 		getSupportFragmentManager().popBackStack(); //takes back the transaction from bFragment to abFragment, animating back
 		hideSoftwareKeyboard();
 	}
@@ -299,5 +314,85 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 		getSupportFragmentManager().popBackStack(); // Goes back to last screen
 		hideSoftwareKeyboard();
 		// TODO: an alert thanking for the proposition
+	}
+	
+	private class DownloadBookOnAddTask extends AsyncTask<Book, Integer, String> {
+		ProgressDialog progress;
+		int chapterCount=0;
+		
+		@Override
+		protected void onPreExecute() {
+            progress = ProgressDialog.show(MainActivity.this,"","Downloading...",true);
+		}
+		@Override
+		protected String doInBackground(Book... params){
+			String key = params[0].getKey();
+			String url = StringConstants.URL_GET_CHAPTERS;
+			UrlParameters urlParameters = new UrlParameters();
+			urlParameters.addPair("bk", key);
+			WebRequest request = null;
+			try {
+				request = new WebRequest(url, urlParameters);
+			} catch (IOException e1) {
+				try {
+					throw new WebRequestException(WebRequestExceptionMessage.CHAPTERS_DOWNLOAD);
+				} catch (WebRequestException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} catch (WebRequestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			try {
+				JSONArray resultArray = request.getJSONArray();
+				chapterCount=resultArray.length();
+				for (int i = 0; i < chapterCount; i++) {
+					JSONObject result = resultArray.getJSONObject(i);
+					String chapterKey = result.get("ck").toString();
+					String chapterTitle = result.get("title").toString();
+					int chapterVersion = result.getInt("version");
+					String chapterAuthorEmail = result.get("email").toString();
+					String chapterAuthorName = null;
+					if (!result.isNull("name")) {
+						chapterAuthorName = result.get("name").toString();
+					}
+					String chapterAuthorInstitution = null;
+					if (!result.isNull("institution")) {
+						chapterAuthorInstitution = result.get("institution").toString();
+					}
+					boolean chapterProposalsAllowed = result.getBoolean("allowProp");
+					params[0].getChapters().add(new Chapter(chapterKey, chapterTitle, chapterVersion, 
+							chapterAuthorEmail, chapterAuthorName, chapterAuthorInstitution, 
+							chapterProposalsAllowed, i, key, true));
+					publishProgress(i+1);
+					
+				}
+			} catch (JSONException e) {
+				try {
+					throw new FormatException(FormatExceptionMessage.CHAPTERS_DOWNLOAD);
+				} catch (FormatException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			} catch (WebRequestException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (FormatException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(String string) {
+		     progress.dismiss();
+		  }
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+		     progress.setMessage("Downloaded " + values[0] + " of " + chapterCount + " chapters");
+		}
 	}
 }

@@ -396,7 +396,6 @@ public class Book {
 	 * @throws WebRequestException 
 	 */
 	public List<Chapter> getChapters() throws FormatException, WebRequestException {
-		load(true);
 		return chapters;
 	}
 }

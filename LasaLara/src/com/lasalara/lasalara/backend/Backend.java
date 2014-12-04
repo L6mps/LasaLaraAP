@@ -116,7 +116,7 @@ public class Backend {
 	 * @param ownerEmail	The book's owner's e-mail address.
 	 * @param bookTitle		The book's title.
 	 */
-	public void downloadBook(final String ownerEmail, final String bookTitle) {
+	public Book downloadBook(final String ownerEmail, final String bookTitle) {
 		Book newBook = null;
 		try {
 			newBook = new Book(ownerEmail, bookTitle, true);
@@ -135,6 +135,7 @@ public class Backend {
 		} catch (WebRequestException e) {
 			addMessage(e.getMessage());
 		}
+		return newBook;
 	}
 	
 	/**
