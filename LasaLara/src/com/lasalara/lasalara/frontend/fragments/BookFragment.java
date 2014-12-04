@@ -64,6 +64,8 @@ public class BookFragment extends ListFragment{
 
 	    @Override
 	    public void onDestroyActionMode(ActionMode mode) {
+	    	getListView().clearChoices();
+	    	getListView().setItemChecked(getListView().getCheckedItemPosition(), false);
 	        mode = null;
 	    }
 	};
@@ -116,7 +118,8 @@ public class BookFragment extends ListFragment{
 	public void onStart() {
 		super.onStart();
 		if(getFragmentManager().findFragmentById(R.id.fragment_container) != null) {
-			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);		
+			getListView().setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+			getListView().setSelector(android.R.color.darker_gray);
 		}
 	}
 	
@@ -150,5 +153,10 @@ public class BookFragment extends ListFragment{
 
 	public Progress getProgress() {
 		return Backend.getInstance().getProgress();
+	}
+	
+	public void notifyDataChanged() {
+		listAdapter.setBookData(Backend.getInstance().getBooks());
+		listAdapter.notifyDataSetChanged();
 	}
 }

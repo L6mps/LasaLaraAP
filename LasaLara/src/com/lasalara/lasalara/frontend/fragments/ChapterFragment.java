@@ -77,7 +77,6 @@ OnChapterSelectedListener mCallback;
 	
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		mCallback.onChapterSelected(chapters.get(position));
-		getListView().setItemChecked(position,  true);
 	}
 
 	public void changeData(List<Chapter> chapters, Book bk) {
@@ -101,6 +100,7 @@ OnChapterSelectedListener mCallback;
 		try {
 			this.setListShown(false);
 			parentBook.update();
+			this.setListShown(true);
 			setListAdapter(new CustomListAdapter(getActivity(), chapters, true));
 		} catch (InputDoesntExistException e) {
 			Backend.getInstance().addMessage(e.getMessage());

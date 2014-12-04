@@ -395,6 +395,8 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 		@Override
 		protected void onPostExecute(String string) {
 		     progress.dismiss();
+		     updateProgressBar();
+		     bFragment.notifyDataChanged();
 		  }
 		
 		@Override

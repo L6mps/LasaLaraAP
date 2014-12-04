@@ -6,8 +6,9 @@
     <ProgressBar
          android:id="@+id/listProgressBar"
          android:layout_width="match_parent"
-         android:layout_height="2dip"
-         style="@android:style/Widget.ProgressBar.Horizontal" />
+         android:layout_height="4dp"
+         style="@android:style/Widget.ProgressBar.Horizontal"
+         android:progressDrawable="@drawable/progressbar"   />
     <ExpandableListView
         android:id="@+id/expListView"
         android:layout_width="match_parent"

@@ -112,17 +112,15 @@ public class QuestionFragment extends Fragment {
 		a.setText("");
 		f.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.exit));
 		f.setVisibility(View.GONE);
-		
-		//Proof-of-concept, shows which question is showing as progress
 		refCallback.onProgressRefresh();
 	}
 	
 	private CharSequence getCurrentAnswer() {
-		return qa.getAnswer();
+		return qa!=null?qa.getAnswer():"";
 	}
 
 	private CharSequence getCurrentQuestion() {
-		return qa.getQuestion();
+		return qa!=null?qa.getQuestion():"";
 	}
 	
 	private void showAnswer() {
@@ -142,9 +140,6 @@ public class QuestionFragment extends Fragment {
 	public void screenSwiped(char c) {
 		if(c=='r')
 			nextQuestion();
-		else if(c=='l')
-			return;
-			//previousQuestion();
 	}
 
 	private void nextQuestion() {
