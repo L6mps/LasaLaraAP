@@ -163,6 +163,29 @@ public class Chapter {
 	 * @throws FormatException 
 	 */
 	public void update(Chapter updatedChapter) throws WebRequestException, FormatException {
+		updateProperties(updatedChapter);
+		deleteQuestions();
+		downloadQuestions();
+	}
+	
+	/**
+	 * Set a new position to the chapter. Used for correctly ordering the chapters in the book.
+	 * @param newPosition	The new position in the chapter list.
+	 */
+	public void updatePosition(int newPosition) {
+		if (position != newPosition) {
+			position = newPosition;
+			updatePositionInDatabase();
+		}
+	}
+	
+	/**
+	 * Update only the main properties of this chapter without changing any of the questions.
+	 * Used when the book updating system detects no change in the chapter's version number, yet
+	 * the metadata of the chapter might still be updated.
+	 * @param updatedChapter	The updated chapter from where to get the new properties.
+	 */
+	public void updateProperties(Chapter updatedChapter) {
 		title = updatedChapter.getTitle();
 		version = updatedChapter.getVersion();
 		authorEmail = updatedChapter.getAuthorEmail();
@@ -170,15 +193,6 @@ public class Chapter {
 		authorInstitution = updatedChapter.getAuthorInstitution();
 		proposalsAllowed = updatedChapter.areProposalsAllowed();
 		updateInDatabase();
-		deleteQuestions();
-		downloadQuestions();
-	}
-	
-	public void updatePosition(int newPosition) {
-		if (position != newPosition) {
-			position = newPosition;
-			updatePositionInDatabase();
-		}
 	}
 	
 	/**

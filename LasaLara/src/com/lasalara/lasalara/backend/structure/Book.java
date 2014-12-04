@@ -228,6 +228,8 @@ public class Book {
 					if (existingChapter.getVersion() != updatedChapter.getVersion()) {
 						existingChapter.update(updatedChapter);
 						numberOfUpdatedChapters++;
+					} else {
+						existingChapter.updateProperties(updatedChapter);
 					}
 					existsInUpdatedBook = true;
 				}
