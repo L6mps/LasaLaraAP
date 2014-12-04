@@ -224,7 +224,7 @@ public class Book {
 		for (Chapter existingChapter: chapters) {
 			boolean existsInUpdatedBook = false;
 			for (Chapter updatedChapter: updatedChapters) {
-				if (existingChapter.getKey() == updatedChapter.getKey()) {
+				if (existingChapter.getKey().equals(updatedChapter.getKey())) {
 					if (existingChapter.getVersion() != updatedChapter.getVersion()) {
 						existingChapter.update(updatedChapter);
 						numberOfUpdatedChapters++;
@@ -242,7 +242,7 @@ public class Book {
 		for (int i = 0; i < updatedChapters.size(); i++) {
 			boolean exists = false;
 			for (int j = 0; j < chapters.size(); j++) {
-				if (chapters.get(j).getKey() == updatedChapters.get(i).getKey()) {
+				if (chapters.get(j).getKey().equals(updatedChapters.get(i).getKey())) {
 					exists = true;
 				}
 			}
