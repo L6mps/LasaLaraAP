@@ -63,35 +63,45 @@ public class QuestionHelper {
 	}
 	
 	/**
-	 * @param question	The question object's instance.
+	 * @param question		The question string.
+	 * @param answer		The answer string.
+	 * @param chapterKey	The parent chapter's UUID.
 	 * @return whether the question already exists in the database or not.
 	 */
-	private boolean existsInDatabase(Question question) {
+	private boolean existsInDatabase(String question, String answer, String chapterKey) {
 		String[] columns = {StringConstants.QUESTION_COLUMN_QUESTION};
 		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "=?" +
 				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "=?" +
 				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=?";
-		String[] whereArguments = {question.getQuestion(), question.getAnswer(), question.getChapterKey()};
+		String[] whereArguments = {question, answer, chapterKey};
 		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, columns, whereClause, whereArguments, null, null, null);
-		return results.moveToFirst();
+		boolean exists = results.moveToFirst();
+		results.close();
+		return exists;
 	}
 	
 	/**
 	 * Insert a new question into the SQLite database.
-	 * @param question	The question object's instance.
+	 * @param question			The question string.
+	 * @param answer			The answer string.
+	 * @param reviewCount		The amount of times the question has been reviewed.
+	 * @param knownCount		The amount of times the question has been set as known.
+	 * @param reviewTime		The time the question was last reviewed.
+	 * @param knownUntilTime	The time until which the question remains hidden.
+	 * @param chapterKey		The parent chapter's UUID.
 	 */
-	public void insertQuestion(Question question) {
-		if (existsInDatabase(question)) {
-			deleteQuestion(question);
+	public void insertQuestion(String question, String answer, int reviewCount, int knownCount, Timestamp reviewTime, Timestamp knownUntilTime, String chapterKey) {
+		if (existsInDatabase(question, answer, chapterKey)) {
+			deleteQuestion(question, answer, chapterKey);
 		}
 		ContentValues contentValues = new ContentValues();
-		contentValues.put(StringConstants.QUESTION_COLUMN_QUESTION, question.getQuestion());
-		contentValues.put(StringConstants.QUESTION_COLUMN_ANSWER, question.getAnswer());
-		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_COUNT, question.getReviewCount());
-		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_COUNT, question.getKnownCount());
-		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_TIME, question.getReviewTime().toString()); // TODO: Test if string conversion is the correct way to handle this
-		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME, question.getKnownUntilTime().toString()); // TODO: Test if string conversion is the correct way to handle this
-		contentValues.put(StringConstants.QUESTION_COLUMN_CHAPTER_KEY, question.getChapterKey());
+		contentValues.put(StringConstants.QUESTION_COLUMN_QUESTION, question);
+		contentValues.put(StringConstants.QUESTION_COLUMN_ANSWER, answer);
+		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_COUNT, reviewCount);
+		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_COUNT, knownCount);
+		contentValues.put(StringConstants.QUESTION_COLUMN_REVIEW_TIME, reviewTime.toString()); // TODO: Test if string conversion is the correct way to handle this
+		contentValues.put(StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME, knownUntilTime.toString()); // TODO: Test if string conversion is the correct way to handle this
+		contentValues.put(StringConstants.QUESTION_COLUMN_CHAPTER_KEY, chapterKey);
 		database.insert(StringConstants.QUESTION_TABLE_NAME, null, contentValues);
 	}
 	
@@ -117,10 +127,20 @@ public class QuestionHelper {
 	 * @param question	The question object's instance.
 	 */
 	public void deleteQuestion(Question question) {
+		deleteQuestion(question.getQuestion(), question.getAnswer(), question.getChapterKey());
+	}
+	
+	/**
+	 * Delete a question from the SQLite database.
+	 * @param question		The question string.
+	 * @param answer		The answer string.
+	 * @param chapterKey	The parent chapter's UUID.
+	 */
+	public void deleteQuestion(String question, String answer, String chapterKey) {
 		String whereClause = StringConstants.QUESTION_COLUMN_QUESTION + "=?" +
 				" AND " + StringConstants.QUESTION_COLUMN_ANSWER + "=?" +
 				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=?";
-		String[] whereArguments = {question.getQuestion(), question.getAnswer(), question.getChapterKey()};
+		String[] whereArguments = {question, answer, chapterKey};
 		database.delete(StringConstants.QUESTION_TABLE_NAME, whereClause, whereArguments);
 	}
 	
@@ -148,6 +168,7 @@ public class QuestionHelper {
 			questionList.add(new Question(results));
 			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return questionList;
 	}
 	
@@ -164,10 +185,10 @@ public class QuestionHelper {
 		String orderClause = StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " ASC";
 		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, null, whereClause, whereArguments, null, null, orderClause, "1");
 		boolean moveSucceeded = results.moveToFirst();
-		while (moveSucceeded) {
+		if (moveSucceeded) {
 			nextQuestion = new Question(results);
-			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return nextQuestion;
 	}
 	
@@ -183,10 +204,10 @@ public class QuestionHelper {
 		String orderClause = StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " ASC";
 		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, columns, whereClause, whereArguments, null, null, orderClause, "1");
 		boolean moveSucceeded = results.moveToFirst();
-		while (moveSucceeded) {
+		if (moveSucceeded) {
 			nextTime = results.getString(0);
-			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return nextTime;
 	}
 	
@@ -205,6 +226,7 @@ public class QuestionHelper {
 			numberOfQuestions = results.getInt(0);
 			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return numberOfQuestions;
 	}
 	
@@ -225,6 +247,7 @@ public class QuestionHelper {
 			numberOfAnsweredQuestions = results.getInt(0);
 			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return numberOfAnsweredQuestions;
 	}
 	
@@ -245,6 +268,7 @@ public class QuestionHelper {
 			numberOfAnsweredQuestions = results.getInt(0);
 			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return numberOfAnsweredQuestions;
 	}
 }

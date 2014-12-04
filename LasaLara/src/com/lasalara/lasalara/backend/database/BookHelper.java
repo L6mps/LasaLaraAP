@@ -67,7 +67,9 @@ public class BookHelper {
 		String whereClause = StringConstants.BOOK_COLUMN_KEY + "=?";
 		String[] whereArguments = {book.getKey()};
 		Cursor results = database.query(StringConstants.BOOK_TABLE_NAME, columns, whereClause, whereArguments, null, null, null);
-		return results.moveToFirst();
+		boolean exists = results.moveToFirst();
+		results.close();
+		return exists;
 	}
 	
 	/**
@@ -138,6 +140,7 @@ public class BookHelper {
 			bookList.add(new Book(results));
 			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return bookList;
 	}
 }

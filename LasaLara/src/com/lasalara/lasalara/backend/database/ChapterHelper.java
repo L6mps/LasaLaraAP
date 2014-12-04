@@ -71,7 +71,9 @@ public class ChapterHelper {
 		String whereClause = StringConstants.CHAPTER_COLUMN_KEY + "=?";
 		String[] whereArguments = {chapter.getKey()};
 		Cursor results = database.query(StringConstants.CHAPTER_TABLE_NAME, columns, whereClause, whereArguments, null, null, null);
-		return results.moveToFirst();
+		boolean exists = results.moveToFirst();
+		results.close();
+		return exists;
 	}
 	
 	/**
@@ -168,6 +170,7 @@ public class ChapterHelper {
 			chapterList.add(new Chapter(results));
 			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return chapterList;
 	}
 }

@@ -1,6 +1,8 @@
 package com.lasalara.lasalara.backend.structure;
 
 import java.io.IOException;
+import java.sql.Timestamp;
+import java.util.Calendar;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -116,6 +118,17 @@ public class Chapter {
 	private void deleteFromDatabase() {
 		DatabaseHelper.getInstance().getChapterHelper().deleteChapter(this);
 	}
+	
+	/**
+	 * Add a new question into the SQLite database.
+	 * @param question		The question string.
+	 * @param answer		The answer string.
+	 * @param chapterKey	The parent chapter's UUID.
+	 */
+	private void addNewQuestionToDatabase(String question, String answer, String chapterKey) {
+		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
+		DatabaseHelper.getInstance().getQuestionHelper().insertQuestion(question, answer, 0, 0, currentTime, currentTime, chapterKey);
+	}
 
 	/**
 	 * Load the questions in this book.
@@ -144,7 +157,7 @@ public class Chapter {
 				for (int i = 0; i < questionList.length(); i++) {
 					String question = questionList.getString(i);
 					String answer = answerList.getString(i);
-					new Question(question, answer, key);
+					addNewQuestionToDatabase(question, answer, key);
 				}
 			} else {
 				throw new FormatException(FormatExceptionMessage.QUESTIONS_DOWNLOAD_LIST);
