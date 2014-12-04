@@ -289,7 +289,10 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	}
 	
 	public void sendQuestionPropositionOnQuestionPropositionDialogClick() {
-		// TODO, at the moment goes back to the last screen so the program doesn't crash
-		getSupportFragmentManager().popBackStack();
+		qFragment.getParentChapter().poseQuestion(((EditText)pqFragment.getView().findViewById(R.id.question)).getText().toString(),
+				((EditText)pqFragment.getView().findViewById(R.id.answer)).getText().toString());
+		getSupportFragmentManager().popBackStack(); // Goes back to last screen
+		hideSoftwareKeyboard();
+		// TODO: an alert thanking for the proposition
 	}
 }

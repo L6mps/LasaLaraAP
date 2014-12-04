@@ -30,8 +30,8 @@
     
     <string name="addQuestion">Enter the question</string>
     <string name="addAnswer">Enter the answer</string>
-    <string name="question">Question</string>
-    <string name="answer">Answer</string>
+    <string name="question">Proposed Question</string>
+    <string name="answer">Proposed Answer</string>
     <string name="send">Send</string>
     
  </resources>
