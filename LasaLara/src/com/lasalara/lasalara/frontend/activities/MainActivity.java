@@ -305,8 +305,10 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	public void downloadBookOnAddBookDialogClick() {
 		Book newBook = Backend.getInstance().downloadBook(((EditText)abFragment.getView().findViewById(R.id.author)).getText().toString(),
 				 ((EditText)abFragment.getView().findViewById(R.id.book)).getText().toString());
-		DownloadBookOnAddTask task = new DownloadBookOnAddTask();
-		task.execute(newBook);
+		if(newBook!=null) {
+			DownloadBookOnAddTask task = new DownloadBookOnAddTask();
+			task.execute(newBook);
+		}
 		getSupportFragmentManager().popBackStack(); //takes back the transaction from bFragment to abFragment, animating back
 		hideSoftwareKeyboard();
 	}
