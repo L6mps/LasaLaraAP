@@ -3,6 +3,7 @@ package com.lasalara.lasalara.backend.webRequest;
 import android.os.Build;
 import android.util.Log; // TODO: Remove as soon as posing questions works
 
+import com.lasalara.lasalara.LasaLaraApplication;
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.exceptions.FormatException;
@@ -47,26 +48,30 @@ public class WebRequest {
 	 */
 	public WebRequest(String url, UrlParameters parameterList) throws IOException, WebRequestException {
 		disableConnectionReuseIfNecessary();
-		this.url = url;
-		this.parameterList = parameterList;
-		Thread thread = new Thread() {
-			@Override
-			public void run() {
-				try {
-					sendRequest();
-					getResponse();
-				} catch (FormatException e) {
-					Backend.getInstance().addMessage(e.getMessage());
-				} catch (WebRequestException e) {
-					Backend.getInstance().addMessage(e.getMessage());
+		if (LasaLaraApplication.isNetworkConnected()) {
+			this.url = url;
+			this.parameterList = parameterList;
+			Thread thread = new Thread() {
+				@Override
+				public void run() {
+					try {
+						sendRequest();
+						getResponse();
+					} catch (FormatException e) {
+						Backend.getInstance().addMessage(e.getMessage());
+					} catch (WebRequestException e) {
+						Backend.getInstance().addMessage(e.getMessage());
+					}
 				}
+			};
+			thread.start();
+			try {
+				thread.join();
+			} catch (InterruptedException e) {
+				throw new WebRequestException(WebRequestExceptionMessage.INTERRUPTED);
 			}
-		};
-		thread.start();
-		try {
-			thread.join();
-		} catch (InterruptedException e) {
-			throw new WebRequestException(WebRequestExceptionMessage.INTERRUPTED);
+		} else {
+			throw new WebRequestException(WebRequestExceptionMessage.NO_CONNECTION);
 		}
 	}
 	

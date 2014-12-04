@@ -6,6 +6,7 @@ package com.lasalara.lasalara.backend.exceptions;
  */
 public enum WebRequestExceptionMessage {
 	DEFAULT("The web request could not be completed at this time."),
+	NO_CONNECTION("You do not appear to have internet connection."),
 	INTERRUPTED("The web request was interrupted."),
 	CLIENT_PROTOCOL("The web request's client protocol is faulty."),
 	PARSE("The web request's response could not be parsed."),
