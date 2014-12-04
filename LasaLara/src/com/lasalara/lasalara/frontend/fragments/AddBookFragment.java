@@ -1,5 +1,6 @@
 package com.lasalara.lasalara.frontend.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -7,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
@@ -29,6 +31,8 @@ public class AddBookFragment extends Fragment {
 		EditText author = ((EditText) getView().findViewById(R.id.author));
 		author.setText("");
 		author.requestFocus();
+		InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+		imm.showSoftInput(author, InputMethodManager.SHOW_IMPLICIT);
 		EditText book = ((EditText) getView().findViewById(R.id.book));
 		book.setText("");
 		if(!bookListened) {
