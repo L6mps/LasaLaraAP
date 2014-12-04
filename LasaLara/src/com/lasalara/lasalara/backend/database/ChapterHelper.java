@@ -146,11 +146,9 @@ public class ChapterHelper {
 	 * Delete all of the chapters associated with a certain book from the SQLite database.
 	 * Also deletes all of the questions associated with the deleted chapters.
 	 * @param book		The book object's instance.
-	 * @throws FormatException 
-	 * @throws WebRequestException 
 	 */
-	public void deleteChapters(Book book) throws FormatException, WebRequestException {
-		for (Chapter chapter: book.getChapters()) {
+	public void deleteChapters(Book book) {
+		for (Chapter chapter: book.getChaptersInDatabase()) {
 			DatabaseHelper.getInstance().getQuestionHelper().deleteQuestions(chapter);
 		}
 		String whereClause = StringConstants.CHAPTER_COLUMN_BOOK_KEY + "='" + book.getKey() + "'";

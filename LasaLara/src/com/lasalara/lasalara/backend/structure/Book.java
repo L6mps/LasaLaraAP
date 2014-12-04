@@ -142,10 +142,8 @@ public class Book {
 	/**
 	 * Delete this book from the database.
 	 * Also deletes all of the associated chapters and their questions from the database.
-	 * @throws FormatException 
-	 * @throws WebRequestException 
 	 */
-	private void deleteFromDatabase() throws FormatException, WebRequestException {
+	private void deleteFromDatabase() {
 		DatabaseHelper.getInstance().getBookHelper().deleteBook(this);
 	}
 	
@@ -289,10 +287,8 @@ public class Book {
 	
 	/**
 	 * Delete this book from the application.
-	 * @throws FormatException 
-	 * @throws WebRequestException 
 	 */
-	public void delete() throws FormatException, WebRequestException {
+	public void delete() {
 		deleteChapters();
 		deleteFromDatabase();
 	}
@@ -363,6 +359,16 @@ public class Book {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Return a list of chapters in this book only saved into the SQLite database.
+	 * Used when deleting a book.
+	 * @return
+	 */
+	public List<Chapter> getChaptersInDatabase() {
+		preloadChapters();
+		return chapters;
 	}
 	
 	/**

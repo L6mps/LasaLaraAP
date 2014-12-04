@@ -158,28 +158,16 @@ public class Backend {
 	 * @param index		The book's index in the book list.
 	 */
 	public void deleteBook(int index) {
-		try {
-			books.get(index).delete();
-			books.remove(index);
-		} catch (FormatException e) {
-			addMessage(e.getMessage());
-		} catch (WebRequestException e) {
-			addMessage(e.getMessage());
-		}
+		books.get(index).delete();
+		books.remove(index);
 	}
 	
 	/**
 	 * Delete all of the books from the application.
 	 */
 	public void deleteBooks() {
-		try {
-			DatabaseHelper.getInstance().getBookHelper().deleteBooks();
-			books.clear(); // TODO: Garbage collection
-		} catch (FormatException e) {
-			addMessage(e.getMessage());
-		} catch (WebRequestException e) {
-			addMessage(e.getMessage());
-		}
+		DatabaseHelper.getInstance().getBookHelper().deleteBooks();
+		books.clear(); // TODO: Garbage collection
 	}
 	
 	/**
