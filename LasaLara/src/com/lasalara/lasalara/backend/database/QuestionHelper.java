@@ -167,9 +167,8 @@ public class QuestionHelper {
 		String orderClause = StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " ASC";
 		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, null, whereClause, whereArguments, null, null, orderClause, "1");
 		boolean moveSucceeded = results.moveToFirst();
-		while (moveSucceeded) {
+		if (moveSucceeded) {
 			nextQuestion = new Question(results);
-			moveSucceeded = results.moveToNext();
 		}
 		results.close();
 		return nextQuestion;
@@ -187,9 +186,8 @@ public class QuestionHelper {
 		String orderClause = StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " ASC";
 		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, columns, whereClause, whereArguments, null, null, orderClause, "1");
 		boolean moveSucceeded = results.moveToFirst();
-		while (moveSucceeded) {
+		if (moveSucceeded) {
 			nextTime = results.getString(0);
-			moveSucceeded = results.moveToNext();
 		}
 		results.close();
 		return nextTime;
