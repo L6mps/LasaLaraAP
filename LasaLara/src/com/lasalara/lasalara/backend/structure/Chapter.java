@@ -134,7 +134,6 @@ public class Chapter {
 
 	/**
 	 * Load the questions in this book.
-	 * @param context			The current activity's context (needed for network connection check).
 	 * @throws WebRequestException 
 	 * @throws FormatException 
 	 * @throws IOException

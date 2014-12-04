@@ -162,7 +162,6 @@ public class Book {
 	
 	/**
 	 * Download the chapters in this book from the web.
-	 * @param context		The current activity's context (needed for network connection check).
 	 * @throws WebRequestException 
 	 * @throws FormatException
 	 */
@@ -376,7 +375,6 @@ public class Book {
 	 * The chapters are read from the SQLite database. If the book is used for the first time,
 	 * the data is first downloaded from the web.
 	 * If the value of insertIntoDatabase is false, the chapters are not inserted into the database.
-	 * @param context		The current activity's context (needed for network connection check).
 	 * @return the list of chapters in this book.
 	 * @throws FormatException 
 	 * @throws WebRequestException 
@@ -390,7 +388,6 @@ public class Book {
 	 * Return a list of chapters in this book. Used when the user has opened a book.
 	 * The chapters are read from the SQLite database. If the book is used for the first time,
 	 * the data is first downloaded from the web.
-	 * @param context		The current activity's context (needed for network connection check).
 	 * @return the list of chapters in this book.
 	 * @throws FormatException 
 	 * @throws WebRequestException 
