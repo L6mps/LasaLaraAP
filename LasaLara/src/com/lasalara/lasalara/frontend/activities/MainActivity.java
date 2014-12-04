@@ -5,6 +5,7 @@ import com.lasalara.lasalara.R;
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
@@ -289,8 +290,12 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	}
 	
 	public void sendQuestionPropositionOnQuestionPropositionDialogClick() {
-		qFragment.getParentChapter().poseQuestion(((EditText)pqFragment.getView().findViewById(R.id.question)).getText().toString(),
-				((EditText)pqFragment.getView().findViewById(R.id.answer)).getText().toString());
+		try {
+			qFragment.getParentChapter().poseQuestion(((EditText)pqFragment.getView().findViewById(R.id.question)).getText().toString(),
+					((EditText)pqFragment.getView().findViewById(R.id.answer)).getText().toString());
+		} catch (WebRequestException e) {
+			Backend.getInstance().addMessage(e.getMessage());
+		}
 		getSupportFragmentManager().popBackStack(); // Goes back to last screen
 		hideSoftwareKeyboard();
 		// TODO: an alert thanking for the proposition
