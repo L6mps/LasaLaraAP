@@ -1,10 +1,9 @@
 package com.lasalara.lasalara.backend;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
+import com.lasalara.lasalara.LasaLaraApplication;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
 import com.lasalara.lasalara.backend.exceptions.FormatException;
@@ -13,6 +12,7 @@ import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Message;
 import com.lasalara.lasalara.backend.structure.Progress;
+import com.lasalara.lasalara.frontend.activities.MainActivity;
 
 /**
  * The main class of the back end of the application.
@@ -21,7 +21,7 @@ import com.lasalara.lasalara.backend.structure.Progress;
  */
 public class Backend {
 	private static Backend instance;	// The back end instance
-	private Queue<Message> messages;	// The application message queue
+	MessageListener messageCallback;	// The message queue callback class
 	private List<Book> books;			// The downloaded books' list
 	private boolean pageViewOn;			// Questions' page view setting - whether the questions are displayed on a single page or separately
 	
@@ -31,9 +31,9 @@ public class Backend {
 	 */
 	private Backend() {
 		super();
-		messages = new ArrayDeque<Message>();
 		books = new ArrayList<Book>();
 		pageViewOn = false;
+		messageCallback = (MessageListener) LasaLaraApplication.getCurrentContext();
 	}
 	
 	/**
@@ -58,7 +58,7 @@ public class Backend {
 	 * @param message	The Message object.
 	 */
 	public void addMessage(Message message) {
-		messages.add(message);
+		messageCallback.messageAdded(message);
 	}
 	
 	/**
@@ -66,15 +66,7 @@ public class Backend {
 	 * @param message	The message string.
 	 */
 	public void addMessage(String message) {
-		messages.add(new Message(message));
-	}
-	
-	/**
-	 * Retrieve and remove the next message in the message queue.
-	 * @return the next message in the message queue.
-	 */
-	public Message nextMessage() {
-		return messages.poll();
+		messageCallback.messageAdded(new Message(message));
 	}
 	
 	/**
@@ -211,5 +203,13 @@ public class Backend {
 	 */
 	public void setPageViewOn(boolean pageViewOn) {
 		this.pageViewOn = pageViewOn;
+	}
+	
+	/**
+	 * The message queue listener.
+	 * @author Ants-Oskar Mäesalu
+	 */
+	public interface MessageListener {
+		public void messageAdded(Message message);
 	}
 }
