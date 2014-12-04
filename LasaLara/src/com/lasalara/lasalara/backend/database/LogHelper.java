@@ -5,6 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
+import com.lasalara.lasalara.backend.exceptions.FormatException;
+import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Message;
 
@@ -65,8 +67,10 @@ public class LogHelper {
 	
 	/**
 	 * Delete all of the log events from the SQLite database.
+	 * @throws FormatException 
+	 * @throws WebRequestException 
 	 */
-	public void deleteLog() {
+	public void deleteLog() throws FormatException, WebRequestException {
 		for (Book book: Backend.getInstance().getBooks()) {
 			DatabaseHelper.getInstance().getChapterHelper().deleteChapters(book);
 		}

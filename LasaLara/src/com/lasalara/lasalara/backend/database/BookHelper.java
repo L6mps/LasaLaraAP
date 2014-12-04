@@ -5,6 +5,8 @@ import java.util.List;
 
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
+import com.lasalara.lasalara.backend.exceptions.FormatException;
+import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.structure.Book;
 
 import android.content.ContentValues;
@@ -107,8 +109,10 @@ public class BookHelper {
 	 * Delete a book from the SQLite database.
 	 * Also deletes all of the chapters (and their corresponding questions) associated with the deleted book.
 	 * @param book		The book object's instance.
+	 * @throws FormatException 
+	 * @throws WebRequestException 
 	 */
-	public void deleteBook(Book book) {
+	public void deleteBook(Book book) throws FormatException, WebRequestException {
 		DatabaseHelper.getInstance().getChapterHelper().deleteChapters(book);
 		String whereClause = StringConstants.BOOK_COLUMN_KEY + "=?";
 		String[] whereArguments = {book.getKey()};
@@ -118,8 +122,10 @@ public class BookHelper {
 	/**
 	 * Delete all of the books from the SQLite database.
 	 * Also deletes all of the chapters (and their corresponding questions) associated with the deleted books.
+	 * @throws FormatException 
+	 * @throws WebRequestException 
 	 */
-	public void deleteBooks() {
+	public void deleteBooks() throws FormatException, WebRequestException {
 		for (Book book: Backend.getInstance().getBooks()) {
 			DatabaseHelper.getInstance().getChapterHelper().deleteChapters(book);
 		}

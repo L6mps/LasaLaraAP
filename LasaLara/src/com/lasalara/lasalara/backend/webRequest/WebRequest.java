@@ -3,7 +3,12 @@ package com.lasalara.lasalara.backend.webRequest;
 import android.os.Build;
 import android.util.Log; // TODO: Remove as soon as posing questions works
 
+import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
+import com.lasalara.lasalara.backend.exceptions.FormatException;
+import com.lasalara.lasalara.backend.exceptions.FormatExceptionMessage;
+import com.lasalara.lasalara.backend.exceptions.WebRequestException;
+import com.lasalara.lasalara.backend.exceptions.WebRequestExceptionMessage;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -38,25 +43,30 @@ public class WebRequest {
 	 * @param url			The URL of the web request.
 	 * @param urlParameters	The URL parameters string.
 	 * @throws IOException
+	 * @throws WebRequestException 
 	 */
-	public WebRequest(String url, UrlParameters parameterList) throws IOException {
+	public WebRequest(String url, UrlParameters parameterList) throws IOException, WebRequestException {
 		disableConnectionReuseIfNecessary();
-		Log.d(StringConstants.APP_NAME, "Network is connected.");
 		this.url = url;
 		this.parameterList = parameterList;
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
-				sendRequest();
-				getResponse();
+				try {
+					sendRequest();
+					getResponse();
+				} catch (FormatException e) {
+					Backend.getInstance().addMessage(e.getMessage());
+				} catch (WebRequestException e) {
+					Backend.getInstance().addMessage(e.getMessage());
+				}
 			}
 		};
 		thread.start();
 		try {
 			thread.join();
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new WebRequestException(WebRequestExceptionMessage.INTERRUPTED);
 		}
 	}
 	
@@ -71,8 +81,10 @@ public class WebRequest {
 	
 	/**
 	 * Send a POST web request to the site.
+	 * @throws FormatException 
+	 * @throws WebRequestException 
 	 */
-	private void sendRequest() {
+	private void sendRequest() throws FormatException, WebRequestException {
 		Log.d(StringConstants.APP_NAME, "Sending request.");
 		HttpClient client = new DefaultHttpClient();
 		HttpPost post = new HttpPost(url);
@@ -85,38 +97,37 @@ public class WebRequest {
 			Log.d(StringConstants.APP_NAME, "Setting URL entity.");
 			post.setEntity(new UrlEncodedFormEntity(pairs));
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new FormatException(FormatExceptionMessage.WEB_REQUEST_ENCODING);
 		}
 		try {
 			Log.d(StringConstants.APP_NAME, "Getting HTTP response.");
 			response = client.execute(post);
 			Log.d(StringConstants.APP_NAME, "Got HTTP response.");
 		} catch (ClientProtocolException e) {
-			Log.d(StringConstants.APP_NAME, "ClientProtocolException: " + e.getStackTrace()); // TODO
+			throw new WebRequestException(WebRequestExceptionMessage.CLIENT_PROTOCOL);
 		} catch (IOException e) {
-			Log.d(StringConstants.APP_NAME, "IOException: " + e.getStackTrace()); // TODO
+			throw new WebRequestException();
 		} catch (Exception e) {
-			Log.d(StringConstants.APP_NAME, "Jumaliku käe exception: " + e.getStackTrace()); // TODO
+			throw new WebRequestException();
 		}
 	}
 	
 	/**
 	 * Get a response from the web request.
+	 * @throws WebRequestException 
 	 */
-	private void getResponse() {
+	private void getResponse() throws WebRequestException {
 		result = null;
 		try {
 			Log.d(StringConstants.APP_NAME, "Getting response.");
 			result = EntityUtils.toString(response.getEntity());
 			Log.d(StringConstants.APP_NAME, "Got response.");
-			//Log.d(StringConstants.APP_NAME, result);
 		} catch (ParseException e) {
-			Log.d(StringConstants.APP_NAME, "ParseException: " + e.getStackTrace());
+			throw new WebRequestException(WebRequestExceptionMessage.PARSE);
 		} catch (IOException e) {
-			Log.d(StringConstants.APP_NAME, "IOException: " + e.getStackTrace());
+			throw new WebRequestException();
 		} catch (Exception e) {
-			Log.d(StringConstants.APP_NAME, "Jumaliku käe exception: " + e.getStackTrace());
+			throw new WebRequestException();
 		}
 	}
 	

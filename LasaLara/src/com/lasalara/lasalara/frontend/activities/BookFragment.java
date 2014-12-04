@@ -1,5 +1,6 @@
 package com.lasalara.lasalara.frontend.activities;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -10,6 +11,8 @@ import android.widget.ListView;
 
 import com.lasalara.lasalara.R;
 import com.lasalara.lasalara.backend.Backend;
+import com.lasalara.lasalara.backend.exceptions.FormatException;
+import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
@@ -62,7 +65,15 @@ public class BookFragment extends ListFragment{
 	}
 
 	public List<Chapter> getBookChapters(int position) {
-		return books.get(position).getChapters();
+		try {
+			return books.get(position).getChapters();
+		} catch (FormatException e) {
+			Backend.getInstance().addMessage(e.getMessage());
+			return new ArrayList<Chapter>();
+		} catch (WebRequestException e) {
+			Backend.getInstance().addMessage(e.getMessage());
+			return new ArrayList<Chapter>();
+		}
 	}
 
 	public Progress getProgress() {

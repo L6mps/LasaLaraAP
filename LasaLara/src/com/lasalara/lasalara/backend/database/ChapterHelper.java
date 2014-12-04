@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.lasalara.lasalara.backend.constants.StringConstants;
+import com.lasalara.lasalara.backend.exceptions.FormatException;
+import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 
@@ -144,8 +146,10 @@ public class ChapterHelper {
 	 * Delete all of the chapters associated with a certain book from the SQLite database.
 	 * Also deletes all of the questions associated with the deleted chapters.
 	 * @param book		The book object's instance.
+	 * @throws FormatException 
+	 * @throws WebRequestException 
 	 */
-	public void deleteChapters(Book book) {
+	public void deleteChapters(Book book) throws FormatException, WebRequestException {
 		for (Chapter chapter: book.getChapters()) {
 			DatabaseHelper.getInstance().getQuestionHelper().deleteQuestions(chapter);
 		}

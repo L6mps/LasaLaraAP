@@ -10,7 +10,11 @@ import org.json.JSONObject;
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
+import com.lasalara.lasalara.backend.exceptions.FormatException;
+import com.lasalara.lasalara.backend.exceptions.FormatExceptionMessage;
 import com.lasalara.lasalara.backend.exceptions.NumericException;
+import com.lasalara.lasalara.backend.exceptions.WebRequestException;
+import com.lasalara.lasalara.backend.exceptions.WebRequestExceptionMessage;
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
 import com.lasalara.lasalara.backend.webRequest.WebRequest;
 
@@ -44,10 +48,12 @@ public class Chapter {
 	 * @param proposalsAllowed		Boolean value, whether the author allows question proposals or not.
 	 * @param bookKey				The book the chapter is located in.
 	 * @param insertIntoDatabase	Whether to insert the downloaded chapter into the database or not.
+	 * @throws WebRequestException 
+	 * @throws FormatException 
 	 */
 	public Chapter(String key, String title, int version, String authorEmail, 
 			String authorName, String authorInstitution, boolean proposalsAllowed, int position,
-			String bookKey, boolean insertIntoDatabase) {
+			String bookKey, boolean insertIntoDatabase) throws WebRequestException, FormatException {
 		this.key = key;
 		this.title = title;
 		this.version = version;
@@ -113,10 +119,12 @@ public class Chapter {
 	/**
 	 * Load the questions in this book.
 	 * @param context			The current activity's context (needed for network connection check).
+	 * @throws WebRequestException 
+	 * @throws FormatException 
 	 * @throws IOException
 	 * @throws JSONException
 	 */
-	private void downloadQuestions() {
+	private void downloadQuestions() throws WebRequestException, FormatException {
 		String url = StringConstants.URL_GET_QUESTIONS;
 		UrlParameters urlParameters = new UrlParameters();
 		urlParameters.addPair("ck", key);
@@ -124,8 +132,7 @@ public class Chapter {
 		try {
 			request = new WebRequest(url, urlParameters);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			throw new WebRequestException(WebRequestExceptionMessage.QUESTIONS_DOWNLOAD);
 		}
 		try {
 			JSONObject result = request.getJSONObject();
@@ -139,12 +146,10 @@ public class Chapter {
 					new Question(question, answer, key);
 				}
 			} else {
-				throw new RuntimeException();
-				// TODO: Parse error
+				throw new FormatException(FormatExceptionMessage.QUESTIONS_DOWNLOAD_LIST);
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new FormatException(FormatExceptionMessage.QUESTIONS_DOWNLOAD);
 		}
 	}
 	
@@ -153,8 +158,10 @@ public class Chapter {
 	 * version number.
 	 * All of the currently existing questions are purged from the database and new ones are 
 	 * downloaded.
+	 * @throws WebRequestException 
+	 * @throws FormatException 
 	 */
-	public void update(Chapter updatedChapter) {
+	public void update(Chapter updatedChapter) throws WebRequestException, FormatException {
 		title = updatedChapter.getTitle();
 		version = updatedChapter.getVersion();
 		authorEmail = updatedChapter.getAuthorEmail();
@@ -207,8 +214,9 @@ public class Chapter {
 	 * The data is sent to the author through a web request.
 	 * @param question	The new question's question string.
 	 * @param answer	The new question's answer.
+	 * @throws WebRequestException 
 	 */
-	public void poseQuestion(String question, String answer) { // TODO: Test
+	public void poseQuestion(String question, String answer) throws WebRequestException { // TODO: Test
 		String url = StringConstants.URL_POSE_QUESTION;
 		UrlParameters urlParameters = new UrlParameters();
 		urlParameters.addPair("ck", key);
@@ -217,10 +225,8 @@ public class Chapter {
 		try {
 			new WebRequest(url, urlParameters);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			throw new WebRequestException(WebRequestExceptionMessage.QUESTION_POSING);
 		}
-		// TODO: Do we need to check for returned data?
 	}
 	
 	/**

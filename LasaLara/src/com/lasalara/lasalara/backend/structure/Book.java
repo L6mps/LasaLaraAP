@@ -2,8 +2,6 @@ package com.lasalara.lasalara.backend.structure;
 
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -21,6 +19,8 @@ import com.lasalara.lasalara.backend.exceptions.FormatException;
 import com.lasalara.lasalara.backend.exceptions.FormatExceptionMessage;
 import com.lasalara.lasalara.backend.exceptions.InputDoesntExistException;
 import com.lasalara.lasalara.backend.exceptions.InputDoesntExistExceptionMessage;
+import com.lasalara.lasalara.backend.exceptions.WebRequestException;
+import com.lasalara.lasalara.backend.exceptions.WebRequestExceptionMessage;
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
 import com.lasalara.lasalara.backend.webRequest.WebRequest;
 
@@ -48,8 +48,9 @@ public class Book {
 	 * @param insertIntoDatabase	Whether to insert the book into the database or not.
 	 * @throws InputDoesntExistException 
 	 * @throws FormatException 
+	 * @throws WebRequestException 
 	 */
-	public Book(String ownerEmail, String title, boolean insertIntoDatabase) throws InputDoesntExistException, FormatException {
+	public Book(String ownerEmail, String title, boolean insertIntoDatabase) throws InputDoesntExistException, FormatException, WebRequestException {
 		String url = StringConstants.URL_GET_BOOK;
 		UrlParameters urlParameters = new UrlParameters();
 		urlParameters.addPair("em", ownerEmail.toLowerCase(Locale.ENGLISH));
@@ -58,8 +59,7 @@ public class Book {
 		try {
 			request = new WebRequest(url, urlParameters);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			throw new WebRequestException(WebRequestExceptionMessage.BOOK_DOWNLOAD);
 		}
 		try {
 			JSONObject result = request.getJSONObject();
@@ -93,8 +93,7 @@ public class Book {
 				}
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new FormatException(FormatExceptionMessage.BOOK_DOWNLOAD);
 		}
 		chapters = new ArrayList<Chapter>();
 	}
@@ -131,8 +130,10 @@ public class Book {
 	 * Load the book's contents from the SQLite database. If there are no chapters in the SQLite
 	 * database, they are downloaded from the web. Used when the user clicks on the book.
 	 * @param insertIntoDatabase	Whether to insert the chapters into the database or not.
+	 * @throws FormatException 
+	 * @throws WebRequestException 
 	 */
-	private void load(boolean insertIntoDatabase) {
+	private void load(boolean insertIntoDatabase) throws FormatException, WebRequestException {
 		if (chapters.isEmpty()) {
 			downloadChapters(insertIntoDatabase);
 		}
@@ -141,8 +142,10 @@ public class Book {
 	/**
 	 * Delete this book from the database.
 	 * Also deletes all of the associated chapters and their questions from the database.
+	 * @throws FormatException 
+	 * @throws WebRequestException 
 	 */
-	private void deleteFromDatabase() {
+	private void deleteFromDatabase() throws FormatException, WebRequestException {
 		DatabaseHelper.getInstance().getBookHelper().deleteBook(this);
 	}
 	
@@ -162,25 +165,19 @@ public class Book {
 	/**
 	 * Download the chapters in this book from the web.
 	 * @param context		The current activity's context (needed for network connection check).
-	 * @throws IOException
-	 * @throws JSONException
+	 * @throws WebRequestException 
+	 * @throws FormatException
 	 */
-	private void downloadChapters(boolean insertIntoDatabase) {
+	private void downloadChapters(boolean insertIntoDatabase) throws FormatException, WebRequestException {
 		chapters = new ArrayList<Chapter>();
 		String url = StringConstants.URL_GET_CHAPTERS;
 		UrlParameters urlParameters = new UrlParameters();
-		try {
-			urlParameters.addPair("bk", URLEncoder.encode(key, "UTF-8"));
-		} catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		urlParameters.addPair("bk", key);
 		WebRequest request = null;
 		try {
 			request = new WebRequest(url, urlParameters);
 		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			throw new WebRequestException(WebRequestExceptionMessage.CHAPTERS_DOWNLOAD);
 		}
 		try {
 			JSONArray resultArray = request.getJSONArray();
@@ -204,8 +201,7 @@ public class Book {
 						chapterProposalsAllowed, i, key, insertIntoDatabase));
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			throw new FormatException(FormatExceptionMessage.CHAPTERS_DOWNLOAD);
 		}
 	}
 	
@@ -216,8 +212,9 @@ public class Book {
 	 * Appropriate notification messages are sent to the user.
 	 * @throws FormatException 
 	 * @throws InputDoesntExistException 
+	 * @throws WebRequestException 
 	 */
-	public void update() throws InputDoesntExistException, FormatException {
+	public void update() throws InputDoesntExistException, FormatException, WebRequestException {
 		Book updatedBook = new Book(ownerEmail, title, false);
 		List<Chapter> updatedChapters = updatedBook.getChapters(false);
 		int numberOfInsertedChapters = 0;
@@ -290,8 +287,10 @@ public class Book {
 	
 	/**
 	 * Delete this book from the application.
+	 * @throws FormatException 
+	 * @throws WebRequestException 
 	 */
-	public void delete() {
+	public void delete() throws FormatException, WebRequestException {
 		deleteChapters();
 		deleteFromDatabase();
 	}
@@ -371,8 +370,10 @@ public class Book {
 	 * If the value of insertIntoDatabase is false, the chapters are not inserted into the database.
 	 * @param context		The current activity's context (needed for network connection check).
 	 * @return the list of chapters in this book.
+	 * @throws FormatException 
+	 * @throws WebRequestException 
 	 */
-	private List<Chapter> getChapters(boolean insertIntoDatabase) {
+	private List<Chapter> getChapters(boolean insertIntoDatabase) throws FormatException, WebRequestException {
 		load(insertIntoDatabase);
 		return chapters;
 	}
@@ -383,8 +384,10 @@ public class Book {
 	 * the data is first downloaded from the web.
 	 * @param context		The current activity's context (needed for network connection check).
 	 * @return the list of chapters in this book.
+	 * @throws FormatException 
+	 * @throws WebRequestException 
 	 */
-	public List<Chapter> getChapters() {
+	public List<Chapter> getChapters() throws FormatException, WebRequestException {
 		load(true);
 		return chapters;
 	}

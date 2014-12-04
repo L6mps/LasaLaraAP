@@ -12,8 +12,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.lasalara.lasalara.R;
+import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.exceptions.FormatException;
 import com.lasalara.lasalara.backend.exceptions.InputDoesntExistException;
+import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
@@ -37,7 +39,15 @@ OnChapterSelectedListener mCallback;
 	public void onResume() {
 		super.onResume();
 		getActivity().invalidateOptionsMenu();
-		this.chapters = parentBook.getChapters();
+		try {
+			this.chapters = parentBook.getChapters();
+		} catch (FormatException e) {
+			Backend.getInstance().addMessage(e.getMessage());
+			this.chapters = new ArrayList<Chapter>();
+		} catch (WebRequestException e) {
+			Backend.getInstance().addMessage(e.getMessage());
+			this.chapters = new ArrayList<Chapter>();
+		}
 		listAdapter.setChapterData(chapters);
 		listAdapter.notifyDataSetChanged();
 	}
@@ -90,11 +100,11 @@ OnChapterSelectedListener mCallback;
 			parentBook.update();
 			setListAdapter(new CustomListAdapter(getActivity(), chapters, true));
 		} catch (InputDoesntExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Backend.getInstance().addMessage(e.getMessage());
 		} catch (FormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			Backend.getInstance().addMessage(e.getMessage());
+		} catch (WebRequestException e) {
+			Backend.getInstance().addMessage(e.getMessage());
 		}
 		
 	}

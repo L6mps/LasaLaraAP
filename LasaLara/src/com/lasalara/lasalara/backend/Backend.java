@@ -9,6 +9,7 @@ import com.lasalara.lasalara.backend.constants.StringConstants;
 import com.lasalara.lasalara.backend.database.DatabaseHelper;
 import com.lasalara.lasalara.backend.exceptions.FormatException;
 import com.lasalara.lasalara.backend.exceptions.InputDoesntExistException;
+import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Message;
 import com.lasalara.lasalara.backend.structure.Progress;
@@ -111,7 +112,7 @@ public class Backend {
 	
 	/**
 	 * Download a book.
-	 * If the book already exists in the user's book list, an error message is shown. // TODO
+	 * If the book already exists in the user's book list, an error message is shown.
 	 * @param ownerEmail	The book's owner's e-mail address.
 	 * @param bookTitle		The book's title.
 	 */
@@ -129,8 +130,9 @@ public class Backend {
 			}
 		} catch (InputDoesntExistException e) {
 			addMessage(e.getMessage());
-			e.printStackTrace();
 		} catch (FormatException e) {
+			addMessage(e.getMessage());
+		} catch (WebRequestException e) {
 			addMessage(e.getMessage());
 		}
 	}
@@ -143,11 +145,11 @@ public class Backend {
 		try {
 			books.get(index).update();
 		} catch (InputDoesntExistException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			addMessage(e.getMessage());
 		} catch (FormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			addMessage(e.getMessage());
+		} catch (WebRequestException e) {
+			addMessage(e.getMessage());
 		}
 	}
 	
@@ -156,16 +158,28 @@ public class Backend {
 	 * @param index		The book's index in the book list.
 	 */
 	public void deleteBook(int index) {
-		books.get(index).delete();
-		books.remove(index);
+		try {
+			books.get(index).delete();
+			books.remove(index);
+		} catch (FormatException e) {
+			addMessage(e.getMessage());
+		} catch (WebRequestException e) {
+			addMessage(e.getMessage());
+		}
 	}
 	
 	/**
 	 * Delete all of the books from the application.
 	 */
 	public void deleteBooks() {
-		DatabaseHelper.getInstance().getBookHelper().deleteBooks();
-		books.clear(); // TODO: Garbage collection
+		try {
+			DatabaseHelper.getInstance().getBookHelper().deleteBooks();
+			books.clear(); // TODO: Garbage collection
+		} catch (FormatException e) {
+			addMessage(e.getMessage());
+		} catch (WebRequestException e) {
+			addMessage(e.getMessage());
+		}
 	}
 	
 	/**
