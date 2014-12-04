@@ -15,6 +15,8 @@ import android.widget.TextView;
 import android.widget.ViewSwitcher.ViewFactory;
 
 import com.lasalara.lasalara.R;
+import com.lasalara.lasalara.backend.Backend;
+import com.lasalara.lasalara.backend.exceptions.NumericException;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
 import com.lasalara.lasalara.backend.structure.Question;
@@ -62,10 +64,15 @@ public class QuestionFragment extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         	View v = inflater.inflate(R.layout.questionlayout, container, false);
-			qa = parentChapter.getNextQuestion();
-			if(qa==null) {
-				refBack.manualBack();
-				return v;
+        	qa = null;
+			try {
+				qa = parentChapter.getNextQuestion();
+				if(qa == null) {
+					refBack.manualBack();
+					return v;
+				} // TODO: Revise whether the whole method should be done inside the "try" block.
+			} catch (NumericException e) {
+				Backend.getInstance().addMessage(e.getMessage());
 			}
 	        q = (TextSwitcher) v.findViewById(R.id.questionView);
 			a = (TextSwitcher) v.findViewById(R.id.answerView);
@@ -141,15 +148,19 @@ public class QuestionFragment extends Fragment {
 	}
 
 	private void nextQuestion() {
-		qa = parentChapter.getNextQuestion();
-		if(qa!=null)
-			changeQuestion();
-		else {
-			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			builder.setMessage("Chapter complete! You will need to review this chapter after 5 seconds");
-			builder.setPositiveButton("OK", null);
-			builder.show();			
-			refBack.manualBack();
+		try {
+			qa = parentChapter.getNextQuestion();
+			if(qa != null)
+				changeQuestion();
+			else {
+				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+				builder.setMessage("Chapter complete! You will need to review this chapter after 5 seconds"); // TODO: Remove this after the message queue callback has been implemented
+				builder.setPositiveButton("OK", null);
+				builder.show();			
+				refBack.manualBack();
+			}
+		} catch (NumericException e) {
+			Backend.getInstance().addMessage(e.getMessage());
 		}
 	}
 	

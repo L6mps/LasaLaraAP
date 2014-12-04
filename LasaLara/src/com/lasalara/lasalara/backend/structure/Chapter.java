@@ -13,6 +13,7 @@ import com.lasalara.lasalara.backend.database.DatabaseHelper;
 import com.lasalara.lasalara.backend.exceptions.FormatException;
 import com.lasalara.lasalara.backend.exceptions.FormatExceptionMessage;
 import com.lasalara.lasalara.backend.exceptions.NumericException;
+import com.lasalara.lasalara.backend.exceptions.NumericExceptionMessage;
 import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.exceptions.WebRequestExceptionMessage;
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
@@ -352,8 +353,18 @@ public class Chapter {
 	 * Return the next question in the list for this chapter.
 	 * The chapters are read from the SQLite database and only the first one is returned.
 	 * @return the next question in the list for this chapter.
+	 * @throws NumericException 
 	 */
-	public Question getNextQuestion() {
-		return DatabaseHelper.getInstance().getQuestionHelper().getNextQuestion(key);
+	public Question getNextQuestion() throws NumericException {
+		Question nextQuestion = DatabaseHelper.getInstance().getQuestionHelper().getNextQuestion(key);
+		if (nextQuestion == null) {
+			String nextTime = DatabaseHelper.getInstance().getQuestionHelper().getNextAvailableTime(key);
+			if (nextTime != null) {
+				Backend.getInstance().addMessage("The chapter has been completed. You can revise the chapter starting from " + nextTime + ".");
+			} else {
+				throw new NumericException(NumericExceptionMessage.CHAPTER_NEXT_TIME_MISSING);
+			}
+		}
+		return nextQuestion;
 	}
 }

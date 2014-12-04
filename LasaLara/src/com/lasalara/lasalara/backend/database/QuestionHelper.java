@@ -173,6 +173,25 @@ public class QuestionHelper {
 	
 	/**
 	 * @param chapterKey	The current chapter's UUID.
+	 * @return the earliest time the chapter could be revised.
+	 */
+	public String getNextAvailableTime(String chapterKey) {
+		String nextTime = null;
+		String[] columns = {StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME};
+		String whereClause = StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=?";
+		String[] whereArguments = {chapterKey};
+		String orderClause = StringConstants.QUESTION_COLUMN_KNOWN_UNTIL_TIME + " ASC";
+		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, columns, whereClause, whereArguments, null, null, orderClause, "1");
+		boolean moveSucceeded = results.moveToFirst();
+		while (moveSucceeded) {
+			nextTime = results.getString(0);
+			moveSucceeded = results.moveToNext();
+		}
+		return nextTime;
+	}
+	
+	/**
+	 * @param chapterKey	The current chapter's UUID.
 	 * @return the total number of questions in this chapter.
 	 */
 	public int getNumberOfQuestions(String chapterKey) {
