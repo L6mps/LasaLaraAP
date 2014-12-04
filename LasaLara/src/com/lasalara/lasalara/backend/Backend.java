@@ -13,7 +13,6 @@ import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Message;
 import com.lasalara.lasalara.backend.structure.Progress;
-import com.lasalara.lasalara.frontend.activities.MainActivity;
 
 /**
  * The main class of the back end of the application.
