@@ -91,13 +91,13 @@ public class Question {
 	}
 	
 	/**
-	 * Set the question "kind of known". Used when the user has some uncertainties about 
+	 * Set the question partially known. Used when the user has some uncertainties about 
 	 * his/her knowledge.
 	 * Currently, this method differs from the setKnown() method only so that the extra
 	 * time added is cut in half. The review count is increased but the knownCount is not
 	 * updated.
 	 */
-	public void setKindOfKnown() {
+	public void setPartiallyKnown() {
 		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
 		long secondsSinceReview = currentTime.getTime() - reviewTime.getTime();
 		long secondsToAdd = NumericalConstants.TWENTYFIVESECONDS;

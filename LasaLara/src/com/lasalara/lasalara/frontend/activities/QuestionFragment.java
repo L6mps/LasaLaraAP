@@ -171,7 +171,7 @@ public class QuestionFragment extends Fragment {
 		if(pos==0)
 			this.qa.setKnown();
 		else if(pos == 1)
-			this.qa.setKindOfKnown();
+			this.qa.setPartiallyKnown();
 		else if(pos == 2)
 			this.qa.setUnknown();
 		nextQuestion();
