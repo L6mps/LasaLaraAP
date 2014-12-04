@@ -5,8 +5,6 @@ import java.util.List;
 
 import com.lasalara.lasalara.backend.Backend;
 import com.lasalara.lasalara.backend.constants.StringConstants;
-import com.lasalara.lasalara.backend.exceptions.FormatException;
-import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.structure.Book;
 
 import android.content.ContentValues;
