@@ -20,10 +20,10 @@ import com.lasalara.lasalara.backend.structure.Progress;
  * @author Ants-Oskar Mäesalu
  */
 public class Backend {
-	private static Backend instance;	// The back end instance
-	MessageListener messageCallback;	// The message queue callback class
-	private List<Book> books;			// The downloaded books' list
-	private boolean pageViewOn;			// Questions' page view setting - whether the questions are displayed on a single page or separately
+	private static Backend instance;		// The back end instance
+	static MessageListener messageCallback;	// The message queue callback class
+	private List<Book> books;				// The downloaded books' list
+	private boolean pageViewOn;				// Questions' page view setting - whether the questions are displayed on a single page or separately
 	
 	/**
 	 * Constructor.
@@ -33,7 +33,6 @@ public class Backend {
 		super();
 		books = new ArrayList<Book>();
 		pageViewOn = false;
-		messageCallback = (MessageListener) LasaLaraApplication.getCurrentContext();
 	}
 	
 	/**
@@ -51,6 +50,13 @@ public class Backend {
 	 */
 	public static Backend getInstance() {
 		return instance;
+	}
+	
+	/**
+	 * Initialize the callback object.
+	 */
+	public static void initializeCallback() {
+		messageCallback = (MessageListener) LasaLaraApplication.getCurrentContext();
 	}
 	
 	/**

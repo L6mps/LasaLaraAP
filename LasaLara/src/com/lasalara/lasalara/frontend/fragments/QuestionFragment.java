@@ -152,13 +152,8 @@ public class QuestionFragment extends Fragment {
 			qa = parentChapter.getNextQuestion();
 			if(qa != null)
 				changeQuestion();
-			else {
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-				builder.setMessage("Chapter complete! You will need to review this chapter after 5 seconds"); // TODO: Remove this after the message queue callback has been implemented
-				builder.setPositiveButton("OK", null);
-				builder.show();			
+			else		
 				refBack.manualBack();
-			}
 		} catch (NumericException e) {
 			Backend.getInstance().addMessage(e.getMessage());
 		}

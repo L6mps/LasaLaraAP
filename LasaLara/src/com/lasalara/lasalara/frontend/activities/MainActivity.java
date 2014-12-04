@@ -68,6 +68,7 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		LasaLaraApplication.setCurrentContext(this);
+		Backend.initializeCallback();
 		Log.d(StringConstants.APP_NAME, "Initialising database helper.");
 		DatabaseHelper.initialiseInstance(this);
 		Log.d(StringConstants.APP_NAME, "Getting books.");

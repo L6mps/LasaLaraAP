@@ -43,7 +43,6 @@ public class Chapter {
 	/**
 	 * Constructor, used when downloading a chapter from the web.
 	 * The questions in all of these chapters are also downloaded.
-	 * TODO: Recursive asynchronous downloading.
 	 * @param key					The chapter's UUID key.
 	 * @param title					The chapter's title.
 	 * @param version				The chapter's version. Version numbers let the app know when to re-download chapter questions.
