@@ -23,24 +23,6 @@ public class Question {
 	private String chapterKey;				// The chapter the question is located in.
 	
 	/**
-	 * Constructor, used when downloading all of the questions in a chapter.
-	 * @param question	The question string.
-	 * @param answer	The question's answer string.
-	 * @param bookKey	The book the chapter is located in.
-	 */
-	Question(String question, String answer, String chapterKey) {
-		this.question = question;
-		this.answer = answer;
-		reviewCount = 0;
-		knownCount = 0;
-		Timestamp currentTime = new Timestamp(Calendar.getInstance().getTime().getTime());
-		reviewTime = currentTime;
-		knownUntilTime = currentTime;
-		this.chapterKey = chapterKey;
-		DatabaseHelper.getInstance().getQuestionHelper().insertQuestion(this);
-	}
-	
-	/**
 	 * Constructor, used when querying data from the internal SQLite database.
 	 * @param dbResults			Database query results.
 	 */
