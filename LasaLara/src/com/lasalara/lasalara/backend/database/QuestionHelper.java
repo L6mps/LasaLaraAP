@@ -73,7 +73,9 @@ public class QuestionHelper {
 				" AND " + StringConstants.QUESTION_COLUMN_CHAPTER_KEY + "=?";
 		String[] whereArguments = {question.getQuestion(), question.getAnswer(), question.getChapterKey()};
 		Cursor results = database.query(StringConstants.QUESTION_TABLE_NAME, columns, whereClause, whereArguments, null, null, null);
-		return results.moveToFirst();
+		boolean exists = results.moveToFirst();
+		results.close();
+		return exists;
 	}
 	
 	/**
@@ -148,6 +150,7 @@ public class QuestionHelper {
 			questionList.add(new Question(results));
 			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return questionList;
 	}
 	
@@ -168,6 +171,7 @@ public class QuestionHelper {
 			nextQuestion = new Question(results);
 			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return nextQuestion;
 	}
 	
@@ -187,6 +191,7 @@ public class QuestionHelper {
 			nextTime = results.getString(0);
 			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return nextTime;
 	}
 	
@@ -205,6 +210,7 @@ public class QuestionHelper {
 			numberOfQuestions = results.getInt(0);
 			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return numberOfQuestions;
 	}
 	
@@ -225,6 +231,7 @@ public class QuestionHelper {
 			numberOfAnsweredQuestions = results.getInt(0);
 			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return numberOfAnsweredQuestions;
 	}
 	
@@ -245,6 +252,7 @@ public class QuestionHelper {
 			numberOfAnsweredQuestions = results.getInt(0);
 			moveSucceeded = results.moveToNext();
 		}
+		results.close();
 		return numberOfAnsweredQuestions;
 	}
 }
