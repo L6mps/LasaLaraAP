@@ -1,4 +1,4 @@
-package com.lasalara.lasalara.frontend.activities;
+package com.lasalara.lasalara.frontend.fragments;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +16,7 @@ import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
+import com.lasalara.lasalara.frontend.adapters.CustomListAdapter;
 
 public class BookFragment extends ListFragment{
 	OnBookSelectedListener mCallback;

@@ -1,10 +1,10 @@
-package com.lasalara.lasalara.frontend.activities;
+package com.lasalara.lasalara.frontend.fragments;
 
 import java.util.List;
 
 import com.lasalara.lasalara.backend.structure.Question;
-import com.lasalara.lasalara.frontend.activities.QuestionFragment.ManualBack;
-import com.lasalara.lasalara.frontend.activities.QuestionFragment.ProgressBarRefreshListener;
+import com.lasalara.lasalara.frontend.fragments.QuestionFragment.ManualBack;
+import com.lasalara.lasalara.frontend.fragments.QuestionFragment.ProgressBarRefreshListener;
 
 import android.app.Activity;
 import android.content.Context;

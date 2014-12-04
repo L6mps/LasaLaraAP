@@ -1,4 +1,4 @@
-package com.lasalara.lasalara.frontend.activities;
+package com.lasalara.lasalara.frontend.fragments;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.lasalara.lasalara.R;
+import com.lasalara.lasalara.frontend.activities.MainActivity;
 
 public class ProposeQuestionFragment extends Fragment {
 	

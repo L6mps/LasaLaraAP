@@ -20,6 +20,12 @@ import com.lasalara.lasalara.backend.structure.Chapter;
 import com.lasalara.lasalara.backend.structure.Progress;
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
 import com.lasalara.lasalara.backend.webRequest.WebRequest;
+import com.lasalara.lasalara.frontend.fragments.AddBookFragment;
+import com.lasalara.lasalara.frontend.fragments.BookFragment;
+import com.lasalara.lasalara.frontend.fragments.ChapterFragment;
+import com.lasalara.lasalara.frontend.fragments.PageViewFragment;
+import com.lasalara.lasalara.frontend.fragments.ProposeQuestionFragment;
+import com.lasalara.lasalara.frontend.fragments.QuestionFragment;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
