@@ -17,6 +17,7 @@ import com.lasalara.lasalara.backend.exceptions.WebRequestException;
 import com.lasalara.lasalara.backend.exceptions.WebRequestExceptionMessage;
 import com.lasalara.lasalara.backend.structure.Book;
 import com.lasalara.lasalara.backend.structure.Chapter;
+import com.lasalara.lasalara.backend.structure.Message;
 import com.lasalara.lasalara.backend.structure.Progress;
 import com.lasalara.lasalara.backend.webRequest.UrlParameters;
 import com.lasalara.lasalara.backend.webRequest.WebRequest;
@@ -52,7 +53,8 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 															  ChapterFragment.OnChapterSelectedListener,
 															  QuestionFragment.ProgressBarRefreshListener,
 															  QuestionFragment.ManualBack,
-															  OnGestureListener {
+															  OnGestureListener,
+															  Backend.MessageListener {
 	
 	private BookFragment bFragment;
 	private ChapterFragment cFragment;
@@ -399,5 +401,13 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 		protected void onProgressUpdate(Integer... values) {
 		     progress.setMessage("Downloaded " + values[0] + " of " + chapterCount + " chapters");
 		}
+	}
+
+	@Override
+	public void messageAdded(Message message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(message.getMessage());
+		builder.setPositiveButton("OK", null);
+		builder.show();
 	}
 }

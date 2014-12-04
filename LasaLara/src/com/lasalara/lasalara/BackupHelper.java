@@ -6,6 +6,10 @@ import android.app.backup.BackupAgentHelper;
 import android.app.backup.FileBackupHelper;
 import android.app.backup.SharedPreferencesBackupHelper;
 
+/**
+ * The backup helper class that is used to manage the Android application's backups.
+ * @author Ants-Oskar Mäesalu
+ */
 public class BackupHelper extends BackupAgentHelper {
 	// The name of the SharedPreferences file
 	static final String PREFERENCES = "userPreferences";
