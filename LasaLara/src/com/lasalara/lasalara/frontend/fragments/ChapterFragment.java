@@ -6,9 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.util.Log;
 import android.view.View;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.lasalara.lasalara.R;
@@ -98,10 +96,9 @@ OnChapterSelectedListener mCallback;
 
 	public void refreshChapters() {
 		try {
-			this.setListShown(false);
 			parentBook.update();
-			this.setListShown(true);
-			setListAdapter(new CustomListAdapter(getActivity(), chapters, true));
+			listAdapter.setChapterData(chapters);
+			listAdapter.notifyDataSetChanged();
 		} catch (InputDoesntExistException e) {
 			Backend.getInstance().addMessage(e.getMessage());
 		} catch (FormatException e) {

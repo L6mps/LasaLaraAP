@@ -37,7 +37,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.Menu;
@@ -245,7 +244,12 @@ public class MainActivity extends FragmentActivity implements BookFragment.OnBoo
 	    	updateProgressBar();
 	    }
 	    else if(item.getItemId() == R.id.refreshChapters) {
+			//ProgressDialog prog = new ProgressDialog(this);
+			//prog.setTitle("Updating...");
+			//prog.setIndeterminate(true);
+			//prog.show();
 	    	cFragment.refreshChapters();
+			//prog.dismiss();
 	    }
 	    else if(item.getItemId() == R.id.reset_progress) {
 	    	qFragment.resetProgress();
