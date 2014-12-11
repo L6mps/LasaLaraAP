@@ -154,7 +154,7 @@ public class PageViewFragment extends Fragment{
 			ViewHolder holder;
 			if(convertView == null){
 				LayoutInflater inf = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				convertView = inf.inflate(R.layout.list_item, parent, false);
+				convertView = inf.inflate(R.layout.listelement, parent, false);
 				holder = new ViewHolder();
 				
 				holder.text = (TextView) convertView.findViewById(R.id.lbListItem);
