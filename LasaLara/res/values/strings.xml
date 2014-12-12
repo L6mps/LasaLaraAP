@@ -23,7 +23,7 @@
     
     <string name="feedbackQuestion">Was your answer the same?</string>
     <string name="feedbackAnswerPositive">Yes</string>
-    <string name="feedbackAnswerNeutral">Some of it</string>
+    <string name="feedbackAnswerNeutral">Partially</string>
     <string name="feedbackAnswerNegative">No</string>
     
     <!--  Propose Question screen items -->

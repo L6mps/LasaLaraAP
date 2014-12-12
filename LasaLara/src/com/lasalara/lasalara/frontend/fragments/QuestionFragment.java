@@ -98,7 +98,9 @@ public class QuestionFragment extends Fragment {
 			a.setOutAnimation(getActivity(), R.anim.exit);
 			
 			q.setText(getCurrentQuestion());
+			q.setMeasureAllChildren(false);
 			a.setText("");
+			a.setVisibility(View.GONE);
 			answered = false;
 			f.setVisibility(View.GONE);
 	        return v;
@@ -109,6 +111,7 @@ public class QuestionFragment extends Fragment {
 		q.setText(qa.getQuestion());
 		answered = false;
 		a.setText("");
+		a.setVisibility(View.GONE);
 		f.setAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.exit));
 		f.setVisibility(View.GONE);
 		refCallback.onProgressRefresh();
@@ -125,6 +128,7 @@ public class QuestionFragment extends Fragment {
 	private void showAnswer() {
 		if(!answered) {
 			answered = true;
+			a.setVisibility(View.VISIBLE);
 			a.setText(getCurrentAnswer());
 			f.setVisibility(View.VISIBLE);
 			Animation slide = AnimationUtils.loadAnimation(getActivity(), R.anim.slide_up);
